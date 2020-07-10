@@ -8,7 +8,7 @@ Every web request to Twitter apis is handled by libcurl because of tls requireme
 External libs:
 - **QJson4**: A simple library to have a json parser like the one built in qt5
 - **QtCurl**: Qt wrapper around libcurl. Heavily customised wrt to the original project to make it work on OS10
-- **o2**: C++ OAuth library for Qt. Customised to work with Twitter private apis
+- **o2**: C++ OAuth library for Qt. Customised to work with Twitter private apis and with QtCurl instead of QNetworkRequest
 
 I tried to keep every app functionality in its own class. It does not aim to be a perfectly classful code like the ones Java programmers love to write, instead it's a tradeoff between having a tidy codebase and speed of writing/mantaining/debugging features.
 Two classes are abstract:
