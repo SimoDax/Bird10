@@ -1,6 +1,7 @@
 ## Bird10 for BlackBerry
 
-App structure: Qml (/assets) for ui and flow, C++ (/src) for fetching, parsing & data storage
+App structure: Qml (/assets) for ui and app flow, C++ (/src) for fetching, parsing & data storage.
+
 Qml also holds and instantiates the C++ classes, which are exposed as objects in the meta-object system.
 Every web request to Twitter apis is handled by libcurl because of tls requirements, QNetworkAccessManager in qt4.8 is too outdated 
 
