@@ -20,4 +20,4 @@ Side notes:
 
 Some of the Qml code is ripped off from the official app as I wanted a similar style :)
 
-All o1Twitter references in the Qml actually refer to the OXTwitter object (because it is registered like that in the meta-object system), no to O1Twitter. Originally the app used OAuth 1.0 instead of XAuth and I was too lazy to change all the names, so I just changed the actual class getting instantiated when I switched to XAuth.
+All the o1Twitter references in the Qml actually refer to the OXTwitter object (because it is registered like that in the meta-object system), no to O1Twitter. Originally the app used OAuth 1.0 instead of XAuth and I was too lazy to change all the names, so I just changed the actual class getting instantiated when I switched to XAuth.
