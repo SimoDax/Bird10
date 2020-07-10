@@ -1,0 +1,12 @@
+
+arm/
+
+.settings/
+
+logs/
+
+.svn/
+
+*.core
+
+*.txt
