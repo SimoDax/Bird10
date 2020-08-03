@@ -209,6 +209,27 @@ TabbedPane {
                 }
             },
             ActionItem {
+                title: "Start service"
+                onTriggered: {
+                    app.startService()
+                }
+            },
+            ActionItem {
+                title: "Stop service"
+                onTriggered: {
+                    app.stopService()
+                }
+//                attachedObjects: Invocation {
+//                    id: l
+//                    query {
+//                        invokeTargetId: "com.simodax.Bird10HeadlessService"
+//                        mimeType: "*"
+////                        uri: "headless:"
+//                        invokerIncluded: true
+//                    }
+//                }
+            },
+            ActionItem {
                 title: app.backgroundUpdatesEnabled ? "Disable sync" : "Enable sync"
                 onTriggered: {
                     app.backgroundUpdatesEnabled = ! app.backgroundUpdatesEnabled

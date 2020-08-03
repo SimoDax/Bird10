@@ -1,11 +1,11 @@
 
-arm/
+*/arm/
 
-.settings/
+*/.settings/
 
-logs/
+*/logs/
 
-.svn/
+*/.svn/
 
 *.core
 

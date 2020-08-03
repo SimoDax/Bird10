@@ -6,12 +6,12 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-* 
+*
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
@@ -150,6 +150,15 @@ ApplicationUI::ApplicationUI() :
         file.open(QFile::WriteOnly);
         file.close();
     }
+
+    bb::system::InvokeManager* invokeManager = new bb::system::InvokeManager(this);
+
+    InvokeRequest ir;
+    ir.setTarget("com.simodax.Bird10HeadlessService");
+    ir.setAction("com.simodax.Bird10HeadlessService.RESET");
+//    m_reply = invokeManager->invoke(ir);
+
+//    connect(m_reply, SIGNAL(finished()), this,  SLOT(onInvokeResult()));
 
 
 //    QtCUrl cUrl;
@@ -332,7 +341,7 @@ void ApplicationUI::onInvokeResult(){   //helper function pasted stright from do
 
         // Message received if the invocation request is successful
         default:
-            qDebug() << "invokeFinished(): Invoke Succeeded" << endl;
+            qDebug() << "invokeFinished(): " << m_reply->error() << endl;
             break;
     }
 }
@@ -348,6 +357,26 @@ void ApplicationUI::onManualExit()
     else
         qDebug()<<"What the fuck";
 
+}
+
+void ApplicationUI::startService()
+{
+    InvokeManager manager;
+    InvokeRequest request;
+    request.setTarget("com.simodax.Bird10HeadlessService");
+    request.setAction("com.simodax.Bird10HeadlessService.RESET");
+    m_reply = manager.invoke(request);
+    connect(m_reply, SIGNAL(finished()), this,  SLOT(onInvokeResult()));
+}
+
+void ApplicationUI::stopService()
+{
+    InvokeManager manager;
+    InvokeRequest request;
+    request.setTarget("com.simodax.Bird10HeadlessService");
+    request.setAction("com.simodax.Bird10HeadlessService.STOP");
+    m_reply = manager.invoke(request);
+    connect(m_reply, SIGNAL(finished()), this,  SLOT(onInvokeResult()));
 }
 
 void ApplicationUI::onQueryResponse()

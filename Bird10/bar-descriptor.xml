@@ -32,21 +32,90 @@
     <id>com.simodax.bird10</id>
     <configuration name="Device-Debug">
        <platformArchitecture>armle-v7</platformArchitecture>
-       <asset path="arm/o.le-v7-g/Bird10" entry="true" type="Qnx/Elf">Bird10</asset>
+       <asset entryPointId="Bird10" path="arm/o.le-v7-g/Bird10" entry="true" type="Qnx/Elf">Bird10</asset>
+
+       <asset entryPointId="Bird10HeadlessService"
+            path="../Bird10HeadlessService/arm/o.le-v7-g/Bird10HeadlessService"
+    		type="Qnx/Elf">Bird10HeadlessService</asset>
     </configuration>
+    
     <configuration name="Device-Release">
        <entryPointType>Qnx/Cascades</entryPointType>
        <platformArchitecture>armle-v7</platformArchitecture>
-       <asset path="arm/o.le-v7/Bird10.so" entry="true" type="Qnx/Elf">Bird10.so</asset>
+       <asset entryPointId="Bird10" path="arm/o.le-v7/Bird10.so" entry="true" type="Qnx/Elf">Bird10.so</asset>
+       
+       <asset entryPointId="Bird10HeadlessService"
+            path="../Bird10HeadlessService/arm/o.le-v7/Bird10HeadlessService"
+            type="Qnx/Elf">Bird10HeadlessService</asset>
     </configuration>
+    
     <configuration name="Device-Profile">
        <platformArchitecture>armle-v7</platformArchitecture>
-       <asset path="arm-p/o.le-v7-g/Bird10" entry="true" type="Qnx/Elf">Bird10</asset>
+       <asset entryPointId="Bird10" path="arm-p/o.le-v7-g/Bird10" entry="true" type="Qnx/Elf">Bird10</asset>
+       
+       <asset entryPointId="Bird10HeadlessService"
+            path="../Bird10HeadlessService/arm/o.le-v7-g/Bird10HeadlessService"
+            type="Qnx/Elf">Bird10HeadlessService</asset>
     </configuration>
+    
     <configuration name="Simulator-Debug">
        <platformArchitecture>x86</platformArchitecture>
-       <asset path="x86/o-g/Bird10" entry="true" type="Qnx/Elf">Bird10</asset>
+       <asset entryPointId="Bird10" path="x86/o-g/Bird10" entry="true" type="Qnx/Elf">Bird10</asset>
+       
+       <asset entryPointId="Bird10HeadlessService"
+            path="../Bird10HeadlessService/x86/Bird10HeadlessService"
+            type="Qnx/Elf">Bird10HeadlessService</asset>
     </configuration>
+    
+    <entryPoint id="Bird10">
+        <name>Bird10</name>
+    </entryPoint>
+
+    <entryPoint id="Bird10HeadlessService">
+        <name>Bird10Headless Service</name>
+        <entryPointType>Qnx/Elf</entryPointType>
+        <!-- Request permission to run a backend headless process. -->
+        <permission system="true">_sys_run_headless</permission>
+        <permission system="true">_sys_headless_nostop</permission>
+    </entryPoint>
+    
+    <invoke-target id="com.simodax.Bird10HeadlessService">
+        <invoke-target-type>application.headless</invoke-target-type>
+        <invoke-target-name>Bird10Headless Service</invoke-target-name>
+        <entry-point-id>Bird10HeadlessService</entry-point-id>
+
+        <filter>
+            <action>bb.action.system.STARTED</action>
+            <mime-type>application/vnd.blackberry.system.event.STARTED</mime-type>
+            <property var="uris" value="data://local" />
+        </filter>
+
+        <filter>
+            <action>com.simodax.Bird10HeadlessService.RESET</action>
+            <mime-type>*</mime-type>
+            <property var="uris" value="headless:" />
+        </filter>
+        <filter>
+            <action>com.simodax.Bird10HeadlessService.STOP</action>
+            <mime-type>*</mime-type>
+            <property var="uris" value="headless:" />
+        </filter>
+
+        <filter>
+            <action>bb.action.system.INSTALLED</action>
+            <mime-type>application/vnd.blackberry.system.event.INSTALLED</mime-type>
+            <property var="uris" value="data://local:" />
+        </filter>
+    </invoke-target>
+
+    <invoke-target id="com.simodax.bird10">
+        <invoke-target-type>application</invoke-target-type>
+        <invoke-target-name>Bird10</invoke-target-name>
+        <icon>
+            <image>icon.png</image>
+        </icon>
+        <entry-point-id>Bird10</entry-point-id>
+    </invoke-target>
 
     <!-- The name that is displayed in the BlackBerry 10 application installer.
          May have multiple values for each language. See samples or xsd schema file. Optional. -->
@@ -100,6 +169,7 @@
     <!-- Request permission to execute native code.  Required for native applications. -->
     <permission system="true">run_native</permission>
     <permission>access_shared</permission>
+    <permission>post_notification</permission>
     <env var="LD_LIBRARY_PATH" value="app/native/lib:/usr/lib/qt4/lib"/>
 
 </qnx>
