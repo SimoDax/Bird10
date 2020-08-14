@@ -111,7 +111,7 @@ CurlMulti *CurlMulti::threadInstance()
 
 void CurlMulti::addTransfer(CurlEasy *transfer)
 {
-    qDebug()<<"Service::CurlMulti::addTransfer";
+//    qDebug()<<"Service::CurlMulti::addTransfer";
 
     transfers_ << transfer;
     curl_multi_add_handle(handle_, transfer->handle());

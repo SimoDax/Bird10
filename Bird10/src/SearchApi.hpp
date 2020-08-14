@@ -6,12 +6,12 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-* 
+*
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
@@ -28,8 +28,9 @@ class SearchApi: public TwitterApiBase
     Q_OBJECT
 public:
 
-    Q_PROPERTY( bb::cascades::ArrayDataModel* trends READ getTrends NOTIFY trendListChanged  )
+    Q_PROPERTY( bb::cascades::ArrayDataModel* trends READ getTrends RESET clearTrends NOTIFY trendListChanged  )
     bb::cascades::ArrayDataModel* getTrends(){ return m_trends; } ;
+    Q_INVOKABLE void clearTrends(){ m_trends->clear(); emit trendListChanged(); } ;
 
     Q_PROPERTY( bb::cascades::ArrayDataModel* users READ getUsers RESET clearUsers NOTIFY userListChanged  )
     bb::cascades::ArrayDataModel* getUsers(){ return m_users; } ;
@@ -40,11 +41,13 @@ public:
 
     Q_INVOKABLE void requestTrends();
     Q_INVOKABLE void searchUser(const QString& text);
+    Q_INVOKABLE void searchTopic(const QString& text);
 
 protected slots:
 
     void onTrendsReceived();
     void onUserSearchReceived();
+    void onTopicSearchReceived();
 
 signals:
 

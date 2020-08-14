@@ -27,8 +27,8 @@ class NotificationsApi: public TwitterApiBase
 {
     Q_OBJECT
 public:
-    Q_PROPERTY(bb::cascades::ArrayDataModel* notifications READ notifications NOTIFY notificationModelChanged)
-    inline bb::cascades::ArrayDataModel* notifications(){ return m_notificationModel; };
+    Q_PROPERTY(QVariantList* notifications READ notifications NOTIFY notificationModelChanged)
+    inline QVariantList* notifications(){ return m_notificationModel; };
 
     Q_PROPERTY(int unreadCount READ unreadCount NOTIFY unreadCountChanged)
     inline int unreadCount(){ return m_unreadCount; };
@@ -64,7 +64,7 @@ private:
 
 private:
     QString m_cursor, m_unreadIndex;
-    bb::cascades::ArrayDataModel* m_notificationModel;
+    QVariantList* m_notificationModel;
     QVariantMap m_notifications, m_tweets, m_users;
     int m_unreadCount;
     bool m_shouldClearCache;

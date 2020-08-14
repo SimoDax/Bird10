@@ -30,7 +30,7 @@ NavigationPane {
     // Called when the tab becomes the current one
     function resetUnreadCount() {
         dmApi.updateLastSeenId()    // this also resets dmApi.unreadCount
-        dmHistoryId.scrollToPosition(ScrollPosition.Beginning)
+        dmHistoryId.scrollToItem(0)
     }
 
     function loadInbox() { // called  by this page on creation and by main on login

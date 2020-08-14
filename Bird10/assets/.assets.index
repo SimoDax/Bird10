@@ -1,5 +1,5 @@
 1
-146
+149
 1440x1440/AttachedImage.qml
 1440x1440/ScreenContainer.qml
 720x1280/AttachedImage.qml
@@ -46,6 +46,7 @@ DMAttachmentPage.qml
 DMConversationPage.qml
 DMInboxPage.qml
 favorites.qml
+images/add_to_list_80x80.png
 images/bird_logo_white.png
 images/btn_default_photo_gallery.png
 images/btn_emoji_nature.png
@@ -120,6 +121,8 @@ images/share_tweet_hvr.png
 images/twitterheart.png
 ItemPage.qml
 ItemPage_scroll.qml
+ListPage.qml
+ListsPage.qml
 LoginSheet.qml
 main.qml
 NotificationsPage.qml

@@ -52,6 +52,8 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/DiscoverPage.qml) \
         $$quote($$BASEDIR/assets/ItemPage.qml) \
         $$quote($$BASEDIR/assets/ItemPage_scroll.qml) \
+        $$quote($$BASEDIR/assets/ListPage.qml) \
+        $$quote($$BASEDIR/assets/ListsPage.qml) \
         $$quote($$BASEDIR/assets/LoginSheet.qml) \
         $$quote($$BASEDIR/assets/NotificationsPage.qml) \
         $$quote($$BASEDIR/assets/ProfileMediaPage.qml) \
@@ -107,6 +109,7 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/components/VideoTweetComponentMain.qml) \
         $$quote($$BASEDIR/assets/components/Waiter.qml) \
         $$quote($$BASEDIR/assets/favorites.qml) \
+        $$quote($$BASEDIR/assets/images/add_to_list_80x80.png) \
         $$quote($$BASEDIR/assets/images/bird_logo_white.png) \
         $$quote($$BASEDIR/assets/images/btn_default_photo_gallery.png) \
         $$quote($$BASEDIR/assets/images/btn_emoji_nature.png) \
@@ -190,6 +193,7 @@ config_pri_source_group1 {
         $$quote($$BASEDIR/src/ConversationApi.cpp) \
         $$quote($$BASEDIR/src/DMApi.cpp) \
         $$quote($$BASEDIR/src/DiscoverApi.cpp) \
+        $$quote($$BASEDIR/src/ListApi.cpp) \
         $$quote($$BASEDIR/src/NotificationsApi.cpp) \
         $$quote($$BASEDIR/src/ProfileApi.cpp) \
         $$quote($$BASEDIR/src/QJson4/QJsonArray.cpp) \
@@ -229,6 +233,7 @@ config_pri_source_group1 {
         $$quote($$BASEDIR/src/ConversationApi.hpp) \
         $$quote($$BASEDIR/src/DMApi.hpp) \
         $$quote($$BASEDIR/src/DiscoverApi.hpp) \
+        $$quote($$BASEDIR/src/ListApi.hpp) \
         $$quote($$BASEDIR/src/NotificationsApi.hpp) \
         $$quote($$BASEDIR/src/ProfileApi.hpp) \
         $$quote($$BASEDIR/src/QJson4/QJsonArray.h) \

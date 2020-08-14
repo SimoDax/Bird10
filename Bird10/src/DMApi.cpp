@@ -6,12 +6,12 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-* 
+*
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
@@ -149,6 +149,8 @@ void DMApi::onSentDM(){
     pollUpdates(content["entries"].toList().value(0).toMap()["message"].toMap()["conversation_id"].toString());
 
     emit scrollToLast(true);
+
+    reply->deleteLater();
 }
 
 void DMApi::pollUpdates(const QString& conversationId)
@@ -229,6 +231,7 @@ void DMApi::onUpdates(){
     }
 
     m_polling = false;
+    reply->deleteLater();
 }
 
 void DMApi::onUpdatesFailed(CURLcode c){
@@ -303,6 +306,8 @@ void DMApi::onOlderDM(){
     }
 
     emit currentConversationChanged();
+
+    reply->deleteLater();
 }
 
 void DMApi::markRead(const QString& conversationId){
@@ -447,6 +452,8 @@ void DMApi::onBadgeCount()
     m_unreadCount = jsonResponse.object().toVariantMap()["dm_unread_count"].toInt();
 
     emit unreadCountChanged();
+
+    reply->deleteLater();
 }
 
 /*

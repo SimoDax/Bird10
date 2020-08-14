@@ -35,7 +35,7 @@
        <asset entryPointId="Bird10" path="arm/o.le-v7-g/Bird10" entry="true" type="Qnx/Elf">Bird10</asset>
 
        <asset entryPointId="Bird10HeadlessService"
-            path="../Bird10HeadlessService/arm/o.le-v7-g/Bird10HeadlessService"
+            path="../Bird10HeadlessService/arm/Bird10HeadlessService"
     		type="Qnx/Elf">Bird10HeadlessService</asset>
     </configuration>
     
@@ -45,7 +45,7 @@
        <asset entryPointId="Bird10" path="arm/o.le-v7/Bird10.so" entry="true" type="Qnx/Elf">Bird10.so</asset>
        
        <asset entryPointId="Bird10HeadlessService"
-            path="../Bird10HeadlessService/arm/o.le-v7/Bird10HeadlessService"
+            path="../Bird10HeadlessService/arm/Bird10HeadlessService"
             type="Qnx/Elf">Bird10HeadlessService</asset>
     </configuration>
     
@@ -54,7 +54,7 @@
        <asset entryPointId="Bird10" path="arm-p/o.le-v7-g/Bird10" entry="true" type="Qnx/Elf">Bird10</asset>
        
        <asset entryPointId="Bird10HeadlessService"
-            path="../Bird10HeadlessService/arm/o.le-v7-g/Bird10HeadlessService"
+            path="../Bird10HeadlessService/arm/Bird10HeadlessService"
             type="Qnx/Elf">Bird10HeadlessService</asset>
     </configuration>
     
@@ -77,6 +77,7 @@
         <!-- Request permission to run a backend headless process. -->
         <permission system="true">_sys_run_headless</permission>
         <permission system="true">_sys_headless_nostop</permission>
+        <permission>access_notify_settings_control</permission>
     </entryPoint>
     
     <invoke-target id="com.simodax.Bird10HeadlessService">
@@ -124,7 +125,7 @@
     <!-- A string value of the format <0-999>.<0-999>.<0-999> that represents application version which can be used to check for application upgrade.
          Values can also be 1-part or 2-part. It is not necessary to have a 3-part value.
          An updated version of application must have a versionNumber value higher than the previous version. Required. -->
-    <versionNumber>2.4.0</versionNumber>
+    <versionNumber>2.5.0</versionNumber>
 
     <!-- Fourth digit segment of the package version. First three segments are taken from the
          <versionNumber> element.  Must be an integer from 0 to 2^16-1 -->
@@ -170,6 +171,9 @@
     <permission system="true">run_native</permission>
     <permission>access_shared</permission>
     <permission>post_notification</permission>
+    <permission system="true">_sys_headless_nostop</permission>
+    <permission system="true">_sys_run_headless</permission>
+    <permission>access_internet</permission>
     <env var="LD_LIBRARY_PATH" value="app/native/lib:/usr/lib/qt4/lib"/>
 
 </qnx>

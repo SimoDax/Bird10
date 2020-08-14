@@ -43,6 +43,7 @@
 #include <src/DiscoverApi.hpp>
 #include <src/SearchApi.hpp>
 #include <src/DMApi.hpp>
+#include <src/ListApi.hpp>
 #include <QString>
 #include <Qnetworkaccessmanager>
 #include <QNetworkRequest>
@@ -75,6 +76,7 @@ ApplicationUI::ApplicationUI() :
     qmlRegisterType<TweetApi>("com.simodax", 1, 0, "TweetApi");
     qmlRegisterType<ProfileApi>("com.simodax", 1, 0, "ProfileApi");
     qmlRegisterType<DMApi>("com.simodax", 1, 0, "DMApi");
+    qmlRegisterType<ListApi>("com.simodax", 1, 0, "ListApi");
     qRegisterMetaType<CURLcode>("CURLcode");
     qRegisterMetaType< QMap<QString, GroupDataModel*> >("QMap<QString COMMA GroupDataModel*>");
     qRegisterMetaType< QMap<QString, Conversation*> >("QMap<QString COMMA Conversation*>");
@@ -151,14 +153,6 @@ ApplicationUI::ApplicationUI() :
         file.close();
     }
 
-    bb::system::InvokeManager* invokeManager = new bb::system::InvokeManager(this);
-
-    InvokeRequest ir;
-    ir.setTarget("com.simodax.Bird10HeadlessService");
-    ir.setAction("com.simodax.Bird10HeadlessService.RESET");
-//    m_reply = invokeManager->invoke(ir);
-
-//    connect(m_reply, SIGNAL(finished()), this,  SLOT(onInvokeResult()));
 
 
 //    QtCUrl cUrl;

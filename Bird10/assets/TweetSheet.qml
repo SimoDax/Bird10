@@ -85,7 +85,9 @@ Sheet {
             TextArea {
                 property int realLength
                 property bool isMentioning: false
+                property bool isTrending: false
                 property string mentionHandle
+                property string trend
                 property int previousLength
                 id: tweet
                 topMargin: 10
@@ -109,7 +111,7 @@ Sheet {
                     var c = text.charAt(text.length - 1);
                     var cc = c.charCodeAt(0);
 
-                    if(text.charAt(text.length-1) == "@"){
+                    if(text.charAt(text.length-1) == "@" && !isTrending){
                         isMentioning = true;
                         mentionHandle="@";
                         composer.showProfileList()
@@ -136,6 +138,32 @@ Sheet {
                         else{
                             isMentioning = false;
                             composer.hideProfileList()
+                        }
+                        previousLength = text.length
+                    } 
+                    else if (text.charAt(text.length - 1) == "#" && ! isMentioning) {
+                        isTrending = true;
+                        trend = "#";
+                        composer.showTrendList()
+                        searchApi.searchTopic(trend)
+                        previousLength = text.length
+                    }
+                    else if(isTrending){
+                        // trend is being removed with backspace
+                        if (text.length < previousLength) {
+                            if (trend.length > 1) {
+                                trend = trend.substring(0, trend.length - 1)
+                                searchApi.searchTopic(trend)
+                            } else {
+                                isTrending = false;
+                                composer.hideTrendList()
+                            }
+                        } else if ((cc > 47 && cc < 58) || (cc > 64 && cc < 91) || (cc > 96 && cc < 123) || cc == 95) { // valid text is being added to the trend
+                            trend = trend + c;
+                            searchApi.searchTopic(trend)
+                        } else {
+                            isTrending = false;
+                            composer.hideTrendList()
                         }
                         previousLength = text.length
                     }
@@ -716,6 +744,19 @@ Sheet {
                     tweet.isMentioning = false
                 }
             }
+            ListView {
+                id: trends
+                visible: false
+                dataModel: searchApi.trends
+
+                onTriggered: {
+                    var selectedItem = dataModel.data(indexPath)
+                    tweet.editor.setSelection(tweet.text.length - tweet.trend.length, tweet.text.length)
+                    tweet.editor.insertPlainText(selectedItem.toString())
+                    composer.hideTrendList()
+                    tweet.isTrending = false
+                }
+            }
         }
 
         function enableEmojiSelections() {
@@ -762,6 +803,7 @@ Sheet {
             tweet.requestFocus();
         }
         
+        
         function showProfileList(){
             images.visible = false
             count.visible = false
@@ -783,18 +825,55 @@ Sheet {
             contacts.emojiSelectionActive = false;
 
             contacts.visible = false
+            trends.visible = false
             profiles.visible = true
+        }
+
+        function showTrendList() {
+            images.visible = false
+            count.visible = false
+            attachment.visible = false
+
+            cameraButtonContainer.visible = false;
+            photoLibraryButtonContainer.visible = false;
+            emojiPeopleButtonContainer.visible = false;
+            emojiPlacesButtonContainer.visible = false;
+            emojiNatureButtonContainer.visible = false;
+            emojiObjectsButtonContainer.visible = false;
+            emojiSymbolsButtonContainer.visible = false;
+            // Set all emoji categories hidden
+            emojiPeople.visible = false;
+            emojiPlaces.visible = false;
+            emojiNature.visible = false;
+            emojiObjects.visible = false;
+            emojiSymbols.visible = false;
+            contacts.emojiSelectionActive = false;
+
+            contacts.visible = false
+            profiles.visible = false
+            trends.visible = true
         }
 
         function hideProfileList() {
             resetEmojiSelections()
 
             profiles.visible = false
+            trends.visible = false
             contacts.visible = true
             
             searchApi.clearUsers()
         }
 
+        function hideTrendList() {
+            resetEmojiSelections()
+
+            profiles.visible = false
+            trends.visible = false
+            contacts.visible = true
+
+            searchApi.clearTrends()
+        }
+        
         attachedObjects: [
             FilePicker {
                 id: filePicker
@@ -820,6 +899,9 @@ Sheet {
                 onTweeted: {
                     message("Tweet published")
                     tweetSheet.active = false
+                }
+                onError: {
+                    message(error)
                 }
             },
             SearchApi {

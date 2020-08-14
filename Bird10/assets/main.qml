@@ -84,6 +84,7 @@ TabbedPane {
         //ActionBar.placement: ActionBarPlacement.OnBar
     }
     
+    
     Tab {
         title: "Favorites"
         imageSource: "asset:///images/twitterheart.png"
@@ -94,7 +95,18 @@ TabbedPane {
         delegateActivationPolicy: TabDelegateActivationPolicy.ActivateWhenSelected
         //ActionBar.placement: ActionBarPlacement.OnBar
     }
-    
+
+    Tab {
+        title: "Lists"
+        imageSource: "asset:///images/add_to_list_80x80.png"
+        delegate: Delegate {
+            id: listsDelegate
+            source: "asset:///ListsPage.qml"
+        }
+
+        delegateActivationPolicy: TabDelegateActivationPolicy.ActivateWhenSelected
+    }
+
     Tab {
         id: myProfile
         title: "My Profile"
@@ -209,6 +221,12 @@ TabbedPane {
                 }
             },
             ActionItem {
+                title: app.backgroundUpdatesEnabled ? "Disable sync" : "Enable sync"
+                onTriggered: {
+                    app.backgroundUpdatesEnabled = ! app.backgroundUpdatesEnabled
+                }
+            },
+            ActionItem {
                 title: "Start service"
                 onTriggered: {
                     app.startService()
@@ -228,12 +246,6 @@ TabbedPane {
 //                        invokerIncluded: true
 //                    }
 //                }
-            },
-            ActionItem {
-                title: app.backgroundUpdatesEnabled ? "Disable sync" : "Enable sync"
-                onTriggered: {
-                    app.backgroundUpdatesEnabled = ! app.backgroundUpdatesEnabled
-                }
             }
 //            ,ActionItem {
 //                title: "Export core"

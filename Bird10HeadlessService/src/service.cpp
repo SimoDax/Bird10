@@ -24,13 +24,11 @@
 
 #include <QTimer>
 #include "src/NotificationsApi.hpp"
+#include "src/DMApi.hpp"
+#include "src/Notificator.hpp"
+#include "src/DMNotificator.hpp"
 #include <curl/curl.h>
 
-#ifdef QT_DEBUG
-#define NOTIFICATION_TITLE "Bird10 (debug)"
-#else
-#define NOTIFICATION_TITLE "Bird10"
-#endif
 
 using namespace bb::platform;
 using namespace bb::system;
@@ -38,11 +36,9 @@ using namespace bb::system;
 QThread Service::curlThread;
 
 Service::Service() : QObject(),
-        m_notify(new Notification(this)),
         m_invokeManager(new InvokeManager(this)),
         m_authenticator(new OXTwitter(this)),
-        m_timer(new QTimer(this)),
-        m_settings("simodax", "Bird10HeadlessService")
+        m_settings(new QSettings("simodax", "Bird10HeadlessService"))
 {
     qRegisterMetaType<CURLcode>("CURLcode");
     curlThread.start();
@@ -51,13 +47,19 @@ Service::Service() : QObject(),
             this, SLOT(handleInvoke(const bb::system::InvokeRequest&)));
 
 
-    NotificationDefaultApplicationSettings settings;
-    settings.setPreview(NotificationPriorityPolicy::Allow);
-    settings.apply();
+//    NotificationDefaultApplicationSettings settings;
+//    settings.setPreview(NotificationPriorityPolicy::Allow);
+//    settings.apply();
 
-//    qDebug()<<"SERVICE TOKEN: "<<m_authenticator->token();
+//    bb::platform::Notification* n = new Notification(this);
+//
+//    n->setTitle(NOTIFICATION_TITLE);
+//    n->setBody("Service started");
+//
+//    n->notify();
 
-//    onTimeout();
+//    n->deleteLater();
+
 }
 
 void Service::handleInvoke(const bb::system::InvokeRequest & request)
@@ -75,29 +77,36 @@ void Service::handleInvoke(const bb::system::InvokeRequest & request)
     if (request.action().compare("com.simodax.Bird10HeadlessService.RESET") == 0) {
         qDebug()<<"SERVICE TOKEN (on reset): "<<m_authenticator->token();
 
+        bb::platform::Notification* n = new Notification(this);
+
+        n->setTitle(NOTIFICATION_TITLE);
+        n->setBody("Service started");
+        n->notify();
+        n->deleteLater();
+
         // Register timer and check for notifications
         registerTimer();
-        checkTwitterNotifications();
+        checkNotifications();
 
     }
     else if(request.action().compare("bb.action.system.TIMER_FIRED") == 0){
 
         // Sometimes the STOP action happens just before the timer fires and the invocation platform can't deregister it quickly enough
         // so we should check if the sevice is supposed to be in active state before scheduling the next execution
-        if(m_settings.value("active", false).toBool() == false){
+        if(m_settings->value("active", false).toBool() == false){
             qDebug()<<"Service::handleInvoke: QUITTING BECAUSE active = false !";
             bb::Application::quit();
+            return;
         }
 
         // Register timer and check for notifications
         registerTimer();
-        checkTwitterNotifications();
+        checkNotifications();
     }
     else if(request.action().compare("com.simodax.Bird10HeadlessService.STOP") == 0){
         // deregister and close
         clearTimer();
     }
-
 }
 
 
@@ -105,7 +114,6 @@ void Service::onTimeout()
 {
     Notification::clearEffectsForAll();
     Notification::deleteAllFromInbox();
-    m_notify->notify();
 }
 
 void Service::registerTimer()
@@ -130,21 +138,6 @@ void Service::registerTimer()
     m_invokeReply = m_invokeManager->registerTimer(timer_request);
     bool ok = connect(m_invokeReply, SIGNAL(finished()), this, SLOT(onInvokeResult()));
 
-//
-//    InvokeRecurrenceRule recurrenceRule(bb::system::InvokeRecurrenceRuleFrequency::Minutely);
-//    recurrenceRule.setInterval(1);
-//
-//    InvokeTimerRequest timer_request;
-//
-//    if (recurrenceRule.isValid()) {
-//        timer_request.set("com.simodax.bird10.TIMER",  recurrenceRule, "com.simodax.Bird10HeadlessService");
-//        m_invokeReply = m_invokeManager->registerTimer(timer_request);
-//
-//        bool ok = connect(m_invokeReply, SIGNAL(finished()), this, SLOT(onInvokeResult()));
-//
-////        checkTwitterNotifications();
-//    }
-
     qDebug()<<"Service::start: TIMER SET";
 }
 
@@ -153,9 +146,11 @@ void Service::clearTimer()
     qDebug()<<"Service::stop";
 
     m_invokeManager->deregisterTimer("com.simodax.bird10.TIMER");
-    m_settings.setValue("active", false);
-    bb::Application::quit();
+    m_settings->setValue("active", false);
+    bb::Application::instance()->requestExit();
+//    bb::Application::quit();
 }
+
 
 void Service::clearNotifications()
 {
@@ -163,129 +158,42 @@ void Service::clearNotifications()
     Notification::deleteAllFromInbox();
 }
 
-void Service::checkTwitterNotifications()
+
+void Service::checkNotifications()
 {
-    qDebug()<<"Service::checkTwitterNotifications";
-
-    NotificationsApi* api = new NotificationsApi(this);
-
-    bool ok = connect(api, SIGNAL(unreadCountChanged()), this, SLOT(onNotificationsCount()));
-    ok = connect(api, SIGNAL(networkError()), this, SLOT(onError()));
-
-    qDebug()<<"Service::checkTwitterNotifications: CURSOR: "<<m_settings.value("notifications_cursor", QString()).toString();
-
-    api->setAuthenticator(m_authenticator);
-//    api->setCursor(m_settings.value("notifications_cursor", QString()).toString());
-    api->requestNotifications();
-
-    qDebug()<<"Service::checkTwitterNotifications API CALLED";
+    Notificator* n = new Notificator(m_authenticator, m_settings, this);
+    connect(n, SIGNAL(done()), this, SLOT(checkDM()));
+    n->checkTwitterNotifications();
 }
 
-void Service::onNotificationsCount()
+void Service::checkDM()
 {
-    NotificationsApi* api = qobject_cast<NotificationsApi*>(sender());
-    m_settings.setValue("notifications_cursor", api->cursor());
+    if(sender())
+        sender()->deleteLater();
+//        delete sender();
 
-    qDebug()<<"Service::onNotificationsCount: "<< api->notifications()->size() << " UNREAD NOTIFICATIONS";
+    qDebug()<<"Service::checkDM";
 
-    if(api->shouldClearCache()){
-        bb::data::JsonDataAccess jda;
-        QVariantMap activeNotifications = jda.load("./data/activeNotifications.json").toMap();
+    DMNotificator* n = new DMNotificator(m_authenticator, m_settings, this);
 
-        // clear notifications related to old entries
-        for(int i = 0; i < activeNotifications.keys().size(); i++){
-            if(activeNotifications.keys()[i].toULongLong() <= api->unreadIndex().toULongLong()){    //clear if the sortIndex (key) is smaller than the unread index
-                QString sortIndex = activeNotifications.keys()[i];
+    bool ok = connect(n, SIGNAL(done()), this, SLOT(quit()));
 
-                deleteNotification(sortIndex);
-            }
-        }
-
-        // May not be needed
-        // activeNotifications = jda.load("./data/activeNotifications.json").toMap();
-
-        // now, append new entries
-        for(int i = 0; i < api->notifications()->size(); i++){
-            const QVariantMap& n = api->notifications()->value(i).toMap();
-
-            if(!activeNotifications.contains(n["sortIndex"].toString())){
-                sendNotification(buildBody(n) , n["sortIndex"].toString());
-            }
-        }
-    }
-    else    // just add without thinking twice
-        for(int i = 0; i < api->notifications()->size(); i++){
-            const QVariantMap& n = api->notifications()->value(i).toMap();
-
-            sendNotification(buildBody(n), n["sortIndex"].toString());
-        }
-
-    api->deleteLater();
-    bb::Application::quit();
+    n->checkTwitterNotifications();
 }
-
-void Service::deleteNotification(const QString& sortIndex)
-{
-    qDebug()<<"Service::deleteNotification: DELETING NOTIFICATION "<<sortIndex;
-
-    bb::data::JsonDataAccess jda;
-    QVariantMap activeNotifications = jda.load("./data/activeNotifications.json").toMap();
-
-    QString key = activeNotifications.take(sortIndex).toString();
-
-    Notification::deleteFromInbox(key);
-
-    jda.save(activeNotifications, "./data/activeNotifications.json");
-}
-
-void Service::sendNotification(const QString& body, const QString& sortIndex)
-{
-    qDebug()<<"Service::sendNotification: "<<body;
-
-    bb::platform::Notification* n = new Notification(this);
-
-    n->setTitle(NOTIFICATION_TITLE);
-    n->setBody(body);
-
-    bb::system::InvokeRequest request;
-    request.setTarget("com.simodax.bird10");
-    request.setAction("bb.action.START");
-    n->setInvokeRequest(request);
-
-    bb::data::JsonDataAccess jda;
-    QVariantMap activeNotifications = jda.load("./data/activeNotifications.json").toMap();
-
-    activeNotifications.insert(sortIndex, n->key());
-
-    jda.save(activeNotifications, "./data/activeNotifications.json");
-
-    qDebug()<<"bb::platform::NotificationError::Type: "<<n->notify();
-
-    n->deleteLater();
-}
-
-QString Service::buildBody(const QVariantMap& notification)
-{
-    if(notification["tweet"].toMap()["full_text"].toString().isEmpty())
-        return notification["text"].toString();
-
-    return notification["text"].toString() + ": " + notification["tweet"].toMap()["full_text"].toString();
-}
-
 
 void Service::onInvokeResult(){   //helper function pasted stright from docs, saves a lot of headaches
     // Check for errors
     switch(m_invokeReply->error()) {
         case InvokeReplyError::None: {
             qDebug() << "Service::invokeFinished(): No error" << endl;
-            m_settings.setValue("active", true);
+            m_settings->setValue("active", true);
             break;
         }
         // Invocation could not find the target;
         // did we use the right target ID?
         case InvokeReplyError::NoTarget: {
             qDebug() << "Service::invokeFinished(): Error: no target" << endl;
-            m_settings.setValue("active", false);
+            m_settings->setValue("active", false);
             break;
         }
 
@@ -293,7 +201,7 @@ void Service::onInvokeResult(){   //helper function pasted stright from docs, sa
         // did we set all of the values correctly?
         case InvokeReplyError::BadRequest: {
             qDebug() << "Service::invokeFinished(): Error: bad request" << endl;
-            m_settings.setValue("active", false);
+            m_settings->setValue("active", false);
             break;
         }
 
@@ -302,14 +210,14 @@ void Service::onInvokeResult(){   //helper function pasted stright from docs, sa
         // so find an alternate route
         case InvokeReplyError::Internal: {
             qDebug() << "Service::invokeFinished(): Error: internal" << endl;
-            m_settings.setValue("active", false);
+            m_settings->setValue("active", false);
             break;
         }
 
         // Message received if the invocation request is successful
         default:
             qDebug() << "Service::invokeFinished(): " << m_invokeReply->error() <<endl;
-            m_settings.setValue("active", false);
+            m_settings->setValue("active", false);
             break;
     }
     m_invokeReply->deleteLater();
@@ -317,6 +225,17 @@ void Service::onInvokeResult(){   //helper function pasted stright from docs, sa
 
 void Service::onError()
 {
+    if(sender())
+        sender()->deleteLater();
+
     qDebug()<<"Service::onError";
-    bb::Application::quit();
+    bb::Application::instance()->requestExit();
+}
+
+void Service::quit()
+{
+    if(sender())
+        sender()->deleteLater();
+
+    bb::Application::instance()->requestExit();
 }

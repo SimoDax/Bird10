@@ -363,12 +363,15 @@ Page {
                         "showMediaTweetsArrowOption", "spacer" ])
                 lv.dataModel = m
                 
-                var actionArray = new Array();
-                if(profileApi.screenName == o1Twitter.extraTokens.screen_name)
-                    actionArray.push(refreshAction, payAction);
-                else
-                    actionArray.push(followAction, refreshAction, payAction);
-                actions = actionArray;
+                if(actions.length == 0){
+                    var actionArray = new Array();
+                    if(profileApi.screenName == o1Twitter.extraTokens.screen_name)
+                        actionArray.push(refreshAction, payAction);
+                    else
+                        actionArray.push(followAction, refreshAction, payAction);
+                        
+                    actions=actionArray
+                }
 
                 requestMediaUserTweets()
             }

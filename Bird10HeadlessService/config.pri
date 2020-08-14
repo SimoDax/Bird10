@@ -36,9 +36,10 @@ simulator {
 
 config_pri_source_group1 {
     SOURCES += \
-        $$quote($$BASEDIR/src/Conversation.cpp) \
         $$quote($$BASEDIR/src/DMApi.cpp) \
+        $$quote($$BASEDIR/src/DMNotificator.cpp) \
         $$quote($$BASEDIR/src/NotificationsApi.cpp) \
+        $$quote($$BASEDIR/src/Notificator.cpp) \
         $$quote($$BASEDIR/src/QJson4/QJsonArray.cpp) \
         $$quote($$BASEDIR/src/QJson4/QJsonDocument.cpp) \
         $$quote($$BASEDIR/src/QJson4/QJsonObject.cpp) \
@@ -62,9 +63,10 @@ config_pri_source_group1 {
         $$quote($$BASEDIR/src/service.cpp)
 
     HEADERS += \
-        $$quote($$BASEDIR/src/Conversation.hpp) \
         $$quote($$BASEDIR/src/DMApi.hpp) \
+        $$quote($$BASEDIR/src/DMNotificator.hpp) \
         $$quote($$BASEDIR/src/NotificationsApi.hpp) \
+        $$quote($$BASEDIR/src/Notificator.hpp) \
         $$quote($$BASEDIR/src/QJson4/QJsonArray.h) \
         $$quote($$BASEDIR/src/QJson4/QJsonDocument.h) \
         $$quote($$BASEDIR/src/QJson4/QJsonObject.h) \
@@ -94,11 +96,6 @@ config_pri_source_group1 {
         $$quote($$BASEDIR/src/secret.h) \
         $$quote($$BASEDIR/src/service.hpp)
 }
-
-INCLUDEPATH += $$quote($$BASEDIR/src/o2) \
-    $$quote($$BASEDIR/src/QtCurl) \
-    $$quote($$BASEDIR/src/QJson4) \
-    $$quote($$BASEDIR/src)
 
 CONFIG += precompile_header
 

@@ -46,33 +46,28 @@ public:
 private slots:
     void handleInvoke(const bb::system::InvokeRequest &);
     void onTimeout();
-    void onNotificationsCount();
     void onError();
 
     void onInvokeResult();
+    void quit();
 
-    void checkTwitterNotifications();
+    void checkDM();
 
 private:
+    void checkNotifications();
 
     void registerTimer();
     void clearTimer();
 
-    void sendNotification(const QString& body, const QString& sortIndex);
-    void deleteNotification(const QString& key);
     void clearNotifications();
 
-    QString buildBody(const QVariantMap& notification);
 
-
-    bb::platform::Notification * m_notify;
     bb::system::InvokeManager * m_invokeManager;
     bb::system::InvokeReply* m_invokeReply;
 
     OXTwitter* m_authenticator;
 
-    QTimer* m_timer;
-    QSettings m_settings;
+    QSettings* m_settings;
 };
 
 #endif /* SERVICE_H_ */

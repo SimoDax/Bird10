@@ -35,6 +35,11 @@ Container {
             preferredWidth: ui.du(5.5)
             preferredHeight: ui.du(5.5)
             onClicked: {
+                if(ListItemData.limited_replies){
+                    itemRoot.ListItem.view.pane.error_message("The original Tweet author restricted who can reply to this Tweet")
+                    return
+                }
+                
                 var user_mentions = ""
                 if(typeof(ListItemData.entities.user_mentions) != 'undefined')
                     for(var i = 0; i < ListItemData.entities.user_mentions.length; i++)

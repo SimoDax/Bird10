@@ -6,12 +6,12 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-* 
+*
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
@@ -105,6 +105,9 @@ QVariantMap TimelineBase::parseTweet(QVariantMap tweet)
     }
     tweet["full_text"] = QString::fromStdWString(text);
 
+    if(tweet.keys().contains("limited_actions") && tweet["limited_actions"].toString() == "limited_replies")
+        tweet["limited_replies"] = true;
+
 
     // ISO date parsing follows -- DO NOT TOUCH!
 
@@ -139,9 +142,9 @@ QVariantMap TimelineBase::parseTweet(QVariantMap tweet)
         QDateTime current = QDateTime::currentDateTime();
 
         int deltaDays = dt.daysTo(current);
-        if(deltaDays == 0){
+        if(deltaDays == 0 || deltaDays == 1){
             int deltaHours = dt.secsTo(current)/3600;
-            qDebug()<<deltaHours;
+//            qDebug()<<deltaHours;
 
             if(deltaHours == 0){
                 int deltaMinutes = dt.secsTo(current)/60;

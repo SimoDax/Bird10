@@ -28,7 +28,7 @@ using namespace bb::data;
 
 NotificationsApi::NotificationsApi(QObject *parent) : TwitterApiBase(parent)
 {
-    m_notificationModel = new bb::cascades::ArrayDataModel(this);
+    m_notificationModel = new QVariantList();
     m_shouldClearCache = false;
 }
 
@@ -136,12 +136,12 @@ void NotificationsApi::onNotificationsReceived(){
 
     }
 
-    emit unreadCountChanged();
-
     m_notifications.clear();
     m_tweets.clear();
     m_users.clear();
     reply->deleteLater();
+
+    emit unreadCountChanged();
 }
 
 void NotificationsApi::updateUnreadIndex(){

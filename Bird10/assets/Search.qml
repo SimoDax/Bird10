@@ -73,10 +73,15 @@ Sheet {
                             searchApi.searchUser(text.trim())
                             searchPage.showTrends = false
                         }
-                        else open.visible = false
-                        
+                        else{
+                            open.visible = false
+                            searchPage.showTrends = true
+                            if(text.trim().length > 0){
+                                searchApi.searchTopic(text.trim())
+                            }
+                            else searchApi.requestTrends()
+                        }
                     }
-
                 }
                 Button {
                     text: "Cancel"

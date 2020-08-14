@@ -6,12 +6,12 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-* 
+*
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
@@ -141,3 +141,46 @@ void SearchApi::onUserSearchReceived(){
 
     reply->deleteLater();
 }
+
+void SearchApi::searchTopic(const QString& text)
+{
+    if (!authenticator_ || !authenticator_->linked()) {
+        m_users->clear();
+        emit userListChanged();
+        return;
+    }
+
+    QString url = ("https://api.twitter.com/1.1/search/typeahead.json");
+    QList<O0RequestParameter> par;
+    par.append(O0RequestParameter("q", text.toUtf8()));
+    par.append(O0RequestParameter("src", "search_box"));
+    par.append(O0RequestParameter("result_type", "topics"));
+
+    CurlEasy* reply = requestor->get(url, par);
+
+    connect(reply, SIGNAL(done(CURLcode)), this, SLOT(onTopicSearchReceived()));
+    connect(reply, SIGNAL(error(CURLcode)), this, SLOT(onRequestFailed(CURLcode)));
+
+    //Since the object lives on a different thread its function calls need to be queued
+    //This will trigger the perform method without making an unnecessary signal-slot connection
+    QMetaObject::invokeMethod(reply, "perform", Qt::QueuedConnection);
+}
+
+void SearchApi::onTopicSearchReceived()
+{
+    CurlEasy* reply = qobject_cast<CurlEasy *>(sender());
+
+    m_trends->clear();
+    QJsonDocument jsonResponse = QJsonDocument::fromJson(reply->data());
+    QVariantMap data = jsonResponse.object().toVariantMap();
+
+    QVariantList topics = data["topics"].toList();
+    for(int i = 0; i<topics.size(); i++){
+        m_trends->append(topics[i].toMap()["topic"].toString());
+    }
+
+    emit trendListChanged();
+
+    reply->deleteLater();
+}
+

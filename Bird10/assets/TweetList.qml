@@ -29,6 +29,7 @@ import "/components"
 ListView {
     property variant api : twitterApi    //for accessing api inside list item
     property variant rtDialog : rtDialog
+    property variant pane: tabbedPane    //for accessing global definitions (main.qml) inside list item
 
     function itemType(data, indexPath) {
         //console.debug(indexPath + " " + data)
@@ -174,17 +175,16 @@ ListView {
             active: false
             sourceComponent: tweetSheetDefinition
 
+        },
+        SystemToast {
+            id: errorToast
+            body: ""
         }
+        
     ]
-    //    attachedObjects: [
-//        ComponentDefinition {
-//        id: videoPageDefinition
-//        source: "VideoPage.qml"
-//        },
-//        MediaPlayer {
-//            id: player
-//            videoOutput: VideoOutput.PrimaryDisplay
-//            windowId: "myWinId"
-//        }
-//    ]
+    
+    function error_message(text) {
+        errorToast.body = text
+        errorToast.show()
+    }
 }

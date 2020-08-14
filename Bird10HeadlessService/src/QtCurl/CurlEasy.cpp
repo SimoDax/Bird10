@@ -104,7 +104,7 @@ void CurlEasy::removeFromMulti()
 
 void CurlEasy::onCurlMessage(CURLcode code)
 {
-    qDebug()<<"Service::CurlEasy::onCurlMessage";
+//    qDebug()<<"Service::CurlEasy::onCurlMessage";
     //qDebug()<<data();
     lastResult_ = code;
     if(lastResult_ == CURLE_OK && get<long>(CURLINFO_RESPONSE_CODE) < 400)
