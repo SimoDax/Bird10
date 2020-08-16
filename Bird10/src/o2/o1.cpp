@@ -200,6 +200,11 @@ void O1::link() {
         return;
     }
 
+    if(!replyServer_){
+        replyServer_ = new O2ReplyServer(this);
+        connect(replyServer_, SIGNAL(verificationReceived(QMap<QString,QString>)), this, SLOT(onVerificationReceived(QMap<QString,QString>)));
+    }
+
     setLinked(false);
     setToken("");
     setTokenSecret("");

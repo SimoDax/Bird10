@@ -83,8 +83,7 @@ TabbedPane {
 
         //ActionBar.placement: ActionBarPlacement.OnBar
     }
-    
-    
+
     Tab {
         title: "Favorites"
         imageSource: "asset:///images/twitterheart.png"
@@ -142,7 +141,7 @@ TabbedPane {
             id: conversationPage
             source: "asset:///ConversationPage.qml"
         },
-        O1Twitter {
+        OXTwitter {
             id: o1Twitter
 
             onOpenBrowser: {
@@ -188,6 +187,32 @@ TabbedPane {
                 //webView.storage.clear()
             }
 
+        },
+        O1Twitter{
+            id: o1Legacy
+
+            onOpenBrowser: {
+                loginSheet.close()
+                browserDelegate.active = true
+                browserDelegate.object.url = url
+                browserDelegate.object.open()
+            }
+
+            onCloseBrowser: {
+                browserDelegate.object.close()
+                browserDelegate.active = false
+            }
+
+            onLinkingSucceeded: {
+                if (linked)
+                    error_message("Successfully logged in. You will now send Tweets from 'Bird10 for BlackBerry'")
+                else
+                    error_message("Successfully logged out. You will now send Tweets from 'Twitter for Android'")
+            }
+
+            onLinkingFailed: {
+                error_message("Account linking experienced an error. Please check your credentials and that you have an active internet connection")
+            }
         },
         //        TwitterApi {
         //            id: twitterApi
@@ -237,17 +262,14 @@ TabbedPane {
                 onTriggered: {
                     app.stopService()
                 }
-//                attachedObjects: Invocation {
-//                    id: l
-//                    query {
-//                        invokeTargetId: "com.simodax.Bird10HeadlessService"
-//                        mimeType: "*"
-////                        uri: "headless:"
-//                        invokerIncluded: true
-//                    }
-//                }
+            },
+            ActionItem {
+                title: o1Legacy.linked ? "Legacy logout" : "Legacy login"
+                onTriggered: {
+                    o1Legacy.linked ? o1Legacy.unlink() : o1Legacy.link()
+                }
             }
-//            ,ActionItem {
+            //            ,ActionItem {
 //                title: "Export core"
 //                onTriggered: app.exportCore()
 //            }

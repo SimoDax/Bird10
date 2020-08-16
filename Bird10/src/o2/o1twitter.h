@@ -4,7 +4,7 @@
 #include "o0export.h"
 #include "o1.h"
 
-#include <src/secret.h>
+#include <src/legacysecret.h>
 
 /// Twitter OAuth 1.0 client
 class O0_EXPORT O1Twitter: public O1 {
@@ -15,8 +15,8 @@ public:
         setRequestTokenUrl(QUrl("https://api.twitter.com/oauth/request_token"));
         setAuthorizeUrl(QUrl("https://api.twitter.com/oauth/authenticate"));
         setAccessTokenUrl(QUrl("https://api.twitter.com/oauth/access_token"));
-        setClientId(CLIENT_ID);
-        setClientSecret(CLIENT_ID_SECRET);
+        setClientId(LEGACY_CLIENT_ID);
+        setClientSecret(LEGACY_CLIENT_ID_SECRET);
     }
 
 };

@@ -194,7 +194,7 @@ void DMApi::insertConversations(const QVariantMap& content)
     foreach(QVariant conversation, content["conversations"].toMap().values()){
         QVariantMap c = conversation.toMap();
 
-        if(c["sort_event_id"].toULongLong() > m_lastSeenId){
+        if(c["sort_event_id"].toULongLong() > m_lastSeenId && c["sort_event_id"].toULongLong() > c["last_read_event_id"].toULongLong()){
             // parse message with user..
             QString conv_id = c["conversation_id"].toString();
 

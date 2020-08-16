@@ -30,6 +30,7 @@ ListView {
     property variant api : twitterApi    //for accessing api inside list item
     property variant rtDialog : rtDialog
     property variant pane: tabbedPane    //for accessing global definitions (main.qml) inside list item
+    property variant authenticator: o1Twitter
 
     function itemType(data, indexPath) {
         //console.debug(indexPath + " " + data)

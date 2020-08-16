@@ -8,6 +8,8 @@
 #include <src/QJson4/QJsonDocument.h>
 #include <src/QJson4/QJsonObject.h>
 #include <src/applicationui.hpp>
+#include <src/secret.h>
+
 
 #include <iostream>
 
@@ -16,6 +18,8 @@ const char XAUTH_PASSWORD[] = "x_auth_password";
 
 
 OXTwitter::OXTwitter(QObject *parent): O1Twitter(parent) {
+    setClientId(CLIENT_ID);
+    setClientSecret(CLIENT_ID_SECRET);
 }
 
 QString OXTwitter::username() {

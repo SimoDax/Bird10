@@ -39,6 +39,17 @@ ListItemComponent {
             }
         }
         
+//        property bool initialized: ListItem.initialized
+//        onInitializedChanged: {
+//            console.debug("init changed")
+//            if(ListItemData.user.screen_name == itemRoot.ListItem.view.authenticator.extraTokens.screen_name){
+//                console.debug("your tweet")
+//                actionSet.add(deleteActionItem)
+//            }
+//            else if(actionSet.indexOf(deleteActionItem) != -1)
+//                actionSet.remove(deleteActionItem)
+//        }
+        
         id: itemRoot
         
         preferredWidth: Infinity
@@ -118,6 +129,7 @@ ListItemComponent {
                 }
                 contextActions: [
                     ActionSet {
+                        id: actionSet
                         ActionItem {
                             title: "Open in browser"
                             imageSource: "asset:///images/ic_open.png"
@@ -185,8 +197,15 @@ ListItemComponent {
                             horizontalAlignment: HorizontalAlignment.Fill
                             background: Color.DarkGreen
                         }
+                    },
+                    DeleteActionItem {
+                        id: deleteActionItem
+                        title: "Delete Tweet"
+                        onTriggered: {
+                            itemRoot.ListItem.view.api.destroy(ListItemData.id_str)
+                        }
                     }
-                ]
+            ]
             }
 
         Divider {

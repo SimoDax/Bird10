@@ -895,7 +895,7 @@ Sheet {
             },
             TweetApi {
                 id: tweetApi
-                authenticator: o1Twitter
+                authenticator: o1Legacy.linked ? o1Legacy : o1Twitter
                 onTweeted: {
                     message("Tweet published")
                     tweetSheet.active = false

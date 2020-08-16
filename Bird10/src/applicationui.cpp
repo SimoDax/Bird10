@@ -32,6 +32,9 @@
 #include <bb/system/InvokeQueryTargetsRequest>
 
 #include <src/o2/o1twitter.h>
+#include <src/o2/oxtwitter.h>
+#include <src/o2/o0settingsstore.h>
+#include <src/o2/o0globals.h>
 #include <src/twitterapi.hpp>
 #include <src/ConversationApi.hpp>
 #include <src/NotificationsApi.hpp>
@@ -64,7 +67,8 @@ ApplicationUI::ApplicationUI() :
         QObject()
         , m_backgroundUpdatesEnabled(true)
 {
-    qmlRegisterType<OXTwitter>("com.pipacs.o2", 1, 0, "O1Twitter");
+    qmlRegisterType<OXTwitter>("com.pipacs.o2", 1, 0, "OXTwitter");
+    qmlRegisterType<O1Twitter>("com.pipacs.o2", 1, 0, "O1Twitter");
     qmlRegisterType<TwitterApi>("com.pipacs.o2", 1, 0, "TwitterApi");
     qmlRegisterType<WebImageView>("org.labsquare", 1, 0, "WebImageView");
     qmlRegisterType<AuthorizedWebImageView>("org.labsquare", 1, 0, "AuthorizedWebImageView");
@@ -81,6 +85,8 @@ ApplicationUI::ApplicationUI() :
     qRegisterMetaType< QMap<QString, GroupDataModel*> >("QMap<QString COMMA GroupDataModel*>");
     qRegisterMetaType< QMap<QString, Conversation*> >("QMap<QString COMMA Conversation*>");
     qRegisterMetaType<Conversation*>("Conversation*");
+    qRegisterMetaType<O0SettingsStore*>("O0SettingsStore*");
+    qRegisterMetaType<O0AbstractStore*>("O0AbstractStore*");
 
     // Start web requestor thread
     curlThread.start();
@@ -179,6 +185,7 @@ ApplicationUI::ApplicationUI() :
 //            .arg(cUrl.errorBuffer());
 //    }
 }
+
 
 void ApplicationUI::checkVersion(){
     CurlEasy* reply = qobject_cast<CurlEasy *>(sender());

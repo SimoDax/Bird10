@@ -56,7 +56,7 @@ public:
     void setLocalPort(int value);
 
     /// Sets the storage object to use for storing the OAuth tokens on a peristent medium
-    void setStore(O0AbstractStore *store);
+    Q_INVOKABLE void setStore(O0AbstractStore *store);
 
     /// Construct query string from list of headers
     static QByteArray createQueryParameters(const QList<O0RequestParameter> &parameters);

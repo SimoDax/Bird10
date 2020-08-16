@@ -254,6 +254,7 @@ config_pri_source_group1 {
         $$quote($$BASEDIR/src/WebImageView/AuthorizedWebImageView.hpp) \
         $$quote($$BASEDIR/src/WebImageView/WebImageView.h) \
         $$quote($$BASEDIR/src/applicationui.hpp) \
+        $$quote($$BASEDIR/src/legacysecret.h) \
         $$quote($$BASEDIR/src/o2/o0abstractstore.h) \
         $$quote($$BASEDIR/src/o2/o0baseauth.h) \
         $$quote($$BASEDIR/src/o2/o0export.h) \

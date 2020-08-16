@@ -6,12 +6,12 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-* 
+*
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
@@ -362,4 +362,15 @@ void TwitterApi::favorited(){
     reply->deleteLater();
 }
 
+void TwitterApi::destroy(const QString& id)
+{
+    QString url = ("https://api.twitter.com/1.1/statuses/destroy/" + id + ".json");
 
+    QList<O0RequestParameter> par;
+    par.append(O0RequestParameter("id", id.toLatin1()));
+
+    CurlEasy * reply = requestor->post(url, par, QByteArray());
+    connect(reply, SIGNAL(done(CURLcode)), this, SLOT(destroyed()));
+    connect(reply, SIGNAL(error(CURLcode)), this, SLOT(requestFailed(CURLcode)));
+    QMetaObject::invokeMethod(reply, "perform", Qt::QueuedConnection);
+}
