@@ -38,7 +38,8 @@ QThread Service::curlThread;
 Service::Service() : QObject(),
         m_invokeManager(new InvokeManager(this)),
         m_authenticator(new OXTwitter(this)),
-        m_settings(new QSettings("simodax", "Bird10HeadlessService"))
+        m_settings(new QSettings("simodax", "Bird10HeadlessService")),
+        m_running(false)
 {
     qRegisterMetaType<CURLcode>("CURLcode");
     curlThread.start();
@@ -65,6 +66,7 @@ Service::Service() : QObject(),
 void Service::handleInvoke(const bb::system::InvokeRequest & request)
 {
     qDebug()<<"Service::handleInvoke: ACTION IS "<<request.action();
+
 
     // Check if we can hit twitter
     if(!m_authenticator->linked()){
@@ -161,6 +163,11 @@ void Service::clearNotifications()
 
 void Service::checkNotifications()
 {
+    if(m_running)   // if the service gets called while the previous instance is still running let it finish
+        return;
+
+    m_running = true;
+
     Notificator* n = new Notificator(m_authenticator, m_settings, this);
     connect(n, SIGNAL(done()), this, SLOT(checkDM()));
     n->checkTwitterNotifications();

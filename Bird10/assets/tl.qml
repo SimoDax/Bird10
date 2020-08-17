@@ -21,6 +21,7 @@ import bb.cascades 1.4
 import com.pipacs.o2 1.0
 import bb.system 1.2
 import org.labsquare 1.0
+import "/components"
 
 NavigationPane {
     id: nav
@@ -77,22 +78,8 @@ NavigationPane {
                 onTriggered: twitterApi.requestTweets()
                 ActionBar.placement: ActionBarPlacement.InOverflow
             },
-            ActionItem{
+            LoginAction{
                 id: loginAction
-                
-                title: o1Twitter.linked ? "Logout" : "Login"
-                imageSource: "asset:///images/logout.png"
-                onTriggered: {
-                    enabled = false
-                    if (o1Twitter.linked) {
-                        o1Twitter.unlink()
-                    } else {
-                        o1Twitter.link()
-                    }
-                }
-                ActionBar.placement: ActionBarPlacement.InOverflow
-                
-                //onCreationCompleted: o1Twitter.
             },
             ActionItem {
                 id: payAction

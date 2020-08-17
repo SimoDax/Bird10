@@ -88,6 +88,7 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/components/ImageTweetComponent.qml) \
         $$quote($$BASEDIR/assets/components/ImageTweetComponentMain.qml) \
         $$quote($$BASEDIR/assets/components/LoadingComponent.qml) \
+        $$quote($$BASEDIR/assets/components/LoginAction.qml) \
         $$quote($$BASEDIR/assets/components/NotificationTweetComponent.qml) \
         $$quote($$BASEDIR/assets/components/ProfileHeaderBottom.qml) \
         $$quote($$BASEDIR/assets/components/ProfileHeaderTop.qml) \

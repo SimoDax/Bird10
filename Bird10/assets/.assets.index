@@ -1,5 +1,5 @@
 1
-149
+150
 1440x1440/AttachedImage.qml
 1440x1440/ScreenContainer.qml
 720x1280/AttachedImage.qml
@@ -20,6 +20,7 @@ components/GifTweetComponentMain.qml
 components/ImageTweetComponent.qml
 components/ImageTweetComponentMain.qml
 components/LoadingComponent.qml
+components/LoginAction.qml
 components/NotificationTweetComponent.qml
 components/ProfileHeaderBottom.qml
 components/ProfileHeaderTop.qml

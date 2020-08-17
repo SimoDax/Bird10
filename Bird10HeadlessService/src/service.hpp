@@ -68,6 +68,8 @@ private:
     OXTwitter* m_authenticator;
 
     QSettings* m_settings;
+
+    bool m_running;
 };
 
 #endif /* SERVICE_H_ */
