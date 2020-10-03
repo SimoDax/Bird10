@@ -42,7 +42,7 @@ void SearchApi::requestTrends()
 
     QString url = ("https://api.twitter.com/2/guide.json");
     QList<O0RequestParameter> par = basicGetParameters();
-//    par.append(O0RequestParameter("count", "20"));
+    par.append(O0RequestParameter("display_location", "web_sidebar"));
 //    par.append(O0RequestParameter("include_user_entities", "false"));
 
     CurlEasy* reply = requestor->get(url, par);

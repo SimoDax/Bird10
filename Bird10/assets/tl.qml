@@ -22,21 +22,24 @@ import com.pipacs.o2 1.0
 import bb.system 1.2
 import org.labsquare 1.0
 import "/components"
+import "/components/actions"
 
 NavigationPane {
     id: nav
-    peekEnabled: false
+    peekEnabled: true
     
     onCreationCompleted: {
-        if (o1Twitter.linked)
+        if (o1Twitter.linked){
             twitterApi.requestTweets()
+            timer.start()
+        }
         else
             loginSheet.open()
         //loginAction.triggered()
     }
     
     
-    Page {
+    TimelinePage {
         
         function clear(){
             twitterApi.clearTweetModel()
@@ -67,8 +70,18 @@ NavigationPane {
                     }
                 ]
             }
+            QmlTimer {
+                id: timer
+                duration: 60000
+                onTriggered: {
+                    if (app.backgroundUpdatesEnabled){
+                        console.debug('refresh id : ' + ((tweetList.dataModel.data([ 0 ]).id_str)))
+                        twitterApi.requestTweets("", typeof(tweetList.dataModel.data([ 0 ]).rt_id) != 'undefined' ? tweetList.dataModel.data([ 0 ]).rt_id : tweetList.dataModel.data([ 0 ]).id_str)
+                        timer.start()
+                    }
+                }
+            }
         }
-        
         actions: [
             ActionItem {
                 id: refreshAction
@@ -77,24 +90,6 @@ NavigationPane {
                 imageSource: "asset:///images/ic_resume.png"
                 onTriggered: twitterApi.requestTweets()
                 ActionBar.placement: ActionBarPlacement.InOverflow
-            },
-            LoginAction{
-                id: loginAction
-            },
-            ActionItem {
-                id: payAction
-                title: "Donate"
-                imageSource: "asset:///images/heart.png"
-                onTriggered: {
-                    _pay.trigger("bb.action.OPEN")
-                }
-                attachedObjects: Invocation {
-                    id: _pay
-                    query {
-                        uri: "https://paypal.me/pools/c/8pJlhpRSa8"
-                        invokeTargetId: "sys.browser"
-                    }
-                }
             }
         ]
     }

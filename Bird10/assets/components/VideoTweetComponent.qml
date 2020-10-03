@@ -25,22 +25,9 @@ import bb.multimedia 1.4
 
 ListItemComponent {
     type: "video"
-    Container {
+    BaseTweetContainer {
         id: itemRoot
-        property bool tapHandled: false
-        gestureHandlers: TapHandler {
-            onTapped: {
-                if (tapHandled)
-                    tapHandled = false;
-                else {
-                    itemRoot.ListItem.view.openConversation(itemRoot.ListItem.indexPath)
-                }
-            }
-        }
-        
-        preferredWidth: Infinity
-        background: (itemRoot.ListItem.selected ) ? ui.palette.primary : SystemDefaults.Paints.ContainerBackground
-        
+
         RtContainer {
             visible: ListItemData.rt_flag
         }
@@ -126,28 +113,6 @@ ListItemComponent {
                 TweetActionBar {
                 }
             }
-            contextActions: [
-                ActionSet {
-                    ActionItem {
-                        title: "Open in browser"
-                        imageSource: "asset:///images/ic_open.png"
-                        onTriggered: {
-                            //console.debug(itemRoot.ListItem.indexPath)
-                            //console.debug(ListItemData.user.screen_name)
-                            open.trigger("bb.action.OPEN")
-                        }
-                        
-                        attachedObjects: Invocation {
-                            id: open
-                            query {
-                                uri: "https://twitter.com/" + ListItemData.user.screen_name + "/statuses/" + ListItemData.id_str
-                                invokeTargetId: "sys.browser"
-                                onQueryChanged: open.query.updateQuery() //magic line to make it work in listview. Remove this and you're fucked.
-                            }
-                        }
-                    }
-                }
-            ]
         }
         Divider {
         }

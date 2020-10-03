@@ -22,10 +22,11 @@ import com.pipacs.o2 1.0
 import bb.system 1.2
 import org.labsquare 1.0
 import "/components"
+import "/components/actions"
 
 NavigationPane {
     id: nav
-    peekEnabled: false
+    peekEnabled: true
     
     onCreationCompleted: {
         if (o1Twitter.linked)
@@ -40,7 +41,7 @@ NavigationPane {
         errorToast.show()
     }
 
-    Page {
+    TimelinePage {
         
         function clear() {
             twitterApi.clearTweetModel()
@@ -82,25 +83,7 @@ NavigationPane {
              imageSource: "asset:///images/ic_resume.png"
              onTriggered: twitterApi.requestFavoriteTweets()
              ActionBar.placement: ActionBarPlacement.InOverflow
-         },
-         LoginAction{
-             id: loginAction
-         },
-            ActionItem {
-                id: payAction
-                title: "Donate"
-                imageSource: "asset:///images/heart.png"
-                onTriggered: {
-                    _pay.trigger("bb.action.OPEN")
-                }
-                attachedObjects: Invocation {
-                    id: _pay
-                    query {
-                        uri: "https://paypal.me/pools/c/8pJlhpRSa8"
-                        invokeTargetId: "sys.browser"
-                    }
-                }
-            }
+         }
         ]
     }
     attachedObjects: [

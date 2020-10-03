@@ -6,12 +6,12 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-* 
+*
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
@@ -61,6 +61,7 @@ public:
     Q_INVOKABLE void updateLastSeenId();
     Q_INVOKABLE inline GroupDataModel* getConversationFromId(const QString& id){ Conversation* c = m_conversations.value(id); return c ? c->messageModel() : nullptr; };
     Q_INVOKABLE inline void setCurrentConversation(const QString& id){ m_currentConversation = m_conversations.value(id)->messageModel(); emit currentConversationChanged();}
+    Q_INVOKABLE QString getConversationIdFromUser(const QString& user);
 
 signals:
     void inboxModelChanged();

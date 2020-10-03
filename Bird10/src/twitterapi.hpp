@@ -29,6 +29,7 @@
 #include <src/o2/o1requestor.h>
 #include <src/QJson4/QJsonObject.h>
 #include <src/TimelineBase.hpp>
+#include <src/TimelineDataModel.hpp>
 
 
 /// Mini Twitter API
@@ -37,9 +38,9 @@ class TwitterApi: public TimelineBase {
 
 public:
     /// List of tweets
-    Q_PROPERTY(bb::cascades::ArrayDataModel *tweetModel READ tweetModel WRITE setTweetModel NOTIFY tweetModelChanged)
-    bb::cascades::ArrayDataModel *tweetModel() ;
-    void setTweetModel(bb::cascades::ArrayDataModel *tweetModel);
+    Q_PROPERTY(TimelineDataModel *tweetModel READ tweetModel WRITE setTweetModel NOTIFY tweetModelChanged)
+    TimelineDataModel *tweetModel() ;
+    void setTweetModel(TimelineDataModel *tweetModel);
 
 
     explicit TwitterApi(QObject *parent = 0);
@@ -50,28 +51,32 @@ public:
 public slots:
     Q_INVOKABLE virtual void requestTweets(QString max_id = QString(), QString since_id = QString());
     Q_INVOKABLE virtual void requestFavoriteTweets(QString max_id = QString(), QString since_id = QString());
-    Q_INVOKABLE virtual void requestProfileTweets(QString max_id = QString(), QString since_id = QString());
+//    Q_INVOKABLE virtual void requestProfileTweets(QString max_id = QString(), QString since_id = QString());
     Q_INVOKABLE void requestOlderTweets();
     Q_INVOKABLE void requestOlderFavoriteTweets();
-    Q_INVOKABLE void requestOlderProfileTweets();
+//    Q_INVOKABLE void requestOlderProfileTweets();
+    Q_INVOKABLE void latestTweets();
+
     Q_INVOKABLE void favorite(QString id, bool state);
-    Q_INVOKABLE void destroy(const QString& id);
+    Q_INVOKABLE void destroyTweet(const QString& id);
 
 signals:
     void tweetModelChanged();
     void userNotFoundError();
 
 protected:
-    bb::cascades::ArrayDataModel *tweetModel_;
+    TimelineDataModel *tweetModel_;
 
 protected slots:
     void tweetsReceived();
     void olderTweetsReceived();
+    void latestTweetsReceived();
     void requestFailed(CURLcode error);
     void retweeted();
     void unretweeted();
     void favorited();
     void retweet(QString id, bool state);
+    void onDestroyTweet();
 
 protected:
     void appendTweets(CurlEasy* reply);

@@ -48,6 +48,7 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/ConversationPage.qml) \
         $$quote($$BASEDIR/assets/DMAttachmentPage.qml) \
         $$quote($$BASEDIR/assets/DMConversationPage.qml) \
+        $$quote($$BASEDIR/assets/DMInbox.qml) \
         $$quote($$BASEDIR/assets/DMInboxPage.qml) \
         $$quote($$BASEDIR/assets/DiscoverPage.qml) \
         $$quote($$BASEDIR/assets/ItemPage.qml) \
@@ -69,15 +70,18 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/VisualStyle.bright/btn_default_camera.png) \
         $$quote($$BASEDIR/assets/VisualStyle.bright/btn_default_gallery.png) \
         $$quote($$BASEDIR/assets/VisualStyle.bright/btn_emoji.png) \
+        $$quote($$BASEDIR/assets/VisualStyle.bright/btn_video.png) \
         $$quote($$BASEDIR/assets/VisualStyle.bright/quoted_border.amd) \
         $$quote($$BASEDIR/assets/VisualStyle.bright/quoted_border.png) \
         $$quote($$BASEDIR/assets/VisualStyle.dark/btn_compose_tweet.png) \
         $$quote($$BASEDIR/assets/VisualStyle.dark/btn_default_camera.png) \
         $$quote($$BASEDIR/assets/VisualStyle.dark/btn_default_gallery.png) \
         $$quote($$BASEDIR/assets/VisualStyle.dark/btn_emoji.png) \
+        $$quote($$BASEDIR/assets/VisualStyle.dark/btn_video.png) \
         $$quote($$BASEDIR/assets/VisualStyle.dark/quoted_border.amd) \
         $$quote($$BASEDIR/assets/VisualStyle.dark/quoted_border.png) \
         $$quote($$BASEDIR/assets/components/ArrowItemComponent.qml) \
+        $$quote($$BASEDIR/assets/components/BaseTweetContainer.qml) \
         $$quote($$BASEDIR/assets/components/BigPic.qml) \
         $$quote($$BASEDIR/assets/components/DMCompose.qml) \
         $$quote($$BASEDIR/assets/components/DMConversationComponent.qml) \
@@ -88,7 +92,6 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/components/ImageTweetComponent.qml) \
         $$quote($$BASEDIR/assets/components/ImageTweetComponentMain.qml) \
         $$quote($$BASEDIR/assets/components/LoadingComponent.qml) \
-        $$quote($$BASEDIR/assets/components/LoginAction.qml) \
         $$quote($$BASEDIR/assets/components/NotificationTweetComponent.qml) \
         $$quote($$BASEDIR/assets/components/ProfileHeaderBottom.qml) \
         $$quote($$BASEDIR/assets/components/ProfileHeaderTop.qml) \
@@ -98,6 +101,7 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/components/QmlTimer.qml) \
         $$quote($$BASEDIR/assets/components/QuotedTweetComponent.qml) \
         $$quote($$BASEDIR/assets/components/RtContainer.qml) \
+        $$quote($$BASEDIR/assets/components/TimelinePage.qml) \
         $$quote($$BASEDIR/assets/components/TweetActionBar.qml) \
         $$quote($$BASEDIR/assets/components/TweetActionBarMain.qml) \
         $$quote($$BASEDIR/assets/components/TweetAuthorMain.qml) \
@@ -109,6 +113,8 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/components/VideoTweetComponent.qml) \
         $$quote($$BASEDIR/assets/components/VideoTweetComponentMain.qml) \
         $$quote($$BASEDIR/assets/components/Waiter.qml) \
+        $$quote($$BASEDIR/assets/components/actions/LoginAction.qml) \
+        $$quote($$BASEDIR/assets/components/actions/PayAction.qml) \
         $$quote($$BASEDIR/assets/favorites.qml) \
         $$quote($$BASEDIR/assets/images/add_to_list_80x80.png) \
         $$quote($$BASEDIR/assets/images/bird_logo_white.png) \
@@ -136,9 +142,11 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/images/heart_grey.png) \
         $$quote($$BASEDIR/assets/images/heart_red.png) \
         $$quote($$BASEDIR/assets/images/home_80x80.png) \
+        $$quote($$BASEDIR/assets/images/ic_doctype_video.png) \
         $$quote($$BASEDIR/assets/images/ic_open.png) \
         $$quote($$BASEDIR/assets/images/ic_resume.png) \
         $$quote($$BASEDIR/assets/images/ic_save.png) \
+        $$quote($$BASEDIR/assets/images/ic_to_top.png) \
         $$quote($$BASEDIR/assets/images/icn_compose_focused_100x100.png) \
         $$quote($$BASEDIR/assets/images/icn_compose_white_100x100.png) \
         $$quote($$BASEDIR/assets/images/icn_search_focused_100x100.png) \
@@ -149,6 +157,7 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/images/image_mask_dark.png) \
         $$quote($$BASEDIR/assets/images/logo.png) \
         $$quote($$BASEDIR/assets/images/logout.png) \
+        $$quote($$BASEDIR/assets/images/mail_80x80.png) \
         $$quote($$BASEDIR/assets/images/me_80x80.png) \
         $$quote($$BASEDIR/assets/images/messages_80x80.png) \
         $$quote($$BASEDIR/assets/images/new_msg.png) \
@@ -195,6 +204,7 @@ config_pri_source_group1 {
         $$quote($$BASEDIR/src/DMApi.cpp) \
         $$quote($$BASEDIR/src/DiscoverApi.cpp) \
         $$quote($$BASEDIR/src/ListApi.cpp) \
+        $$quote($$BASEDIR/src/MediaUploader.cpp) \
         $$quote($$BASEDIR/src/NotificationsApi.cpp) \
         $$quote($$BASEDIR/src/ProfileApi.cpp) \
         $$quote($$BASEDIR/src/QJson4/QJsonArray.cpp) \
@@ -209,6 +219,7 @@ config_pri_source_group1 {
         $$quote($$BASEDIR/src/RetweetDialog.cpp) \
         $$quote($$BASEDIR/src/SearchApi.cpp) \
         $$quote($$BASEDIR/src/TimelineBase.cpp) \
+        $$quote($$BASEDIR/src/TimelineDataModel.cpp) \
         $$quote($$BASEDIR/src/TweetApi.cpp) \
         $$quote($$BASEDIR/src/TwitterApiBase.cpp) \
         $$quote($$BASEDIR/src/WebImageView/AuthorizedWebImageView.cpp) \
@@ -235,6 +246,7 @@ config_pri_source_group1 {
         $$quote($$BASEDIR/src/DMApi.hpp) \
         $$quote($$BASEDIR/src/DiscoverApi.hpp) \
         $$quote($$BASEDIR/src/ListApi.hpp) \
+        $$quote($$BASEDIR/src/MediaUploader.hpp) \
         $$quote($$BASEDIR/src/NotificationsApi.hpp) \
         $$quote($$BASEDIR/src/ProfileApi.hpp) \
         $$quote($$BASEDIR/src/QJson4/QJsonArray.h) \
@@ -250,6 +262,7 @@ config_pri_source_group1 {
         $$quote($$BASEDIR/src/RetweetDialog.hpp) \
         $$quote($$BASEDIR/src/SearchApi.hpp) \
         $$quote($$BASEDIR/src/TimelineBase.hpp) \
+        $$quote($$BASEDIR/src/TimelineDataModel.hpp) \
         $$quote($$BASEDIR/src/TweetApi.hpp) \
         $$quote($$BASEDIR/src/TwitterApiBase.hpp) \
         $$quote($$BASEDIR/src/WebImageView/AuthorizedWebImageView.hpp) \
@@ -333,6 +346,9 @@ lupdate_inclusion {
         $$quote($$BASEDIR/../assets/components/*.qml) \
         $$quote($$BASEDIR/../assets/components/*.js) \
         $$quote($$BASEDIR/../assets/components/*.qs) \
+        $$quote($$BASEDIR/../assets/components/actions/*.qml) \
+        $$quote($$BASEDIR/../assets/components/actions/*.js) \
+        $$quote($$BASEDIR/../assets/components/actions/*.qs) \
         $$quote($$BASEDIR/../assets/images/*.qml) \
         $$quote($$BASEDIR/../assets/images/*.js) \
         $$quote($$BASEDIR/../assets/images/*.qs) \

@@ -59,13 +59,14 @@ using namespace bb::cascades;
 using namespace bb::system;
 
 QThread ApplicationUI::curlThread;
-//OXTwitter * ApplicationUI::authenticator = new OXTwitter();
 QNetworkAccessManager * ApplicationUI::mNetManager = new QNetworkAccessManager();
 QNetworkDiskCache * ApplicationUI::mNetworkDiskCache = new QNetworkDiskCache();
 
 ApplicationUI::ApplicationUI() :
         QObject()
         , m_backgroundUpdatesEnabled(true)
+        , m_dmApi(new DMApi(this))
+        , m_displayInfo(new bb::device::DisplayInfo)
 {
     qmlRegisterType<OXTwitter>("com.pipacs.o2", 1, 0, "OXTwitter");
     qmlRegisterType<O1Twitter>("com.pipacs.o2", 1, 0, "O1Twitter");
@@ -81,15 +82,21 @@ ApplicationUI::ApplicationUI() :
     qmlRegisterType<ProfileApi>("com.simodax", 1, 0, "ProfileApi");
     qmlRegisterType<DMApi>("com.simodax", 1, 0, "DMApi");
     qmlRegisterType<ListApi>("com.simodax", 1, 0, "ListApi");
+    qmlRegisterType<TimelineDataModel>("com.simodax", 1, 0, "TimelineDataModel");
     qRegisterMetaType<CURLcode>("CURLcode");
     qRegisterMetaType< QMap<QString, GroupDataModel*> >("QMap<QString COMMA GroupDataModel*>");
     qRegisterMetaType< QMap<QString, Conversation*> >("QMap<QString COMMA Conversation*>");
     qRegisterMetaType<Conversation*>("Conversation*");
     qRegisterMetaType<O0SettingsStore*>("O0SettingsStore*");
     qRegisterMetaType<O0AbstractStore*>("O0AbstractStore*");
+    qRegisterMetaType<DMApi*>("DMAPi*");
+    qRegisterMetaType<bb::device::DisplayInfo*>("bb::device::DisplayInfo*");
 
     // Start web requestor thread
     curlThread.start();
+
+    // Initialize network cache
+    mNetworkDiskCache->setCacheDirectory("/tmp/bird10");
 
     // Set visual style from settings (if there is any)
     QSettings settings("simodax","bird10");
@@ -98,8 +105,12 @@ ApplicationUI::ApplicationUI() :
 
     // Create scene document from main.qml asset, the parent is set
     // to ensure the document gets destroyed properly at shut down.
+    QmlDocument::defaultDeclarativeEngine()->rootContext()->setContextProperty("app", this);
+    QmlDocument::defaultDeclarativeEngine()->rootContext()->setContextProperty("display", m_displayInfo);
     QmlDocument *qml = QmlDocument::create("asset:///main.qml").parent(this);
     qml->setContextProperty("app", this);
+    qml->setContextProperty("display", m_displayInfo);
+
 
     // Create root object for the UI
     AbstractPane *root = qml->createRootObject<AbstractPane>();
@@ -107,59 +118,13 @@ ApplicationUI::ApplicationUI() :
     // Set created root object as the application scene
     Application::instance()->setScene(root);
 
-
-    //OpenSSL verify version
-    const char * p = SSLeay_version(SSLEAY_VERSION);
-    QString osslVersion = QString::fromAscii(p);
-    qDebug()<<osslVersion;
-
-    if(!osslVersion.contains("1.0.2")){
-        osslVersion.chop(12);
-        SystemDialog* m_listdialog;
-        m_listdialog = new SystemDialog("Ok");
-        m_listdialog->setTitle("Warning");
-        m_listdialog->setBody("An old OpenSSL library version has been detected. The app probably won't work.\n" \
-                              "Please check that you are running it under OS 10.3.3\n" \
-                              "Required version: OpenSSL 1.0.2g\n" \
-                              "Your version: " + osslVersion);
-        m_listdialog->exec();
-    }
-
-    // Initialize network cache
-    mNetworkDiskCache->setCacheDirectory("/tmp/bird10");
-
+    m_dmApi->setAuthenticator(root->findChild<OXTwitter*>("o1Twitter"));
+//    qDebug()<<"ApplicationUI::ApplicationUI: authenticator ptr "<<(root->findChild<OXTwitter*>("o1Twitter"));
     // Set cache in manager
 //    mNetManager->setCache(mNetworkDiskCache);
 
-    CurlEasy * request = new CurlEasy(NULL, &ApplicationUI::curlThread);
-    request->set(CURLOPT_URL, QUrl("https://bird10app.netlify.com/version.txt"));
-    request->set(CURLOPT_FAILONERROR, 1L);
-    request->set(CURLOPT_FOLLOWLOCATION, 1L);   // Follow netlify 3xx redirects
-    connect(request, SIGNAL(done(CURLcode)), this, SLOT(checkVersion()));
-    //connect(request, SIGNAL(error(CURLcode)), this, SLOT(requestFailed(CURLcode)));
-
-    //Since the object lives on a different thread its function calls need to be queued
-    //This will trigger the perform method without making an unnecessary signal-slot connection
-    QMetaObject::invokeMethod(request, "perform", Qt::QueuedConnection);
-
-    // Hit
-    if(!QFile::exists("./data/versioncheck_" + Application::applicationVersion())){
-        CurlEasy * request = new CurlEasy(NULL, &ApplicationUI::curlThread);
-        request->set(CURLOPT_URL, QUrl("http://odassi.altervista.org/bird10/version.php?v=" + Application::applicationVersion()));
-        request->set(CURLOPT_FAILONERROR, 1L);
-        request->set(CURLOPT_FOLLOWLOCATION, 1L);
-        connect(request, SIGNAL(done(CURLcode)), request, SLOT(deleteLater()));
-
-        //Since the object lives on a different thread its function calls need to be queued
-        //This will trigger the perform method without making an unnecessary signal-slot connection
-        QMetaObject::invokeMethod(request, "perform", Qt::QueuedConnection);
-
-        QFile file("./data/versioncheck_" + Application::applicationVersion());
-        file.open(QFile::WriteOnly);
-        file.close();
-    }
-
-
+    // Delay all the non-critical stuff a bit to let the ui load quicker
+    QTimer::singleShot(1000, this, SLOT(lateInit()));
 
 //    QtCUrl cUrl;
 //    cUrl.setTextCodec("Windows-1251");
@@ -409,4 +374,54 @@ void ApplicationUI::onQueryResponse()
     delete _queryResults;
 }
 
+void ApplicationUI::lateInit()
+{
+    //OpenSSL verify version
+    const char * p = SSLeay_version(SSLEAY_VERSION);
+    QString osslVersion = QString::fromAscii(p);
+    qDebug()<<osslVersion;
 
+    if(!osslVersion.contains("1.0.2")){
+        osslVersion.chop(12);
+        SystemDialog* m_listdialog;
+        m_listdialog = new SystemDialog("Ok");
+        m_listdialog->setTitle("Warning");
+        m_listdialog->setBody("An old OpenSSL library version has been detected. The app probably won't work.\n" \
+                              "Please check that you are running it under OS 10.3.3\n" \
+                              "Required version: OpenSSL 1.0.2g\n" \
+                              "Your version: " + osslVersion);
+        m_listdialog->exec();
+    }
+
+    // Check for updates
+    CurlEasy * request = new CurlEasy(NULL, &ApplicationUI::curlThread);
+    request->set(CURLOPT_URL, QUrl("https://bird10app.netlify.com/version.txt"));
+    request->set(CURLOPT_FAILONERROR, 1L);
+    request->set(CURLOPT_FOLLOWLOCATION, 1L);   // Follow netlify 3xx redirects
+    connect(request, SIGNAL(done(CURLcode)), this, SLOT(checkVersion()));
+    //connect(request, SIGNAL(error(CURLcode)), this, SLOT(requestFailed(CURLcode)));
+
+    //Since the object lives on a different thread its function calls need to be queued
+    //This will trigger the perform method without making an unnecessary signal-slot connection
+    QMetaObject::invokeMethod(request, "perform", Qt::QueuedConnection);
+
+    // Hit
+    if(!QFile::exists("./data/versioncheck_" + Application::applicationVersion())){
+        CurlEasy * request = new CurlEasy(NULL, &ApplicationUI::curlThread);
+        request->set(CURLOPT_URL, QUrl("http://odassi.altervista.org/bird10/version.php?v=" + Application::applicationVersion()));
+        request->set(CURLOPT_FAILONERROR, 1L);
+        request->set(CURLOPT_FOLLOWLOCATION, 1L);
+        connect(request, SIGNAL(done(CURLcode)), request, SLOT(deleteLater()));
+
+        //Since the object lives on a different thread its function calls need to be queued
+        //This will trigger the perform method without making an unnecessary signal-slot connection
+        QMetaObject::invokeMethod(request, "perform", Qt::QueuedConnection);
+
+        QFile file("./data/versioncheck_" + Application::applicationVersion());
+        file.open(QFile::WriteOnly);
+        file.close();
+    }
+
+//    m_displayInfo = new bb::device::DisplayInfo();
+    m_dmApi->loadInboxInitialState();
+}

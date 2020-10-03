@@ -28,6 +28,8 @@
 #include <bb/system/SystemDialog>
 #include <bb/system/InvokeTargetReply>
 #include <bb/system/InvokeQueryTargetsReply>
+#include <bb/device/DisplayInfo>
+#include <src/DMApi.hpp>
 
 using namespace bb::system;
 /*!
@@ -42,6 +44,13 @@ public:
     Q_PROPERTY(bool backgroundUpdatesEnabled READ backgroundUpdatesEnabled WRITE setBackgroundUpdatesEnabled NOTIFY backgroundUpdatesEnabledChanged)
     inline bool backgroundUpdatesEnabled(){ return m_backgroundUpdatesEnabled; };
     inline void setBackgroundUpdatesEnabled(bool enabled){ m_backgroundUpdatesEnabled = enabled; emit backgroundUpdatesEnabledChanged();};
+
+    Q_PROPERTY(DMApi* dm READ dmApi CONSTANT)
+    inline DMApi* dmApi(){return m_dmApi;};
+
+    Q_PROPERTY(bb::device::DisplayInfo* display READ display CONSTANT)
+    inline bb::device::DisplayInfo* display(){return m_displayInfo;};
+
 
     ApplicationUI();
     virtual ~ApplicationUI() {}
@@ -104,9 +113,12 @@ private slots:
     void checkVersion();
     void onDialogFinished(bb::system::SystemUiResult::Type result);
     void onQueryResponse();
+    void lateInit();
 
 private:
     static QNetworkAccessManager * mNetManager;
+    bb::device::DisplayInfo* m_displayInfo;
+    DMApi* m_dmApi;
     InvokeTargetReply * m_reply;
     InvokeQueryTargetsReply* _queryResults;
     bool m_backgroundUpdatesEnabled;

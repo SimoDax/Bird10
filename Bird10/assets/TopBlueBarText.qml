@@ -97,6 +97,22 @@ Container {
                 tweetSheet.active = true
                 tweetSheet.object.open()
             }
+            visible: ! tweetSheet.active
+        }
+        Container {
+            verticalAlignment: VerticalAlignment.Center
+            rightPadding: 20
+            leftPadding: 20
+            visible: tweetSheet.active
+            ActivityIndicator {
+                id: tweeting
+                maxHeight: 10    // just to set the smallest preset available
+                maxWidth: 10
+                leftMargin: 0
+                rightMargin: 0
+                verticalAlignment: VerticalAlignment.Center
+                running: tweetSheet.active
+            }
         }
     }
         

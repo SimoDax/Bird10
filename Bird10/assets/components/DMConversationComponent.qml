@@ -54,6 +54,8 @@ import org.labsquare 1.0
         property variant pageSize: ListItem.view.pageSize
         property variant authenticator: ListItem.view.authenticator
 
+        background: ListItemData.previewData.status == 1 ? Application.themeSupport.theme.colorTheme.style == VisualStyle.Bright ? Color.create("#b4eaff") : Color.create("#043b50") : SystemDefaults.Paints.ContainerBackground
+
     Container{
         objectName: "DM conversation"
         layout: StackLayout {
@@ -89,7 +91,6 @@ import org.labsquare 1.0
 //                }
 
             }
-
         }
         Container {
             id: profileImageContainer

@@ -17,26 +17,44 @@
 *
 */
 
-#ifndef TIMELINEBASE_HPP_
-#define TIMELINEBASE_HPP_
+#ifndef MEDIAUPLOADER_HPP_
+#define MEDIAUPLOADER_HPP_
 
+#include <QObject>
+#include <QStringList>
+#include <QFile>
 #include "TwitterApiBase.hpp"
-#include <src/QJson4/QJsonObject.h>
 
-class TimelineBase: public TwitterApiBase
+class MediaUploader : public TwitterApiBase
 {
     Q_OBJECT
 
+    enum MediaType{
+        IMAGE,
+        VIDEO,
+        GIF
+    };
+
 public:
-    TimelineBase(QObject *parent = 0);
-    virtual ~TimelineBase();
+    MediaUploader(O1Twitter* authenticator, QObject* parent = 0);
+
+    void uploadVideo(const QString& path);
+    void uploadPictures(const QList<QString> paths);
+
+signals:
+    void uploadComplete(QString media_ids);
+
+protected slots:
+    void append();
+    void finalize();
+    void onFinalized();
 
 protected:
-
-    QVariantMap parseTweet(QVariantMap tweet);
-    QJsonObject realTweet(QJsonObject tweet);
-    QVariantMap realTweet(QVariantMap tweet);
-    QVariantMap parseTweetV2(QVariantMap tweet, const QVariantMap& tweets, const QVariantMap& users);
+    MediaType m_mediaType;
+    QString m_id;
+    QFile m_currentFile;
+    int m_index;
+    QStringList m_mediaIds;
 };
 
-#endif /* TIMELINEBASE_HPP_ */
+#endif /* MEDIAUPLOADER_HPP_ */

@@ -6,12 +6,12 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-* 
+*
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
@@ -23,6 +23,7 @@
 #include <QDebug>
 
 #include <src/TweetApi.hpp>
+#include <src/MediaUploader.hpp>
 
 TweetApi::TweetApi(QObject *parent) : TwitterApiBase(parent){
 
@@ -61,9 +62,9 @@ void TweetApi::onTweeted(){
 }
 
 void TweetApi::imageTweet(QString status, QVariantList images, QString in_reply_to_status_id, QString attachment_url){
-    imageStatus = status;
-    image_reply_status_id = in_reply_to_status_id;
-    image_attachment_url = attachment_url;
+    m_status = status;
+    reply_status_id = in_reply_to_status_id;
+    m_attachment_url = attachment_url;
     qDebug()<<"TweetApi::imageTweet, status length: "<<status.size();
 
     for(int i = 0; i<images.size(); i++){
@@ -109,19 +110,46 @@ void TweetApi::imagePosted(){
     reply->deleteLater();
 }
 
+void TweetApi::postMediaTweet(QString media_ids)
+{
+    QString url = ("https://api.twitter.com/1.1/statuses/update.json");
+
+    QList<O0RequestParameter> par;
+    par.append(O0RequestParameter("status", m_status.toUtf8()));
+    if(!reply_status_id.isEmpty()){
+            par.append(O0RequestParameter("in_reply_to_status_id", reply_status_id.toLatin1()));
+            par.append(O0RequestParameter("auto_populate_reply_metadata", "true"));
+            reply_status_id.clear();
+    }
+    if(!m_attachment_url.isEmpty()){
+            par.append(O0RequestParameter("attachment_url", m_attachment_url.toLatin1()));
+            m_attachment_url.clear();
+    }
+
+    par.append(O0RequestParameter("media_ids", media_ids.toUtf8()));
+
+    CurlEasy * reply = requestor->post(url, par, QByteArray());
+    connect(reply, SIGNAL(done(CURLcode)), this, SLOT(onTweeted()));
+    bool ok = connect(reply, SIGNAL(error(CURLcode)), this, SLOT(onRequestFailed(CURLcode)));
+    Q_ASSERT(ok);
+    QMetaObject::invokeMethod(reply, "perform", Qt::QueuedConnection);
+
+    sender()->deleteLater();    //clean up mediauploader
+}
+
 void TweetApi::postImageTweet(){
     QString url = ("https://api.twitter.com/1.1/statuses/update.json");
 
     QList<O0RequestParameter> par;
-    par.append(O0RequestParameter("status", imageStatus.toUtf8()));
-    if(!image_reply_status_id.isEmpty()){
-            par.append(O0RequestParameter("in_reply_to_status_id", image_reply_status_id.toLatin1()));
+    par.append(O0RequestParameter("status", m_status.toUtf8()));
+    if(!reply_status_id.isEmpty()){
+            par.append(O0RequestParameter("in_reply_to_status_id", reply_status_id.toLatin1()));
             par.append(O0RequestParameter("auto_populate_reply_metadata", "true"));
-            image_reply_status_id.clear();
+            reply_status_id.clear();
     }
-    if(!image_attachment_url.isEmpty()){
-            par.append(O0RequestParameter("attachment_url", image_attachment_url.toLatin1()));
-            image_attachment_url.clear();
+    if(!m_attachment_url.isEmpty()){
+            par.append(O0RequestParameter("attachment_url", m_attachment_url.toLatin1()));
+            m_attachment_url.clear();
     }
 
     qDebug()<<media_ids;
@@ -140,4 +168,16 @@ void TweetApi::postImageTweet(){
     QMetaObject::invokeMethod(reply, "perform", Qt::QueuedConnection);
 }
 
+void TweetApi::videoTweet(const QString& status, const QString& video, const QString& in_reply_to_status_id, const QString& attachment_url)
+{
+    MediaUploader* mu = new MediaUploader(authenticator_, this);
+    connect(mu, SIGNAL(uploadComplete(QString)), this, SLOT(postMediaTweet(QString)));
+    mu->uploadVideo(video);
+}
 
+qint64 TweetApi::fileSize(const QString& path)
+{
+    QFile f(path);
+    f.open(QIODevice::ReadOnly);
+    return f.size();
+}

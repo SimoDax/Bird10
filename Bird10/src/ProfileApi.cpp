@@ -26,11 +26,11 @@
 
 ProfileApi::ProfileApi(QObject *parent) : TimelineBase(parent)
 {
-    previewTweetModel_ = new bb::cascades::ArrayDataModel(this);
-    tweetModel_ = new bb::cascades::ArrayDataModel(this);
-    mediaTweetModel_ = new bb::cascades::ArrayDataModel(this);
-    fullTweetModel_ = new bb::cascades::ArrayDataModel(this);
-    userModel_ = new bb::cascades::ArrayDataModel(this);
+    previewTweetModel_ = new TimelineDataModel(this);
+    tweetModel_ = new TimelineDataModel(this);
+    mediaTweetModel_ = new TimelineDataModel(this);
+    fullTweetModel_ = new TimelineDataModel(this);
+    userModel_ = new TimelineDataModel(this);
 
 }
 
@@ -121,7 +121,7 @@ void ProfileApi::requestUserData()
 }
 
 
-void ProfileApi::appendTweets(CurlEasy* reply, bb::cascades::ArrayDataModel* dataModel)
+void ProfileApi::appendTweets(CurlEasy* reply, TimelineDataModel* dataModel)
 {
     // V1.1 timeline parser
     QJsonDocument jsonResponse = QJsonDocument::fromJson(reply->data());

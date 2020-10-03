@@ -32,6 +32,8 @@ TimelineBase::~TimelineBase()
 }
 
 
+
+
 QVariantMap TimelineBase::realTweet(QVariantMap tweet)
 {
     if(tweet.keys().contains("retweeted_status")){
@@ -139,6 +141,7 @@ QVariantMap TimelineBase::parseTweet(QVariantMap tweet)
             iso.append(l[4].mid(0,2) + ":" + l[4].mid(3,4));
 
         dt = QDateTime::fromString(iso, Qt::ISODate);
+        dt = dt.toLocalTime();
         QDateTime current = QDateTime::currentDateTime();
 
         int deltaDays = dt.daysTo(current);
@@ -164,6 +167,7 @@ QVariantMap TimelineBase::parseTweet(QVariantMap tweet)
             tweet["time"] = dt.toString("d MMM yyyy").toLower();
 
         tweet["full_time"] = dt.toString("h:mm AP " + QString::fromUtf8("\u00B7") +" d MMM yyyy").toLower();
+        tweet["timestamp"] = dt.toMSecsSinceEpoch();
     }
 
 
@@ -189,3 +193,4 @@ QVariantMap TimelineBase::parseTweetV2(QVariantMap tweet, const QVariantMap& twe
     return tweet;
 
 }
+

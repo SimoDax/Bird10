@@ -28,6 +28,8 @@ Page {
     property string remotePartyName
     property string dmListViewName
     property string conversationId
+    property variant dmApi: app.dm
+    property alias inputText: dmComposer.inputText
     
     onCreationCompleted: {
         dmApi.scrollToLast.connect(scrollListToEnd)
@@ -107,7 +109,8 @@ Page {
                 scrollRole: ScrollRole.Main
                 objectName: dmListViewName
                 property bool itemActive: false //indiciates when a list item is selected
-                property variant pageSize: handler
+//                property variant pageSize: handler
+                property variant pageSize: display.pixelSize
                 property variant authenticator: o1Twitter
                 property alias attachmentPage: fullViewPicturePageDefinition
 

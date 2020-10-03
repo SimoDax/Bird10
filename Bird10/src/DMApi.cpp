@@ -606,3 +606,17 @@ Conversation* DMApi::getConversationFromMessage(const QVariantMap& message)
     QVariantMap m = message["message"].toMap();
     return m_conversations.value(m["conversation_id"].toString());
 }
+
+QString DMApi::getConversationIdFromUser(const QString& user)
+{
+    for(int i = 0; i<m_conversations.keys().size(); i++){
+        if(m_conversations.keys()[i].contains(user))
+            return m_conversations.keys()[i];
+    }
+
+    // it's a new conversation!
+    QString conversation_id = authenticator_->extraTokens()["user_id"].toString() + "-" + user;
+    m_conversations.insert(conversation_id, new Conversation());
+
+    return conversation_id;
+}

@@ -6,12 +6,12 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-* 
+*
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
@@ -20,18 +20,27 @@
 #include "ConversationApi.hpp"
 #include <src/QJson4/QJsonObject.h>
 #include <src/QJson4/QJsonDocument.h>
+#include <src/TimelineDataModel.hpp>
 
 ConversationApi::ConversationApi(QObject *parent) : TwitterApi(parent)
 {
-    tweetModel_ = new bb::cascades::ArrayDataModel();
+    tweetModel_ = new TimelineDataModel(parent);
 }
 
-void ConversationApi::loadConversation(const QString& id)
+void ConversationApi::loadConversation(const QString& id, bool includeCursor)
 {
     m_id = id;
     QString request("https://api.twitter.com/2/timeline/conversation/" + id + ".json?include_profile_interstitial_type=1&include_blocking=1&include_blocked_by=1&include_followed_by=1&include_want_retweets=1&include_mute_edge=1&include_can_dm=1&include_can_media_tag=1&skip_status=1&cards_platform=Web-12&include_cards=1&include_composer_source=true&include_ext_alt_text=true&include_reply_count=1&tweet_mode=extended&include_entities=true&include_user_entities=false&include_ext_media_color=false&include_ext_media_availability=false&send_error_codes=true&simple_quoted_tweets=true&count=50&ext=mediaStats,highlightedLabel,cameraMoment");
     QList<O0RequestParameter> par = basicGetParameters();
     par.append(O0RequestParameter("include_user_entities", "false"));
+    par.append(O0RequestParameter("count", "100"));
+
+    if(includeCursor){
+        if(!m_cursor.isEmpty()){
+            par.append(O0RequestParameter("cursor", m_cursor.toUtf8()));
+        }
+        else return;
+    }
 
     CurlEasy* reply = requestor->get(request, par);
 
@@ -88,6 +97,11 @@ void ConversationApi::insertTweetsFromThread(const QVariantMap& thread)
     }
 }
 
+void ConversationApi::loadMore()
+{
+    loadConversation(m_id, true);
+}
+
 void ConversationApi::conversationReceived()
 {
     CurlEasy* reply = qobject_cast<CurlEasy *>(sender());
@@ -100,7 +114,7 @@ void ConversationApi::conversationReceived()
     QVariantList instructions = content["timeline"].toMap()["instructions"].toList();
 
 
-    tweetModel_->clear();
+//    tweetModel_->clear();
 
     m_tweetsCount = 0;
     for(int i = 0; i<instructions.size(); i++){
@@ -116,7 +130,8 @@ void ConversationApi::conversationReceived()
                     insertTweet(entries[i].toMap()["content"].toMap());
                 else if (ids[0].contains("Thread"))
                     insertTweetsFromThread(entries[i].toMap()["content"].toMap());
-
+                else if(ids[0].contains("cursor") && ids[1].contains("bottom"))
+                    m_cursor = entries[i].toMap()["content"].toMap()["operation"].toMap()["cursor"].toMap()["value"].toString();
                 //TODO: implement cursor
             }
         }

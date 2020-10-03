@@ -115,10 +115,28 @@ ListView {
         tweetSheet.active = true
         tweetSheet.object.in_reply_to = screen_name
         tweetSheet.object.in_reply_to_status_id = id_str
-        tweetSheet.object.indexPath = indexPath[0]
+        console.debug(dataModel.data(indexPath))
+        tweetSheet.object.referencedTweet = dataModel.data([0])
         tweetSheet.object.open()
     }
     
+    function dmUser(user){
+        var id = app.dm.getConversationIdFromUser(user.id_str)
+        var page = dmConversationPage.createObject(nav)
+        page.conversationId = id;
+        page.remotePartyName = user.name;
+        app.dm.setCurrentConversation(id)
+        nav.push(page);
+    }
+
+    function dmLink(shared_url) {
+        var comp = Qt.createComponent("asset:///DMInboxPage.qml")
+        var page = comp.createObject(nav)
+        page.shared_url = shared_url
+        nav.push(page);
+    }
+    
+
     listItemComponents: [
         LoadingComponent {
             id: lc
@@ -161,7 +179,7 @@ ListView {
             onQuote: {
                 tweetSheet.active = true 
                 tweetSheet.object.attachment_url = "https://twitter.com/"+dataModel.value(indexPath).user.screen_name+"/status/"+dataModel.value(indexPath).id_str
-                tweetSheet.object.indexPath = indexPath
+                tweetSheet.object.referencedTweet = dataModel.data([indexPath])
                 tweetSheet.object.open()
             }
             onRetweet: twitterApi.retweet(dataModel.value(indexPath).rt_flag ? dataModel.value(indexPath).rt_id : dataModel.value(indexPath).id_str, dataModel.value(indexPath).retweeted)

@@ -1,5 +1,5 @@
 1
-150
+159
 1440x1440/AttachedImage.qml
 1440x1440/ScreenContainer.qml
 720x1280/AttachedImage.qml
@@ -9,7 +9,10 @@
 768x1280/AttachedImage.qml
 768x1280/ScreenContainer.qml
 BrowserSheet.qml
+components/actions/LoginAction.qml
+components/actions/PayAction.qml
 components/ArrowItemComponent.qml
+components/BaseTweetContainer.qml
 components/BigPic.qml
 components/DMCompose.qml
 components/DMConversationComponent.qml
@@ -20,7 +23,6 @@ components/GifTweetComponentMain.qml
 components/ImageTweetComponent.qml
 components/ImageTweetComponentMain.qml
 components/LoadingComponent.qml
-components/LoginAction.qml
 components/NotificationTweetComponent.qml
 components/ProfileHeaderBottom.qml
 components/ProfileHeaderTop.qml
@@ -30,6 +32,7 @@ components/ProfilesList.qml
 components/QmlTimer.qml
 components/QuotedTweetComponent.qml
 components/RtContainer.qml
+components/TimelinePage.qml
 components/TweetActionBar.qml
 components/TweetActionBarMain.qml
 components/TweetAuthorMain.qml
@@ -45,6 +48,7 @@ ConversationPage.qml
 DiscoverPage.qml
 DMAttachmentPage.qml
 DMConversationPage.qml
+DMInbox.qml
 DMInboxPage.qml
 favorites.qml
 images/add_to_list_80x80.png
@@ -77,15 +81,18 @@ images/icn_compose_focused_100x100.png
 images/icn_compose_white_100x100.png
 images/icn_search_focused_100x100.png
 images/icn_search_white_100x100.png
+images/ic_doctype_video.png
 images/ic_open.png
 images/ic_resume.png
 images/ic_save.png
+images/ic_to_top.png
 images/image_mask.amd
 images/image_mask.png
 images/image_mask_dark.amd
 images/image_mask_dark.png
 images/logo.png
 images/logout.png
+images/mail_80x80.png
 images/messages_80x80.png
 images/me_80x80.png
 images/new_msg.png
@@ -142,11 +149,13 @@ VisualStyle.bright/btn_compose_tweet.png
 VisualStyle.bright/btn_default_camera.png
 VisualStyle.bright/btn_default_gallery.png
 VisualStyle.bright/btn_emoji.png
+VisualStyle.bright/btn_video.png
 VisualStyle.bright/quoted_border.amd
 VisualStyle.bright/quoted_border.png
 VisualStyle.dark/btn_compose_tweet.png
 VisualStyle.dark/btn_default_camera.png
 VisualStyle.dark/btn_default_gallery.png
 VisualStyle.dark/btn_emoji.png
+VisualStyle.dark/btn_video.png
 VisualStyle.dark/quoted_border.amd
 VisualStyle.dark/quoted_border.png

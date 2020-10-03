@@ -27,20 +27,10 @@ ListItemComponent {
     id: lic
     type: "main_gif"
     
-    Container {
-        property bool tapHandled: false
-        gestureHandlers: TapHandler {
-            onTapped: {
-                if (tapHandled)
-                    tapHandled = false;
-            }
-        }
+    BaseTweetContainer {
         
         id: itemRoot
-        
-        preferredWidth: Infinity
-        background: (itemRoot.ListItem.selected ) ? ui.palette.primary : ui.palette.background
-        
+
         layout: StackLayout {
             orientation: LayoutOrientation.TopToBottom
         }
@@ -99,6 +89,18 @@ ListItemComponent {
             rightPadding: 5
             bottomPadding: 5
 
+            attachedObjects: MediaPlayer {
+                id: player
+
+                sourceUrl: ListItemData.extended_entities.media[0].video_info.variants[0].url.toString()
+
+                // Set these properties for video
+                videoOutput: VideoOutput.PrimaryDisplay
+                windowId: fwcVideoSurface.windowId
+                repeatMode: RepeatMode.Track
+
+            }
+
         }
         QuotedTweetComponent {
             visible: delegateActive
@@ -107,39 +109,6 @@ ListItemComponent {
         TweetActionBarMain{
         }
         
-        contextActions: [
-            ActionSet {
-                ActionItem {
-                    title: "Open in browser"
-                    imageSource: "asset:///images/ic_open.png"
-                    onTriggered: {
-                        //console.debug(itemRoot.ListItem.indexPath)
-                        //console.debug(ListItemData.user.screen_name)
-                        open.trigger("bb.action.OPEN")
-                    }
-                    
-                    attachedObjects: Invocation {
-                        id: open
-                        query {
-                            uri: "https://twitter.com/" + ListItemData.user.screen_name + "/statuses/" + ListItemData.id_str
-                            invokeTargetId: "sys.browser"
-                            onQueryChanged: open.query.updateQuery() //magic line to make it work in listview. Remove this and you're fucked.
-                        }
-                    }
-                }
-            }
-        ]
-        attachedObjects: MediaPlayer {
-            id: player
-
-            sourceUrl: ListItemData.extended_entities.media[0].video_info.variants[0].url.toString()
-
-            // Set these properties for video
-            videoOutput: VideoOutput.PrimaryDisplay
-            windowId: fwcVideoSurface.windowId
-            repeatMode: RepeatMode.Track
-
-        }
         onCreationCompleted: {
             player.play()
         }

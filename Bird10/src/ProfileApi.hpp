@@ -6,12 +6,12 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-* 
+*
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
@@ -24,6 +24,7 @@
 #include <src/TimelineBase.hpp>
 #include <bb/cascades/ArrayDataModel>
 #include <src/QJson4/QJsonArray.h>
+#include <src/TimelineDataModel.hpp>
 
 class ProfileApi: public TimelineBase
 {
@@ -32,24 +33,24 @@ public:
     ProfileApi(QObject *parent = 0);
 
     /// List of tweets
-    Q_PROPERTY(bb::cascades::ArrayDataModel *tweetModel READ tweetModel NOTIFY tweetModelChanged)
-    inline bb::cascades::ArrayDataModel *tweetModel() { return tweetModel_; } ;
+    Q_PROPERTY(TimelineDataModel *tweetModel READ tweetModel NOTIFY tweetModelChanged)
+    inline TimelineDataModel *tweetModel() { return tweetModel_; } ;
 
     /// List of tweets with replies
-    Q_PROPERTY(bb::cascades::ArrayDataModel *fullTweetModel READ fullTweetModel NOTIFY fullTweetModelChanged)
-    inline bb::cascades::ArrayDataModel *fullTweetModel() { return fullTweetModel_; } ;
+    Q_PROPERTY(TimelineDataModel *fullTweetModel READ fullTweetModel NOTIFY fullTweetModelChanged)
+    inline TimelineDataModel *fullTweetModel() { return fullTweetModel_; } ;
 
     /// List of  media tweets
-    Q_PROPERTY(bb::cascades::ArrayDataModel *mediaTweetModel READ mediaTweetModel NOTIFY mediaTweetModelChanged)
-    inline bb::cascades::ArrayDataModel *mediaTweetModel() { return mediaTweetModel_; } ;
+    Q_PROPERTY(TimelineDataModel *mediaTweetModel READ mediaTweetModel NOTIFY mediaTweetModelChanged)
+    inline TimelineDataModel *mediaTweetModel() { return mediaTweetModel_; } ;
 
     /// Small list of tweets
-    Q_PROPERTY(bb::cascades::ArrayDataModel *previewTweetModel READ previewTweetModel NOTIFY previewTweetModelChanged)
-    inline bb::cascades::ArrayDataModel *previewTweetModel() { return previewTweetModel_; } ;
+    Q_PROPERTY(TimelineDataModel *previewTweetModel READ previewTweetModel NOTIFY previewTweetModelChanged)
+    inline TimelineDataModel *previewTweetModel() { return previewTweetModel_; } ;
 
     /// Profile data
-    Q_PROPERTY(bb::cascades::ArrayDataModel *userModel READ userModel NOTIFY userModelChanged)
-    inline bb::cascades::ArrayDataModel *userModel(){ return userModel_; } ;
+    Q_PROPERTY(TimelineDataModel *userModel READ userModel NOTIFY userModelChanged)
+    inline TimelineDataModel *userModel(){ return userModel_; } ;
 
     /// Screen name
     Q_PROPERTY(QString screenName READ screenName WRITE setScreenName)
@@ -94,13 +95,13 @@ protected:
 //    QVariantMap realTweet(QVariantMap tweet);
 //    //QJsonObject realTweet(QJsonObject tweet);
 //    QVariantMap parseTweet(QVariantMap tweet);
-    void appendTweets(CurlEasy* reply, bb::cascades::ArrayDataModel * dataModel);
+    void appendTweets(CurlEasy* reply, TimelineDataModel * dataModel);
     void insertMediaTweets(CurlEasy* reply, int offset = 0);
     void requestUserData();
     void populateUserData(const QJsonArray& tweets);
 
 protected:
-    bb::cascades::ArrayDataModel *previewTweetModel_, *tweetModel_, *mediaTweetModel_, *fullTweetModel_, *userModel_;
+    TimelineDataModel *previewTweetModel_, *tweetModel_, *mediaTweetModel_, *fullTweetModel_, *userModel_;
     QString m_screen_name, m_id_str, m_mediaCursor;
     bool m_following;
 };

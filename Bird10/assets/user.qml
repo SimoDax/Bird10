@@ -24,7 +24,7 @@ import org.labsquare 1.0
 
 NavigationPane {
     id: nav
-    peekEnabled: false
+    peekEnabled: true
     
     onCreationCompleted: {
         if (o1Twitter.linked)

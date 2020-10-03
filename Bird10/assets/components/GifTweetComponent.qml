@@ -25,20 +25,8 @@ import bb.multimedia 1.4
 
 ListItemComponent {
     type: "gif"
-    Container {
+    BaseTweetContainer {
         id: itemRoot
-        property bool tapHandled: false
-        property bool dividerVisible: true
-        
-        gestureHandlers: TapHandler {
-            onTapped: {
-                if (tapHandled)
-                    tapHandled = false;
-                else {
-                    itemRoot.ListItem.view.openConversation(itemRoot.ListItem.indexPath)
-                }
-            }
-        }
 
         property variant i: ListItem.initialized
 
@@ -171,32 +159,9 @@ ListItemComponent {
             onCreationCompleted: {
                 player.prepare()
             }
-            contextActions: [
-                ActionSet {
-                    ActionItem {
-                        title: "Open in browser"
-                        imageSource: "asset:///images/ic_open.png"
-                        onTriggered: {
-                            //console.debug(itemRoot.ListItem.indexPath)
-                            //console.debug(ListItemData.user.screen_name)
-                            open.trigger("bb.action.OPEN")
-                        }
-
-                        attachedObjects: Invocation {
-                            id: open
-                            query {
-                                uri: "https://twitter.com/" + ListItemData.user.screen_name + "/statuses/" + ListItemData.id_str
-                                invokeTargetId: "sys.browser"
-                                onQueryChanged: open.query.updateQuery() //magic line to make it work in listview. Remove this and you're fucked.
-                            }
-                        }
-                    }
-                }
-            ]
         }
 
         Divider {
-            visible: itemRoot.ListItem.component.dividerVisible
         }
     }
 }

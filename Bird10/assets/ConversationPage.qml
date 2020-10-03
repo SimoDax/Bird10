@@ -38,6 +38,15 @@ Page {
         TweetList {
             id: tweetList
 
+            attachedObjects: [
+                ListScrollStateHandler {
+                    onAtEndChanged: {
+                        if (atEnd && tweetList.dataModel.size() != 0 && tweetList.dataModel.size() < 500)
+                            twitterApi.loadMore()
+                    }
+                }
+            ]
+
             scrollRole: ScrollRole.Main
             function itemType(data, indexPath) {
                 //console.debug(indexPath + " " + data)

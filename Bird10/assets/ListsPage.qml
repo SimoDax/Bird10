@@ -6,7 +6,7 @@ import "/components"
 
 NavigationPane {
     id: nav
-    peekEnabled: false
+    peekEnabled: true
 
     
     Page {

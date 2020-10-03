@@ -23,6 +23,12 @@ Page {
     property alias image: imageView.image
     
     Container {
+        attachedObjects: LayoutUpdateHandler {
+            property alias height: pageSize.layoutFrame.height
+            property alias width: pageSize.layoutFrame.width
+            id: pageSize
+        }
+        
         horizontalAlignment: HorizontalAlignment.Fill
         verticalAlignment: VerticalAlignment.Fill
         layout: DockLayout {
@@ -40,11 +46,18 @@ Page {
                 overScrollEffectMode: OverScrollEffectMode.None
             }
             
-            ImageView {
-                id: imageView
-                horizontalAlignment: HorizontalAlignment.Fill
-                verticalAlignment: VerticalAlignment.Fill
-                scalingMethod: ScalingMethod.AspectFit
+            Container{
+                maxHeight: pageSize.height
+                maxWidth: pageSize.width
+
+                ImageView {
+                    id: imageView
+                    horizontalAlignment: HorizontalAlignment.Fill
+                    verticalAlignment: VerticalAlignment.Fill
+                    scalingMethod: ScalingMethod.AspectFit
+                    maxHeight: pageSize.height
+                    maxWidth: pageSize.width
+                }
             }
         }
     }

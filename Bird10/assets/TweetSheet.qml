@@ -21,13 +21,15 @@ import bb.cascades 1.4
 import bb.cascades.pickers 1.0
 import org.labsquare 1.0
 import com.simodax 1.0
+import bb.multimedia 1.4
 import "/components"
 
 Sheet {
     property string in_reply_to: ""
     property string in_reply_to_status_id: ""
     property string attachment_url: ""
-    property int indexPath: -1
+    property variant referencedTweet
+
 
 //    onIndexPathChanged: {
 //        attachment_url = "https://twitter.com/" + twitterApi.tweetModel.value(indexPath).user.screen_name + "/status/" + twitterApi.tweetModel.value(indexPath).id_str
@@ -39,6 +41,11 @@ Sheet {
         property string image2: ""
         property string image3: ""
         property string image4: ""
+        property string video: ""
+        
+        function noImageSelected(){
+            return composer.image1 == "" && composer.image2 == "" && composer.image3 == "" && composer.image4 == ""
+        }
 
         titleBar: TitleBar {
             title: in_reply_to_status_id == "" ? "Tweet" : "Reply"
@@ -47,6 +54,8 @@ Sheet {
                 onTriggered: {
                     if (composer.image1 != "")
                         tweetApi.imageTweet(tweet.text, Array(composer.image1, composer.image2, composer.image3, composer.image4), in_reply_to_status_id, attachment_url);
+                    else if (composer.video != "")
+                        tweetApi.videoTweet(tweet.text, composer.video, in_reply_to_status_id, attachment_url);
                     else
                         tweetApi.tweet(tweet.text, in_reply_to_status_id, attachment_url)
                     close()
@@ -216,11 +225,21 @@ Sheet {
                     imageSource: "file://" + composer.image4
                     leftMargin: 10
                 }
+                ForeignWindowControl {
+                    id: fwc
+                    windowId: "composer.video"
+                    visible: composer.video != ""
+
+                    updatedProperties: WindowProperty.Size | WindowProperty.Position | WindowProperty.Visible
+
+                    preferredWidth: 150
+                    preferredHeight: 150
+                }
             }
 
             // Quoted or replied tweet
             Container {
-                visible: indexPath != -1 && attachment_url != ""
+                visible: (referencedTweet) != null && attachment_url != ""
 
                 id: attachment
 
@@ -237,8 +256,7 @@ Sheet {
                 bottomPadding: 15.0
                 WebImageView {
                     id: profilePic
-                    //                    url: rtDialog.tweet.user.profile_image_url_https
-                    url: twitterApi.tweetModel.value(indexPath).user.profile_image_url_https
+                    url:  ((referencedTweet) != null ? referencedTweet.user.profile_image_url : "")
                     minWidth: 80.0
                     minHeight: 80.0
                 }
@@ -258,14 +276,14 @@ Sheet {
 
                         Label {
                             id: username
-                            text: twitterApi.tweetModel.value(indexPath).user.name
+                            text: ((referencedTweet) != null ? referencedTweet.user.name: "")
                             textStyle.fontWeight: FontWeight.Bold
                             textStyle.fontSizeValue: 7.0
                             rightMargin: 5.0
                         }
                         Label {
                             id: handle
-                            text: "@" + twitterApi.tweetModel.value(indexPath).user.screen_name
+                            text: "@" + ((referencedTweet) != null ? referencedTweet.user.screen_name : "")
                             textStyle.fontSizeValue: 7.0
                             textStyle.color: Color.create("#969696")
                             leftMargin: 0.0
@@ -274,7 +292,7 @@ Sheet {
                     }
 
                     Label {
-                        text: twitterApi.tweetModel.value(indexPath).full_text
+                        text: ((referencedTweet) != null ? referencedTweet.full_text : "")
                         multiline: true
                         textFormat: TextFormat.Html
                         topMargin: 10
@@ -491,7 +509,7 @@ Sheet {
                         //enabled: CommonUtilities.checkFileSystemAccessible()
                         //opacity: CommonUtilities.checkFileSystemAccessible() ? 1 : 0.5
                         objectName: "Pictures Button"
-                        enabled: composer.image4 == ""
+                        enabled: composer.image4 == "" && composer.video == ""
                         //preferredWidth: SizeSelector.convert(120)
                         //maxWidth: SizeSelector.convert(120)
                         //preferredHeight: SizeSelector.convert(86)
@@ -501,6 +519,7 @@ Sheet {
                         defaultImageSource: "asset:///btn_default_gallery.png"
                         disabledImageSource: "asset:///btn_default_gallery.png"
                         onClicked: {
+                            filePicker.type = FileType.Picture
                             filePicker.open()
                             /*
                              * if (_tweetComposeController.filePickerImageSet) {
@@ -559,18 +578,23 @@ Sheet {
                     ImageButton {
                         id: cameraButton
                         objectName: "Camera Button"
-                        visible: false
-                        //enabled: CommonUtilities.enableCameraButton()
+                        visible: true
+                        enabled: composer.noImageSelected()
+                        onEnabledChanged: {
+                            console.debug('enabled: ' +composer.noImageSelected())
+                        }
                         //opacity: CommonUtilities.enableCameraButton() ? 1 : 0.5
                         //preferredWidth: SizeSelector.convert(120)
                         //maxWidth: SizeSelector.convert(120)
                         //preferredHeight: SizeSelector.convert(86)
                         verticalAlignment: VerticalAlignment.Center
                         horizontalAlignment: HorizontalAlignment.Center
-                        defaultImageSource: "asset:///btn_default_camera.png"
-                        disabledImageSource: "asset:///btn_default_camera.png"
+                        defaultImageSource: "asset:///btn_video.png"
+                        disabledImageSource: "asset:///btn_video.png"
                         focusPolicy: FocusPolicy.KeyAndTouch
                         onClicked: {
+                            filePicker.type = FileType.Video
+                            filePicker.open()
                             /*
                              * if (! CommonUtilities.isCameraAllowed()) {
                              * _tweetComposeController.showCameraPermissionDialog();
@@ -881,16 +905,39 @@ Sheet {
                 title: "Select Picture"
                 //directories: [ "/accounts/1000/shared/camera", "/accounts/1000/shared/photos" ]
                 onFileSelected: {
-                    if (composer.image1 == "")
-                        composer.image1 = selectedFiles[0];
-                    else if (composer.image2 == "")
-                        composer.image2 = selectedFiles[0];
-                    else if (composer.image3 == "")
-                        composer.image3 = selectedFiles[0];
-                    else if (composer.image4 == "")
-                        composer.image4 = selectedFiles[0]
+                    if(type == FileType.Picture){
+                        if(tweetApi.fileSize(selectedFiles[0]) > 5*1000*1000){
+                            error_message("File size is too big!")
+                            return;
+                        }
+                        if (composer.image1 == "")
+                            composer.image1 = selectedFiles[0];
+                        else if (composer.image2 == "")
+                            composer.image2 = selectedFiles[0];
+                        else if (composer.image3 == "")
+                            composer.image3 = selectedFiles[0];
+                        else if (composer.image4 == "")
+                            composer.image4 = selectedFiles[0]
+                    }
+                    else{
+                        if (tweetApi.fileSize(selectedFiles[0]) > 15 * 1000 * 1000) {
+                            error_message("File size is too big!")
+                            return;
+                        }
+                        composer.video = selectedFiles[0]
+                        vidPlayer.sourceUrl = selectedFiles[0]
+                    }
 
                     //console.log("FileSelected signal received : " + selectedFiles)
+                }
+            },
+            MediaPlayer {
+                id: vidPlayer
+                videoOutput: VideoOutput.PrimaryDisplay
+                windowId: fwc.windowId
+                onSourceUrlChanged: {
+                    console.debug(sourceUrl)
+                    prepare()
                 }
             },
             TweetApi {

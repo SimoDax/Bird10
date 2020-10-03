@@ -17,43 +17,25 @@
 *
 */
 
-#ifndef CONVERSATIONAPI_HPP_
-#define CONVERSATIONAPI_HPP_
+#ifndef TIMELINEDATAMODEL_HPP_
+#define TIMELINEDATAMODEL_HPP_
 
-#include <src/TimelineBase.hpp>
 #include <bb/cascades/ArrayDataModel>
-#include <src/TwitterApi.hpp>
 
-
-class ConversationApi: public TwitterApi
+class TimelineDataModel: public bb::cascades::ArrayDataModel
 {
     Q_OBJECT
 
 public:
+    TimelineDataModel(QObject* parent = 0);
 
-    ConversationApi(QObject *parent = 0);
+    void refreshElapsedTime();
+    void replaceById(const QString& id, const QVariantMap& newData);
+    void removeById(const QString& id);
 
-    Q_INVOKABLE void loadConversation(const QString& id, bool includeCursor = false);
-    Q_INVOKABLE void loadMore();
-
-signals:
-    void conversationLoaded(int index);
-
-private:
-
-    void insertTweet(const QVariantMap& tweet);
-    void insertTweetsFromThread(const QVariantMap& thread);
-
-private slots:
-
-    void conversationReceived();
-
-private:
-    QVariantMap m_tweets;
-    QVariantMap m_users;
-    QString m_id, m_cursor;
-    int m_tweetsCount;
-    int m_mainTweetIndex;
+protected:
+    QString getTimeString(const QDateTime& dt);
+    QString getFullTimeString(const QDateTime& dt);
 };
 
-#endif /* CONVERSATIONAPI_HPP_ */
+#endif /* TIMELINEDATAMODEL_HPP_ */

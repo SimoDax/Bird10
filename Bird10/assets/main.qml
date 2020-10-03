@@ -68,18 +68,25 @@ TabbedPane {
     Tab {
         title: "Messages"
         imageSource: "asset:///images/messages_80x80.png"
-        delegate: Delegate {
-            id: dmDelegate
-            source: "asset:///DMInboxPage.qml"
+        DMInbox {
+            id: inbox
         }
-        delegateActivationPolicy: TabDelegateActivationPolicy.ActivateImmediately
-        unreadContentCount: {
-            if (dmDelegate.active)
-                return dmDelegate.object.unread;
-            else return 0
-        }
+        unreadContentCount: inbox.unread
         newContentAvailable: unreadContentCount > 0
-        onTriggered: dmDelegate.object.resetUnreadCount()
+        onTriggered: inbox.resetUnreadCount()
+        
+//        delegate: Delegate {
+//            id: dmDelegate
+//            source: "asset:///DMInboxPage.qml"
+//        }
+//        delegateActivationPolicy: TabDelegateActivationPolicy.ActivateImmediately
+//        unreadContentCount: {
+//            if (dmDelegate.active)
+//                return dmDelegate.object.unread;
+//            else return 0
+//        }
+//        newContentAvailable: unreadContentCount > 0
+//        onTriggered: dmDelegate.object.resetUnreadCount()
 
         //ActionBar.placement: ActionBarPlacement.OnBar
     }
@@ -141,8 +148,18 @@ TabbedPane {
             id: conversationPage
             source: "asset:///ConversationPage.qml"
         },
+        ComponentDefinition {
+            id: dmConversationPage
+            source: "asset:///DMConversationPage.qml"
+        },
+        ComponentDefinition {
+            id: dmInboxPage
+            source: "asset:///DMInboxPage.qml"
+        },
         OXTwitter {
             id: o1Twitter
+            objectName: "o1Twitter"
+            
 
             onOpenBrowser: {
                 //browser.url = url

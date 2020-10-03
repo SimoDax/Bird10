@@ -50,6 +50,7 @@ config_pri_source_group1 {
         $$quote($$BASEDIR/src/QtCurl/CurlEasy.cpp) \
         $$quote($$BASEDIR/src/QtCurl/CurlMulti.cpp) \
         $$quote($$BASEDIR/src/TwitterApiBase.cpp) \
+        $$quote($$BASEDIR/src/logger/logger.cpp) \
         $$quote($$BASEDIR/src/main.cpp) \
         $$quote($$BASEDIR/src/o2/o0baseauth.cpp) \
         $$quote($$BASEDIR/src/o2/o0settingsstore.cpp) \
@@ -78,6 +79,7 @@ config_pri_source_group1 {
         $$quote($$BASEDIR/src/QtCurl/CurlEasy.h) \
         $$quote($$BASEDIR/src/QtCurl/CurlMulti.h) \
         $$quote($$BASEDIR/src/TwitterApiBase.hpp) \
+        $$quote($$BASEDIR/src/logger/logger.h) \
         $$quote($$BASEDIR/src/o2/o0abstractstore.h) \
         $$quote($$BASEDIR/src/o2/o0baseauth.h) \
         $$quote($$BASEDIR/src/o2/o0export.h) \
@@ -118,6 +120,11 @@ lupdate_inclusion {
         $$quote($$BASEDIR/../src/QtCurl/*.cc) \
         $$quote($$BASEDIR/../src/QtCurl/*.cpp) \
         $$quote($$BASEDIR/../src/QtCurl/*.cxx) \
+        $$quote($$BASEDIR/../src/logger/*.c) \
+        $$quote($$BASEDIR/../src/logger/*.c++) \
+        $$quote($$BASEDIR/../src/logger/*.cc) \
+        $$quote($$BASEDIR/../src/logger/*.cpp) \
+        $$quote($$BASEDIR/../src/logger/*.cxx) \
         $$quote($$BASEDIR/../src/o2/*.c) \
         $$quote($$BASEDIR/../src/o2/*.c++) \
         $$quote($$BASEDIR/../src/o2/*.cc) \

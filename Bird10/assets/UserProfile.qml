@@ -23,6 +23,7 @@ import bb.system 1.2
 import org.labsquare 1.0
 import com.simodax 1.0
 import "/components"
+import "/components/actions"
 
 Page {
     id: profilePage
@@ -414,20 +415,8 @@ Page {
              onTriggered: profileApi.requestUserTweets()
              ActionBar.placement: ActionBarPlacement.InOverflow
          },
-         ActionItem {
+         PayAction {
              id: payAction
-             title: "Donate"
-             imageSource: "asset:///images/heart.png"
-             onTriggered: {
-                 _pay.trigger("bb.action.OPEN")
-             }
-             attachedObjects: Invocation {
-                 id: _pay
-                 query {
-                     uri: "https://paypal.me/pools/c/8pJlhpRSa8"
-                     invokeTargetId: "sys.browser"
-                 }
-             }
          }
     ]
 
