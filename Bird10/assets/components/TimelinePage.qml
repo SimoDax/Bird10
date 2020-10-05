@@ -21,6 +21,7 @@ import bb.cascades 1.4
 import "/components/actions"
 
 Page {
+    property alias refreshAction: refreshAction
 
     actionBarAutoHideBehavior: ActionBarAutoHideBehavior.HideOnScroll
     actionBarVisibility: ChromeVisibility.Compact
@@ -33,6 +34,13 @@ Page {
             onTriggered: {
                 tweetList.scrollToItem([ 0 ])
             }
+            ActionBar.placement: ActionBarPlacement.InOverflow
+        },
+        ActionItem {
+            id: refreshAction
+            enabled: o1Twitter.linked
+            title: "Refresh"
+            imageSource: "asset:///images/ic_resume.png"
             ActionBar.placement: ActionBarPlacement.InOverflow
         },
         LoginAction {

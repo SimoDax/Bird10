@@ -42,6 +42,7 @@ NavigationPane {
     }
 
     TimelinePage {
+        onCreationCompleted: refreshAction.triggered.connect(twitterApi.requestFavoriteTweets)
         
         function clear() {
             twitterApi.clearTweetModel()
@@ -74,17 +75,6 @@ NavigationPane {
                 ]
             }
         }
-    
-    actions: [
-         ActionItem {
-             id: refreshAction
-             enabled: o1Twitter.linked
-             title: "Refresh"
-             imageSource: "asset:///images/ic_resume.png"
-             onTriggered: twitterApi.requestFavoriteTweets()
-             ActionBar.placement: ActionBarPlacement.InOverflow
-         }
-        ]
     }
     attachedObjects: [
         ComponentDefinition {

@@ -40,6 +40,9 @@ NavigationPane {
     
     
     TimelinePage {
+        onCreationCompleted: {
+            refreshAction.triggered.connect(twitterApi.requestTweets)
+        }
         
         function clear(){
             twitterApi.clearTweetModel()
@@ -82,16 +85,6 @@ NavigationPane {
                 }
             }
         }
-        actions: [
-            ActionItem {
-                id: refreshAction
-                enabled: o1Twitter.linked
-                title: "Refresh"
-                imageSource: "asset:///images/ic_resume.png"
-                onTriggered: twitterApi.requestTweets()
-                ActionBar.placement: ActionBarPlacement.InOverflow
-            }
-        ]
     }
     attachedObjects: [
         TwitterApi {
