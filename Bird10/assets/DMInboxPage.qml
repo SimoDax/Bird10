@@ -148,7 +148,7 @@ Page {
             id: timer
             duration: 30000
             onTriggered: {
-                if(tabbedPane.activeTab.title != "Messages")
+                if(nav.objectName != "DMNavigationPane")
                     return;
                     
                 if (app.backgroundUpdatesEnabled){

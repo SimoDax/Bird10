@@ -24,6 +24,7 @@ import "../components" 1.0
 
 NavigationPane {
     id: nav
+    objectName: "DMNavigationPane"
 
     property variant dmApi: app.dm
     property variant inbox: app.dm.inbox
