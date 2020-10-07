@@ -52,12 +52,6 @@ Container {
             ActionSet {
                 id: actionSet
                 ActionItem {
-                    title: "DM user"
-                    imageSource: "asset:///images/mail_80x80.png"
-                    onTriggered: itemRoot.ListItem.view.dmUser(ListItemData.user)
-                    enabled: ListItemData.user.followed_by
-                }
-                ActionItem {
                     title: "Open in browser"
                     imageSource: "asset:///images/ic_open.png"
                     onTriggered: {
@@ -77,7 +71,14 @@ Container {
                 }
                 ActionItem {
                     title: "Send via DM"
+                    imageSource: "asset:///images/share_tweet.png"
                     onTriggered: itemRoot.ListItem.view.dmLink("https://twitter.com/" + ListItemData.user.screen_name + "/statuses/" + ListItemData.id_str)
+                }
+                ActionItem {
+                    title: "DM user"
+                    imageSource: "asset:///images/mail_80x80.png"
+                    onTriggered: itemRoot.ListItem.view.dmUser(ListItemData.user)
+                    enabled: ListItemData.user.followed_by
                 }
 //                                                    ActionItem {
 //                                                        title: "Share Tweet"
