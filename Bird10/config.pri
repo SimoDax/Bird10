@@ -83,6 +83,7 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/components/ArrowItemComponent.qml) \
         $$quote($$BASEDIR/assets/components/BaseTweetContainer.qml) \
         $$quote($$BASEDIR/assets/components/BigPic.qml) \
+        $$quote($$BASEDIR/assets/components/CardComponent.qml) \
         $$quote($$BASEDIR/assets/components/DMCompose.qml) \
         $$quote($$BASEDIR/assets/components/DMConversationComponent.qml) \
         $$quote($$BASEDIR/assets/components/DMMessageComponent.qml) \
@@ -91,8 +92,10 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/components/GifTweetComponentMain.qml) \
         $$quote($$BASEDIR/assets/components/ImageTweetComponent.qml) \
         $$quote($$BASEDIR/assets/components/ImageTweetComponentMain.qml) \
+        $$quote($$BASEDIR/assets/components/LargeSummaryCard.qml) \
         $$quote($$BASEDIR/assets/components/LoadingComponent.qml) \
         $$quote($$BASEDIR/assets/components/NotificationTweetComponent.qml) \
+        $$quote($$BASEDIR/assets/components/PlayerCard.qml) \
         $$quote($$BASEDIR/assets/components/ProfileHeaderBottom.qml) \
         $$quote($$BASEDIR/assets/components/ProfileHeaderTop.qml) \
         $$quote($$BASEDIR/assets/components/ProfilePic.qml) \
@@ -101,6 +104,7 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/components/QmlTimer.qml) \
         $$quote($$BASEDIR/assets/components/QuotedTweetComponent.qml) \
         $$quote($$BASEDIR/assets/components/RtContainer.qml) \
+        $$quote($$BASEDIR/assets/components/SummaryCard.qml) \
         $$quote($$BASEDIR/assets/components/TimelinePage.qml) \
         $$quote($$BASEDIR/assets/components/TweetActionBar.qml) \
         $$quote($$BASEDIR/assets/components/TweetActionBarMain.qml) \
@@ -155,6 +159,7 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/images/image_mask.png) \
         $$quote($$BASEDIR/assets/images/image_mask_dark.amd) \
         $$quote($$BASEDIR/assets/images/image_mask_dark.png) \
+        $$quote($$BASEDIR/assets/images/link.png) \
         $$quote($$BASEDIR/assets/images/logo.png) \
         $$quote($$BASEDIR/assets/images/logout.png) \
         $$quote($$BASEDIR/assets/images/mail_80x80.png) \

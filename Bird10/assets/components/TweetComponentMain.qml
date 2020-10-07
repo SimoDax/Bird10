@@ -56,7 +56,9 @@ ListItemComponent {
             activeTextHandler: TweetTextHandler {
             }
         }
-        
+
+        CardComponent {
+        }
         Container {
             visible: ! ListItemData.is_quote_status
             maxHeight: 10

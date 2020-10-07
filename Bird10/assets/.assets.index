@@ -1,5 +1,5 @@
 1
-159
+164
 1440x1440/AttachedImage.qml
 1440x1440/ScreenContainer.qml
 720x1280/AttachedImage.qml
@@ -14,6 +14,7 @@ components/actions/PayAction.qml
 components/ArrowItemComponent.qml
 components/BaseTweetContainer.qml
 components/BigPic.qml
+components/CardComponent.qml
 components/DMCompose.qml
 components/DMConversationComponent.qml
 components/DMMessageComponent.qml
@@ -22,8 +23,10 @@ components/GifTweetComponent.qml
 components/GifTweetComponentMain.qml
 components/ImageTweetComponent.qml
 components/ImageTweetComponentMain.qml
+components/LargeSummaryCard.qml
 components/LoadingComponent.qml
 components/NotificationTweetComponent.qml
+components/PlayerCard.qml
 components/ProfileHeaderBottom.qml
 components/ProfileHeaderTop.qml
 components/ProfilePic.qml
@@ -32,6 +35,7 @@ components/ProfilesList.qml
 components/QmlTimer.qml
 components/QuotedTweetComponent.qml
 components/RtContainer.qml
+components/SummaryCard.qml
 components/TimelinePage.qml
 components/TweetActionBar.qml
 components/TweetActionBarMain.qml
@@ -90,6 +94,7 @@ images/image_mask.amd
 images/image_mask.png
 images/image_mask_dark.amd
 images/image_mask_dark.png
+images/link.png
 images/logo.png
 images/logout.png
 images/mail_80x80.png

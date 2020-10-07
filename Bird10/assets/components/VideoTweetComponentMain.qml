@@ -96,6 +96,8 @@ ListItemComponent {
             }
             horizontalAlignment: HorizontalAlignment.Fill
         }
+        CardComponent {
+        }
         QuotedTweetComponent {
             visible: delegateActive
             delegateActive: ListItemData.is_quote_status
