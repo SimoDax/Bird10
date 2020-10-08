@@ -30,11 +30,6 @@ Sheet {
     property string attachment_url: ""
     property variant referencedTweet
 
-
-//    onIndexPathChanged: {
-//        attachment_url = "https://twitter.com/" + twitterApi.tweetModel.value(indexPath).user.screen_name + "/status/" + twitterApi.tweetModel.value(indexPath).id_str
-//    }
-
     Page {
         id: composer
         property string image1: ""
@@ -225,15 +220,12 @@ Sheet {
                     imageSource: "file://" + composer.image4
                     leftMargin: 10
                 }
-                ForeignWindowControl {
-                    id: fwc
-                    windowId: "composer.video"
+                Label {
                     visible: composer.video != ""
-
-                    updatedProperties: WindowProperty.Size | WindowProperty.Position | WindowProperty.Visible
-
-                    preferredWidth: 150
-                    preferredHeight: 150
+                    text: { 
+                         var a = composer.video.split("/")
+                         return " Attached video: " + a[a.length-1]
+                     }
                 }
             }
 
@@ -929,15 +921,6 @@ Sheet {
                     }
 
                     //console.log("FileSelected signal received : " + selectedFiles)
-                }
-            },
-            MediaPlayer {
-                id: vidPlayer
-                videoOutput: VideoOutput.PrimaryDisplay
-                windowId: fwc.windowId
-                onSourceUrlChanged: {
-                    console.debug(sourceUrl)
-                    prepare()
                 }
             },
             TweetApi {
