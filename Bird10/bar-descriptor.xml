@@ -141,6 +141,13 @@
     <!-- <copyright></copyright> -->
 
     <!--  Name of author which is used for signing. Must match the developer name of your development certificate. -->
+    <splashScreens>
+       <image>BB10_splash_twitter_blackbkg1280x768.png</image>
+       <image>BB10_splash_twitter_blackbkg1440x1440.png</image>
+       <image>BB10_splash_twitter_blackbkg720.png</image>
+       <image>BB10_splash_twitter_blackbkg720x1280.png</image>
+       <image>BB10_splash_twitter_blackbkg1280x720.png</image>
+    </splashScreens>
     <authorId>gYAAgOvwQYDcoUo_URzZ-sMnMZc</authorId>
     <author>Simone Dassi</author>
     <buildId>0</buildId>
@@ -166,6 +173,11 @@
         <include name="*.qm"/>
     </asset>
     <asset path="assets/images/logo.png">logo.png</asset>
+    <asset path="BB10_splash_twitter_blackbkg1280x768.png">BB10_splash_twitter_blackbkg1280x768.png</asset>
+    <asset path="BB10_splash_twitter_blackbkg1440x1440.png">BB10_splash_twitter_blackbkg1440x1440.png</asset>
+    <asset path="BB10_splash_twitter_blackbkg720.png">BB10_splash_twitter_blackbkg720.png</asset>
+    <asset path="BB10_splash_twitter_blackbkg720x1280.png">BB10_splash_twitter_blackbkg720x1280.png</asset>
+    <asset path="BB10_splash_twitter_blackbkg1280x720.png">BB10_splash_twitter_blackbkg1280x720.png</asset>
 
     <!-- Request permission to execute native code.  Required for native applications. -->
     <permission system="true">run_native</permission>
