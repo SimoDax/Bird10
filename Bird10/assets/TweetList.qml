@@ -29,6 +29,7 @@ import "/components"
 ListView {
     property variant api : twitterApi    //for accessing api inside list item
     property variant rtDialog : rtDialog
+    property variant deleteDialog: deleteDialog
     property variant pane: tabbedPane    //for accessing global definitions (main.qml) inside list item
     property variant authenticator: o1Twitter
 
@@ -184,6 +185,20 @@ ListView {
             }
             onRetweet: twitterApi.retweet(dataModel.value(indexPath).rt_flag ? dataModel.value(indexPath).rt_id : dataModel.value(indexPath).id_str, dataModel.value(indexPath).retweeted)
         },
+        SystemDialog {
+            property string tweet_id: ""
+            
+            id: deleteDialog
+            title: "Delete Tweet"
+            body: "Are you sure you want to delete this tweet?"
+            customButton.enabled: false
+            confirmButton.label: "Delete"
+            cancelButton.label: "Cancel"
+            onFinished: {
+                if(value == SystemUiResult.ConfirmButtonSelection)
+                    api.destroyTweet(tweet_id)
+            }
+         },
         ComponentDefinition {
             id: tweetSheetDefinition
             content: TweetSheet {

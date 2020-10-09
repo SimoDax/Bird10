@@ -109,7 +109,8 @@ Container {
                 id: deleteActionItem
                 title: "Delete Tweet"
                 onTriggered: {
-                    itemRoot.ListItem.view.api.destroyTweet(ListItemData.id_str)
+                    itemRoot.ListItem.view.deleteDialog.tweet_id = ListItemData.id_str
+                    itemRoot.ListItem.view.deleteDialog.show()
                 }
             }
         ]
