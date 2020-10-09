@@ -196,6 +196,7 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/images/search_cancel.png) \
         $$quote($$BASEDIR/assets/images/share_tweet.png) \
         $$quote($$BASEDIR/assets/images/share_tweet_hvr.png) \
+        $$quote($$BASEDIR/assets/images/share_tweet_white.png) \
         $$quote($$BASEDIR/assets/images/twitterheart.png) \
         $$quote($$BASEDIR/assets/main.qml) \
         $$quote($$BASEDIR/assets/tl.qml) \

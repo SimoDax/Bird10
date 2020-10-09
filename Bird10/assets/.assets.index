@@ -1,5 +1,5 @@
 1
-164
+165
 1440x1440/AttachedImage.qml
 1440x1440/ScreenContainer.qml
 720x1280/AttachedImage.qml
@@ -131,6 +131,7 @@ images/rounded9slice.png
 images/search_cancel.png
 images/share_tweet.png
 images/share_tweet_hvr.png
+images/share_tweet_white.png
 images/twitterheart.png
 ItemPage.qml
 ItemPage_scroll.qml

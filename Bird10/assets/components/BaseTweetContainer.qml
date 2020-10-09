@@ -71,7 +71,7 @@ Container {
                 }
                 ActionItem {
                     title: "Send via DM"
-                    imageSource: "asset:///images/share_tweet.png"
+                    imageSource: "asset:///images/share_tweet_white.png"
                     onTriggered: itemRoot.ListItem.view.dmLink("https://twitter.com/" + ListItemData.user.screen_name + "/statuses/" + ListItemData.id_str)
                 }
                 ActionItem {

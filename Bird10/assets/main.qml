@@ -200,7 +200,7 @@ TabbedPane {
                 tabbedPane.activePane.at(0).actionAt(1).enabled = true
                 tabbedPane.activePane.at(0).load()
                 notificationsDelegate.object.loadNotifications()
-                dmDelegate.object.loadInbox()
+                inbox.loadInbox()
                 //webView.storage.clear()
             }
 
