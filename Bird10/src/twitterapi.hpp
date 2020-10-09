@@ -55,7 +55,7 @@ public slots:
     Q_INVOKABLE void requestOlderTweets();
     Q_INVOKABLE void requestOlderFavoriteTweets();
 //    Q_INVOKABLE void requestOlderProfileTweets();
-    Q_INVOKABLE void latestTweets();
+    Q_INVOKABLE void requestLatestTweets();
 
     Q_INVOKABLE void favorite(QString id, bool state);
     Q_INVOKABLE void destroyTweet(const QString& id);

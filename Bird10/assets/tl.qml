@@ -79,7 +79,7 @@ NavigationPane {
                 onTriggered: {
                     if (app.backgroundUpdatesEnabled){
                         console.debug('refresh id : ' + ((tweetList.dataModel.data([ 0 ]).id_str)))
-                        twitterApi.requestTweets("", typeof(tweetList.dataModel.data([ 0 ]).rt_id) != 'undefined' ? tweetList.dataModel.data([ 0 ]).rt_id : tweetList.dataModel.data([ 0 ]).id_str)
+                        twitterApi.requestLatestTweets()
                         timer.start()
                     }
                 }

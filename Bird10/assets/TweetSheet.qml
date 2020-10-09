@@ -917,7 +917,6 @@ Sheet {
                             return;
                         }
                         composer.video = selectedFiles[0]
-                        vidPlayer.sourceUrl = selectedFiles[0]
                     }
 
                     //console.log("FileSelected signal received : " + selectedFiles)
@@ -928,6 +927,7 @@ Sheet {
                 authenticator: o1Legacy.linked ? o1Legacy : o1Twitter
                 onTweeted: {
                     message("Tweet published")
+                    twitterApi.requestLatestTweets()
                     tweetSheet.active = false
                 }
                 onError: {

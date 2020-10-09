@@ -310,6 +310,7 @@ void ApplicationUI::onInvokeResult(){   //helper function pasted stright from do
             qDebug() << "invokeFinished(): " << m_reply->error() << endl;
             break;
     }
+    m_reply->deleteLater();
 }
 
 void ApplicationUI::onManualExit()

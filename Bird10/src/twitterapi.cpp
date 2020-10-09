@@ -175,8 +175,10 @@ void TwitterApi::requestOlderTweets(){
     requestTweets(last_tweet_id);
 }
 
-void TwitterApi::latestTweets(){
-    QString top_tweet_id = tweetModel_->value(0).toMap()["id_str"].toString();
+void TwitterApi::requestLatestTweets(){
+    QString top_tweet_id = tweetModel_->value(0).toMap()["rt_id"].toString();
+    if(top_tweet_id.isEmpty())
+        top_tweet_id = tweetModel_->value(0).toMap()["id_str"].toString();
 
     requestTweets(QString(), top_tweet_id);
 }
