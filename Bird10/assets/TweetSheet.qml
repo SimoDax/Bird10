@@ -29,6 +29,7 @@ Sheet {
     property string in_reply_to_status_id: ""
     property string attachment_url: ""
     property variant referencedTweet
+    property bool busy: false
 
     Page {
         id: composer
@@ -53,6 +54,7 @@ Sheet {
                         tweetApi.videoTweet(tweet.text, composer.video, in_reply_to_status_id, attachment_url);
                     else
                         tweetApi.tweet(tweet.text, in_reply_to_status_id, attachment_url)
+                    busy = true
                     close()
                 }
 
@@ -932,6 +934,11 @@ Sheet {
                 }
                 onError: {
                     message(error)
+                    busy = false
+                }
+                onNetworkError: {
+                    message(error)
+                    busy = false
                 }
             },
             SearchApi {
