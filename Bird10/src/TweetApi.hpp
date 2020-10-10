@@ -41,7 +41,7 @@ signals:
 protected slots:
     void onTweeted();
     void imagePosted();
-    void postMediaTweet(QString media_ids);
+    void postMediaTweet(const QString& media_ids);
 
 protected:
     QString m_status, reply_status_id, m_attachment_url;

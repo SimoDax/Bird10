@@ -110,7 +110,7 @@ void TweetApi::imagePosted(){
     reply->deleteLater();
 }
 
-void TweetApi::postMediaTweet(QString media_ids)
+void TweetApi::postMediaTweet(const QString& media_ids)
 {
     QString url = ("https://api.twitter.com/1.1/statuses/update.json");
 
@@ -130,8 +130,8 @@ void TweetApi::postMediaTweet(QString media_ids)
 
     CurlEasy * reply = requestor->post(url, par, QByteArray());
     connect(reply, SIGNAL(done(CURLcode)), this, SLOT(onTweeted()));
-    bool ok = connect(reply, SIGNAL(error(CURLcode)), this, SLOT(onRequestFailed(CURLcode)));
-    Q_ASSERT(ok);
+    connect(reply, SIGNAL(error(CURLcode)), this, SLOT(onRequestFailed(CURLcode)));
+
     QMetaObject::invokeMethod(reply, "perform", Qt::QueuedConnection);
 
     sender()->deleteLater();    //clean up mediauploader
@@ -170,8 +170,12 @@ void TweetApi::postImageTweet(){
 
 void TweetApi::videoTweet(const QString& status, const QString& video, const QString& in_reply_to_status_id, const QString& attachment_url)
 {
+    m_status = status;
+    reply_status_id = in_reply_to_status_id;
+    m_attachment_url = attachment_url;
     MediaUploader* mu = new MediaUploader(authenticator_, this);
     connect(mu, SIGNAL(uploadComplete(QString)), this, SLOT(postMediaTweet(QString)));
+    connect(mu, SIGNAL(error(QString)), this, SIGNAL(error(QString)));
     mu->uploadVideo(video);
 }
 

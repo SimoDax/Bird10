@@ -47,7 +47,8 @@ signals:
 protected slots:
     void append();
     void finalize();
-    void onFinalized();
+    void checkStatus();
+    void status();
 
 protected:
     MediaType m_mediaType;

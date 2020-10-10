@@ -21,6 +21,7 @@
 #include <src/QJson4/QJsonDocument.h>
 #include <src/QJson4/QJsonObject.h>
 #include <QDebug>
+#include <QTimer>
 
 MediaUploader::MediaUploader(O1Twitter* authenticator, QObject* parent) : TwitterApiBase(parent)
 {
@@ -53,6 +54,7 @@ void MediaUploader::uploadVideo(const QString& path)
     par.append(O0RequestParameter("command", "INIT"));
     par.append(O0RequestParameter("total_bytes", QByteArray::number(m_currentFile.size())));
     par.append(O0RequestParameter("media_type", "video/mp4"));
+    par.append(O0RequestParameter("media_category", "tweet_video"));
 
     qDebug()<<"MediaUploader::uploadVideo: total_bytes: "<<QByteArray::number(m_currentFile.size());
 
@@ -80,7 +82,7 @@ void MediaUploader::append()
     if(content.contains("media_id_string")) // INIT replies with the media id, subsequent calls to APPEND don't
         m_id = content["media_id_string"].toString();
 
-    QByteArray chunk = m_currentFile.read(3*1000*1000);
+    QByteArray chunk = m_currentFile.read(1*1000*1000);
     qDebug()<<"MediaUploader::append: chunk size: "<<chunk.size();
 
     QString url = ("https://upload.twitter.com/1.1/media/upload.json");
@@ -94,7 +96,7 @@ void MediaUploader::append()
     reply->deleteLater();
     reply = requestor->post(url, par);
 
-    if(chunk.size() < 3*1000*1000)
+    if(chunk.size() < 1*1000*1000)
         connect(reply, SIGNAL(done(CURLcode)), this, SLOT(finalize()));
     else
         connect(reply, SIGNAL(done(CURLcode)), this, SLOT(append()));
@@ -120,7 +122,7 @@ void MediaUploader::finalize(){
 
     CurlEasy* reply = requestor->post(url, par);
 
-    connect(reply, SIGNAL(done(CURLcode)), this, SLOT(onFinalized()));
+    connect(reply, SIGNAL(done(CURLcode)), this, SLOT(checkStatus()));
     connect(reply, SIGNAL(error(CURLcode)), this, SLOT(onRequestFailed(CURLcode)));
 
     //Since the object lives on a different thread its function calls need to be queued
@@ -129,7 +131,7 @@ void MediaUploader::finalize(){
 
 }
 
-void MediaUploader::onFinalized()
+void MediaUploader::checkStatus()
 {
     CurlEasy* reply = qobject_cast<CurlEasy *>(sender());
     QJsonDocument jsonResponse = QJsonDocument::fromJson(reply->data());
@@ -137,10 +139,43 @@ void MediaUploader::onFinalized()
 
     qDebug()<<content;
 
+    if(content.keys().contains("processing_info")){
+        QString state = content["processing_info"].toMap()["state"].toString();
+        if(state == "failed"){
+            emit error("Media upload failed: "+ content["processing_info"].toMap()["error"].toMap()["message"].toString());
+            reply->deleteLater();
+            return;
+        }
+        else if(state != "succeeded"){
+            int check_after_secs = content["processing_info"].toMap()["check_after_secs"].toInt();
+            if(check_after_secs > 0)
+                QTimer::singleShot(check_after_secs*1000, this, SLOT(status()));
+                reply->deleteLater();
+                return;
+        }
+    }
+
     m_mediaIds << content["media_id_string"].toString();
     m_index = 0;
 
     emit uploadComplete(m_mediaIds.join(","));
 
     reply->deleteLater();
+}
+
+void MediaUploader::status()
+{
+    QString url = ("https://upload.twitter.com/1.1/media/upload.json");
+    QList<O0RequestParameter> par;
+    par.append(O0RequestParameter("command", "STATUS"));
+    par.append(O0RequestParameter("media_id", m_id.toUtf8()));
+
+    CurlEasy* reply = requestor->get(url, par);
+
+    connect(reply, SIGNAL(done(CURLcode)), this, SLOT(checkStatus()));
+    connect(reply, SIGNAL(error(CURLcode)), this, SLOT(onRequestFailed(CURLcode)));
+
+    //Since the object lives on a different thread its function calls need to be queued
+    //This will trigger the perform method without making an unnecessary signal-slot connection
+    QMetaObject::invokeMethod(reply, "perform", Qt::QueuedConnection);
 }
