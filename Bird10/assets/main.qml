@@ -193,6 +193,8 @@ TabbedPane {
                 loginSheet.loginButton.enabled = true
                 tabbedPane.activePane.at(0).clear()
                 loginSheet.open()
+                inbox.timer.stop()
+                app.dm.clear()
             }
 
             function out_to_in() {

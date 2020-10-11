@@ -62,6 +62,7 @@ public:
     Q_INVOKABLE inline GroupDataModel* getConversationFromId(const QString& id){ Conversation* c = m_conversations.value(id); return c ? c->messageModel() : nullptr; };
     Q_INVOKABLE inline void setCurrentConversation(const QString& id){ m_currentConversation = m_conversations.value(id)->messageModel(); emit currentConversationChanged();}
     Q_INVOKABLE QString getConversationIdFromUser(const QString& user);
+    Q_INVOKABLE void clear();
 
 signals:
     void inboxModelChanged();

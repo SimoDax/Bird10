@@ -28,6 +28,7 @@ NavigationPane {
 
     property variant dmApi: app.dm
     property variant inbox: app.dm.inbox
+    property alias timer: timer
     onInboxChanged: {
         if (isActiveTab)
             dmApi.updateLastSeenId()
@@ -49,6 +50,24 @@ NavigationPane {
     
     DMInboxPage {
         id: thisDMHistory
+    }
+    
+    onCreationCompleted: {
+        timer.start()
+    }
+
+    attachedObjects: QmlTimer {
+        id: timer
+        duration: 30000
+        onTriggered: {
+            if (app.backgroundUpdatesEnabled) {
+                app.dm.pollUpdates()
+
+                if (! isActiveTab)
+                    app.dm.requestBadgeCount()
+            }
+            timer.start()
+        }
     }
 
     onPopTransitionEnded: {

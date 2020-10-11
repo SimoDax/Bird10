@@ -29,11 +29,6 @@ Page {
     actionBarVisibility: ChromeVisibility.Overlay
     actionBarAutoHideBehavior: ActionBarAutoHideBehavior.HideOnScroll
     
-    onCreationCompleted: {
-        //            loadInbox();    // not needed now as it's called from applicationui when dmapi is instantiated
-        timer.start()
-    }
-    
     id: thisDMHistory
     objectName: "Messages Page"
     //property bool needRefreshControl: true
@@ -144,22 +139,7 @@ Page {
             id: handler
         }
         
-        QmlTimer {
-            id: timer
-            duration: 30000
-            onTriggered: {
-                if(nav.objectName != "DMNavigationPane")
-                    return;
-                    
-                if (app.backgroundUpdatesEnabled){
-                    app.dm.pollUpdates()
-                    
-                    if(!isActiveTab)
-                        app.dm.requestBadgeCount()
-                }
-                timer.start()
-            }
-        }
+
     }
     
     //    function lateDataBind() {

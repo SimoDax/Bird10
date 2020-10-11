@@ -620,3 +620,11 @@ QString DMApi::getConversationIdFromUser(const QString& user)
 
     return conversation_id;
 }
+
+void DMApi::clear(){
+    m_inbox->clear();
+    m_conversations.clear();
+    emit inboxModelChanged();
+    m_cursor="";
+    m_lastSeenId = 0;
+}
