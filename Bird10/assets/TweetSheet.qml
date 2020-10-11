@@ -914,10 +914,10 @@ Sheet {
                             composer.image4 = selectedFiles[0]
                     }
                     else{
-                        if (tweetApi.fileSize(selectedFiles[0]) > 15 * 1000 * 1000) {
-                            error_message("File size is too big!")
-                            return;
-                        }
+//                        if (tweetApi.fileSize(selectedFiles[0]) > 15 * 1000 * 1000) {
+//                            error_message("File size is too big!")
+//                            return;
+//                        }
                         composer.video = selectedFiles[0]
                     }
 

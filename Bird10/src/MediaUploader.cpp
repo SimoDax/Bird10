@@ -44,10 +44,10 @@ void MediaUploader::uploadVideo(const QString& path)
         emit error("Cannot open media");
         return;
     }
-    if(m_currentFile.size() > 15 * 1000 * 1000){
-        emit error("Video is too large");
-        return;
-    }
+//    if(m_currentFile.size() > 15 * 1000 * 1000){
+//        emit error("Video is too large");
+//        return;
+//    }
 
     QString url = ("https://upload.twitter.com/1.1/media/upload.json");
     QList<O0RequestParameter> par;
