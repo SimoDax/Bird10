@@ -23,15 +23,11 @@
 
 TimelineBase::TimelineBase(QObject *parent) : TwitterApiBase(parent)
 {
-    // TODO Auto-generated constructor stub
-
 }
 
 TimelineBase::~TimelineBase()
 {
 }
-
-
 
 
 QVariantMap TimelineBase::realTweet(QVariantMap tweet)

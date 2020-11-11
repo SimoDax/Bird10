@@ -23,7 +23,6 @@
 
 ListApi::ListApi(QObject *parent): TwitterApi(parent)
 {
-    // TODO Auto-generated constructor stub
     m_listsModel = new bb::cascades::ArrayDataModel(this);
 }
 
