@@ -352,17 +352,16 @@ void DMApi::markRead(const QString& conversationId){
 void DMApi::insertMessage(const QVariantMap& message, const QVariantMap& users){
     QVariantMap m = message["message"].toMap();
 
-    Conversation* conversation = m_conversations.value(m["conversation_id"].toString());
-
     if(m["conversation_id"].toString().isEmpty()){
-        conversation = 0;
+        return;
     }
 
-    if(conversation)
-        insertMessageInConversation(message, users, conversation);
-    else
-        ;
-        //TODO create new conversation
+    Conversation* conversation = m_conversations.value(m["conversation_id"].toString());
+
+    if(!conversation)
+        conversation = createConversation(m["conversation_id"].toString());
+
+    insertMessageInConversation(message, users, conversation);
 }
 
 void DMApi::insertMessageInConversation(const QVariantMap& message_, const QVariantMap& users, Conversation* conversation){
@@ -616,9 +615,17 @@ QString DMApi::getConversationIdFromUser(const QString& user)
 
     // it's a new conversation!
     QString conversation_id = authenticator_->extraTokens()["user_id"].toString() + "-" + user;
-    m_conversations.insert(conversation_id, new Conversation());
-
+    createConversation(conversation_id);
     return conversation_id;
+}
+
+Conversation* DMApi::createConversation(const QString& conversation_id)
+{
+    Conversation* conversation = new Conversation();
+    m_conversations.insert(conversation_id, conversation);
+    m_inbox->insert(conversation);
+
+    return conversation;
 }
 
 void DMApi::clear(){

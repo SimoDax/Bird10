@@ -85,6 +85,7 @@ protected:
     void insertMessage(const QVariantMap& message, const QVariantMap& users);
     void insertMessageInConversation(const QVariantMap& message_, const QVariantMap& users, Conversation* conversation);
     Conversation* getConversationFromMessage(const QVariantMap& message);
+    Conversation* createConversation(const QString& conversation_id);
 
     void updateInboxPreview(Conversation* conversation, const QVariantMap& users);
 
