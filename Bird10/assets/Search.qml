@@ -58,13 +58,7 @@ Sheet {
                     hintText: "Press Enter to search"
                     input.submitKey: SubmitKey.EnterKey
                     input.onSubmitted: {
-                        if (text.charAt(0) == "@") {
-                            searchApi.searchUser(text.trim())
-                            searchPage.showTrends = false
-                        }
-                        else {
-                            searchPage.searchQuery(text.trim())
-                        }
+                        searchPage.searchQuery(text.trim())
                     }
                     onTextChanging: {
                         if (text.charAt(0) == "@"){
