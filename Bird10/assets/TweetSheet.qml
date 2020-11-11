@@ -233,7 +233,8 @@ Sheet {
 
             // Quoted or replied tweet
             Container {
-                visible: (referencedTweet) != null && attachment_url != ""
+                property bool shouldBeVisible: (referencedTweet) != null && attachment_url != ""
+                visible: shouldBeVisible
 
                 id: attachment
 
@@ -799,7 +800,7 @@ Sheet {
         function resetEmojiSelections() {
             images.visible = true
             count.visible = true
-            attachment.visible = true
+            attachment.visible = attachment.shouldBeVisible
             // Hide all the emoji buttons
             emojiPeopleButtonContainer.visible = false;
             emojiPlacesButtonContainer.visible = false;
@@ -807,7 +808,7 @@ Sheet {
             emojiObjectsButtonContainer.visible = false;
             emojiSymbolsButtonContainer.visible = false;
             // Reset button row to defaults
-            //cameraButtonContainer.visible = true;
+            cameraButtonContainer.visible = true;
             photoLibraryButtonContainer.visible = true;
 
             // Set all emoji categories hidden
@@ -929,7 +930,8 @@ Sheet {
                 authenticator: o1Legacy.linked ? o1Legacy : o1Twitter
                 onTweeted: {
                     message("Tweet published")
-                    twitterApi.requestLatestTweets()
+                    if(twitterApi.objectName == "homeTimeline")
+                        twitterApi.requestLatestTweets()
                     tweetSheet.active = false
                 }
                 onError: {
@@ -946,5 +948,8 @@ Sheet {
                 authenticator: o1Twitter
             }
         ]
+        onCreationCompleted: {
+            console.debug(twitterApi)
+        }
     }
 }

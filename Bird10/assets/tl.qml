@@ -89,6 +89,7 @@ NavigationPane {
     attachedObjects: [
         TwitterApi {
             id: twitterApi
+            objectName: "homeTimeline"
             authenticator: o1Twitter
             onError: {
                 error_message(error)
