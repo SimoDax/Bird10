@@ -6,12 +6,12 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-* 
+*
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
@@ -115,7 +115,9 @@ void DiscoverApi::onSearchReceived()
             if(entry["entryId"] == "sq-cursor-bottom")
                 m_cursorBottom = entry["content"].toMap()["operation"].toMap()["cursor"].toMap()["value"].toString();
         }
-        //TODO: implement terminate timeline
+        else if(instructions[i].toMap().keys().contains("terminateTimeline")){
+            terminateTimeline(instructions[i].toMap());
+        }
 
         qDebug()<<instructions[i].toMap().keys();
     }

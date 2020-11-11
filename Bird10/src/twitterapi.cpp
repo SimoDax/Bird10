@@ -418,3 +418,14 @@ void TwitterApi::onDestroyTweet(){
 
     reply->deleteLater();
 }
+
+void TwitterApi::terminateTimeline(QVariantMap instruction)
+{
+    QString direction = instruction["terminateTimeline"].toMap()["direction"].toString();
+    if(direction == "Top" || direction == "TopAndBottom")
+        tweetModel_->setTerminateTop(true);
+    if(direction == "Bottom" || direction == "TopAndBottom")
+        tweetModel_->setTerminateBottom(true);
+
+    qDebug()<<"TwitterApi::terminateTimeline: "<<instruction;
+}

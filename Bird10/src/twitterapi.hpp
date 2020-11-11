@@ -80,6 +80,7 @@ protected slots:
 
 protected:
     void appendTweets(CurlEasy* reply);
+    void terminateTimeline(QVariantMap instruction);
 };
 
 #endif // TWITTERAPI_H

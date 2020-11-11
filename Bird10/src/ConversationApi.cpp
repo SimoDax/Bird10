@@ -100,6 +100,9 @@ void ConversationApi::insertTweetsFromThread(const QVariantMap& thread)
 
 void ConversationApi::loadMore()
 {
+    if(tweetModel_->isTerminateBottom())
+        return;
+
     loadConversation(m_id, true);
 }
 
@@ -114,12 +117,10 @@ void ConversationApi::conversationReceived()
 
     QVariantList instructions = content["timeline"].toMap()["instructions"].toList();
 
-
-//    tweetModel_->clear();
-
+    m_cursor = "";
     m_tweetsCount = 0;
     for(int i = 0; i<instructions.size(); i++){
-        if(instructions[i].toMap().find("addEntries") != instructions[i].toMap().end()){
+        if(instructions[i].toMap().keys().contains("addEntries")){
             QVariantList entries = instructions[i].toMap()["addEntries"].toMap()["entries"].toList();
             qDebug()<<instructions[i];
 
@@ -131,13 +132,23 @@ void ConversationApi::conversationReceived()
                     insertTweet(entries[i].toMap()["content"].toMap());
                 else if (ids[0].contains("Thread"))
                     insertTweetsFromThread(entries[i].toMap()["content"].toMap());
-                else if(ids[0].contains("cursor") && ids[1].contains("bottom"))
+                else if(ids[0].contains("cursor") && (ids[1].contains("bottom") || ids[1].contains("showMoreThreads")))
                     m_cursor = entries[i].toMap()["content"].toMap()["operation"].toMap()["cursor"].toMap()["value"].toString();
-                //TODO: implement cursor
+                //TODO: implement cursor top
             }
         }
-        //TODO: implement terminate timeline
+        if(instructions[i].toMap().keys().contains("terminateTimeline")){
+            terminateTimeline(instructions[i].toMap());
+        }
     }
+
+    /*
+     * Workaround: Twitter api's seem to have bugged recently - they don't return any terminateTimeline in the bottom direction, at least for conversations
+     * When there are no more replies, however, no cursor is returned. The code that follows exploits this fact to artifically terminate the timeline
+     */
+    if(m_cursor == "")
+        tweetModel_->setTerminateBottom(true);
+
 
     emit tweetModelChanged();
     if(m_mainTweetIndex != -1)

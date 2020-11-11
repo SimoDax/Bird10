@@ -77,11 +77,8 @@ void SearchApi::onTrendsReceived()
 
                 if(id.contains("trends"))
                     insertTrends(entries[i].toMap()["content"].toMap());
-
-                //TODO: implement cursor
             }
         }
-        //TODO: implement terminate timeline
     }
 
     emit trendListChanged();

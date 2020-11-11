@@ -21,6 +21,8 @@
 
 TimelineDataModel::TimelineDataModel(QObject* parent) : bb::cascades::ArrayDataModel(parent)
 {
+    m_terminateBottom = false;
+    m_terminateTop = false;
 }
 
 void TimelineDataModel::refreshElapsedTime()

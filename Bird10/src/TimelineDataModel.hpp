@@ -33,9 +33,39 @@ public:
     void replaceById(const QString& id, const QVariantMap& newData);
     void removeById(const QString& id);
 
+    bool isTerminateBottom() const
+    {
+        return m_terminateBottom;
+    }
+
+    void setTerminateBottom(bool terminateBottom)
+    {
+        m_terminateBottom = terminateBottom;
+    }
+
+    bool isTerminateTop() const
+    {
+        return m_terminateTop;
+    }
+
+    void setTerminateTop(bool terminateTop)
+    {
+        m_terminateTop = terminateTop;
+    }
+
+public slots:
+    void clear(){
+        bb::cascades::ArrayDataModel::clear(); m_terminateBottom = false; m_terminateTop = false;
+    }
+
+
+private:
+    bool m_terminateBottom, m_terminateTop;
+
 protected:
     QString getTimeString(const QDateTime& dt);
     QString getFullTimeString(const QDateTime& dt);
+
 };
 
 #endif /* TIMELINEDATAMODEL_HPP_ */
