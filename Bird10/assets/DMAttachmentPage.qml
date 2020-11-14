@@ -52,11 +52,13 @@ Page {
 
                 ImageView {
                     id: imageView
-                    horizontalAlignment: HorizontalAlignment.Fill
-                    verticalAlignment: VerticalAlignment.Fill
+                    horizontalAlignment: HorizontalAlignment.Center
+                    verticalAlignment: VerticalAlignment.Center
                     scalingMethod: ScalingMethod.AspectFit
                     maxHeight: pageSize.height
                     maxWidth: pageSize.width
+                    minWidth: pageSize.width
+                    minHeight: pageSize.height
                 }
             }
         }
