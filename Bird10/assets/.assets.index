@@ -1,5 +1,5 @@
 1
-167
+169
 1440x1440/AttachedImage.qml
 1440x1440/ScreenContainer.qml
 720x1280/AttachedImage.qml
@@ -17,6 +17,7 @@ components/BigPic.qml
 components/CardComponent.qml
 components/DMCompose.qml
 components/DMConversationComponent.qml
+components/DMEmojiPicker.qml
 components/DMMessageComponent.qml
 components/DMPhotoCard.qml
 components/GifTweetComponent.qml
@@ -62,6 +63,7 @@ images/btn_emoji_nature.png
 images/btn_emoji_objects.png
 images/btn_emoji_people.png
 images/btn_emoji_places.png
+images/btn_emoji_square.png
 images/btn_emoji_symbols.png
 images/btn_pressed_photo_gallery.png
 images/bubble_arrow_blue.png
