@@ -31,8 +31,7 @@ Page {
     property string screen_name
     property string name
 
-    actionBarVisibility: ChromeVisibility.Overlay
-    
+    actionBarVisibility: app.showTabsOnActionBar ? ChromeVisibility.Visible : ChromeVisibility.Compact
 
     function setUser(user_screen_name, user_name) { // Called from TweetList
         //        screen_name = user_screen_name

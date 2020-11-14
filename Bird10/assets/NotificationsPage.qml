@@ -37,6 +37,7 @@ NavigationPane {
     }
     
     Page {
+        actionBarVisibility: app.showTabsOnActionBar ? ChromeVisibility.Visible : ChromeVisibility.Compact
         onCreationCompleted: {
             loadNotifications()
             timer.start()
@@ -187,8 +188,6 @@ NavigationPane {
                 id: payAction
             }
         ]
-        
-        actionBarVisibility: ChromeVisibility.Compact
     }
     onPopTransitionEnded: {
         page.destroy()

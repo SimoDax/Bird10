@@ -29,7 +29,7 @@ NavigationPane {
 
     
     Page {
-        actionBarVisibility: ChromeVisibility.Compact
+        actionBarVisibility: app.showTabsOnActionBar ? ChromeVisibility.Visible : ChromeVisibility.Compact
         onCreationCompleted: {
             twitterApi.requestLists()
         }

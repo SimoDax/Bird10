@@ -59,6 +59,7 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/NotificationsPage.qml) \
         $$quote($$BASEDIR/assets/ProfileMediaPage.qml) \
         $$quote($$BASEDIR/assets/Search.qml) \
+        $$quote($$BASEDIR/assets/SettingsSheet.qml) \
         $$quote($$BASEDIR/assets/TopBlueBarText.qml) \
         $$quote($$BASEDIR/assets/TweetList.qml) \
         $$quote($$BASEDIR/assets/TweetSheet.qml) \
@@ -147,6 +148,7 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/images/heart_red.png) \
         $$quote($$BASEDIR/assets/images/home_80x80.png) \
         $$quote($$BASEDIR/assets/images/ic_doctype_video.png) \
+        $$quote($$BASEDIR/assets/images/ic_done.png) \
         $$quote($$BASEDIR/assets/images/ic_open.png) \
         $$quote($$BASEDIR/assets/images/ic_resume.png) \
         $$quote($$BASEDIR/assets/images/ic_save.png) \

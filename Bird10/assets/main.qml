@@ -24,7 +24,7 @@ import org.labsquare 1.0
 
 TabbedPane {
     id: tabbedPane
-    showTabsOnActionBar: false
+    showTabsOnActionBar: app.showTabsOnActionBar
 
     function error_message(text) {
         errorToast.body = text
@@ -42,8 +42,7 @@ TabbedPane {
             source: "asset:///tl.qml"
             
         }
-        delegateActivationPolicy: TabDelegateActivationPolicy.ActivateWhenSelected
-        //ActionBar.placement: ActionBarPlacement.OnBar
+        delegateActivationPolicy: TabDelegateActivationPolicy.ActivateImmediately
     } //end tab
     
     Tab {
@@ -61,8 +60,6 @@ TabbedPane {
         }
         newContentAvailable: unreadContentCount > 0
         onTriggered: notificationsDelegate.object.resetUnreadCount()
-        
-        //ActionBar.placement: ActionBarPlacement.OnBar
     }
 
     Tab {
@@ -88,7 +85,6 @@ TabbedPane {
 //        newContentAvailable: unreadContentCount > 0
 //        onTriggered: dmDelegate.object.resetUnreadCount()
 
-        //ActionBar.placement: ActionBarPlacement.OnBar
     }
 
     Tab {
@@ -99,7 +95,6 @@ TabbedPane {
             source: "asset:///favorites.qml"
         }
         delegateActivationPolicy: TabDelegateActivationPolicy.ActivateWhenSelected
-        //ActionBar.placement: ActionBarPlacement.OnBar
     }
 
     Tab {
@@ -122,13 +117,15 @@ TabbedPane {
             source: "asset:///user.qml"
         }
         delegateActivationPolicy: TabDelegateActivationPolicy.ActivateWhenSelected
-        //ActionBar.placement: ActionBarPlacement.OnBar
     }
 
     attachedObjects: [
 
         LoginSheet {
             id: loginSheet
+        },
+        SettingsSheet {
+            id: settings
         },
         Delegate {
             id: tweetSheet
@@ -156,6 +153,7 @@ TabbedPane {
             id: dmInboxPage
             source: "asset:///DMInboxPage.qml"
         },
+        
         OXTwitter {
             id: o1Twitter
             objectName: "o1Twitter"
@@ -265,27 +263,9 @@ TabbedPane {
                 }
             },
             ActionItem {
-                title: app.backgroundUpdatesEnabled ? "Disable sync" : "Enable sync"
+                title: "Settings"
                 onTriggered: {
-                    app.backgroundUpdatesEnabled = ! app.backgroundUpdatesEnabled
-                }
-            },
-            ActionItem {
-                title: "Start service"
-                onTriggered: {
-                    app.startService()
-                }
-            },
-            ActionItem {
-                title: "Stop service"
-                onTriggered: {
-                    app.stopService()
-                }
-            },
-            ActionItem {
-                title: o1Legacy.linked ? "Legacy logout" : "Legacy login"
-                onTriggered: {
-                    o1Legacy.linked ? o1Legacy.unlink() : o1Legacy.link()
+                    settings.open()
                 }
             }
             //            ,ActionItem {

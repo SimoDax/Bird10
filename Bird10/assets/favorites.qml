@@ -51,9 +51,6 @@ NavigationPane {
             twitterApi.requestTweets()
         }
 
-        actionBarAutoHideBehavior: ActionBarAutoHideBehavior.HideOnScroll
-        actionBarVisibility: ChromeVisibility.Compact
-
         Container {
             verticalAlignment: VerticalAlignment.Fill
             

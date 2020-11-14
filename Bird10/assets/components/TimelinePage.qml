@@ -24,7 +24,7 @@ Page {
     property alias refreshAction: refreshAction
 
     actionBarAutoHideBehavior: ActionBarAutoHideBehavior.HideOnScroll
-    actionBarVisibility: ChromeVisibility.Compact
+    actionBarVisibility: app.showTabsOnActionBar ? ChromeVisibility.Visible : ChromeVisibility.Compact
 
     actions: [
         ActionItem {

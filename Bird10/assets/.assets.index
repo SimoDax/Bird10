@@ -1,5 +1,5 @@
 1
-165
+167
 1440x1440/AttachedImage.qml
 1440x1440/ScreenContainer.qml
 720x1280/AttachedImage.qml
@@ -86,6 +86,7 @@ images/icn_compose_white_100x100.png
 images/icn_search_focused_100x100.png
 images/icn_search_white_100x100.png
 images/ic_doctype_video.png
+images/ic_done.png
 images/ic_open.png
 images/ic_resume.png
 images/ic_save.png
@@ -142,6 +143,7 @@ main.qml
 NotificationsPage.qml
 ProfileMediaPage.qml
 Search.qml
+SettingsSheet.qml
 tl.qml
 TopBlueBarText.qml
 TweetList.qml

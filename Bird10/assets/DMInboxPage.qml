@@ -25,8 +25,8 @@ import "../components" 1.0
 
 Page {
     property string shared_url: ""
-    
-    actionBarVisibility: ChromeVisibility.Overlay
+
+    actionBarVisibility: app.showTabsOnActionBar ? ChromeVisibility.Visible : ChromeVisibility.Overlay
     actionBarAutoHideBehavior: ActionBarAutoHideBehavior.HideOnScroll
     
     id: thisDMHistory

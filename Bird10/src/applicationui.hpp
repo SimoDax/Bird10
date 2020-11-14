@@ -43,7 +43,11 @@ class ApplicationUI : public QObject
 public:
     Q_PROPERTY(bool backgroundUpdatesEnabled READ backgroundUpdatesEnabled WRITE setBackgroundUpdatesEnabled NOTIFY backgroundUpdatesEnabledChanged)
     inline bool backgroundUpdatesEnabled(){ return m_backgroundUpdatesEnabled; };
-    inline void setBackgroundUpdatesEnabled(bool enabled){ m_backgroundUpdatesEnabled = enabled; emit backgroundUpdatesEnabledChanged();};
+    Q_INVOKABLE void setBackgroundUpdatesEnabled(bool enabled){ m_backgroundUpdatesEnabled = enabled; emit backgroundUpdatesEnabledChanged();};
+
+    Q_PROPERTY(bool showTabsOnActionBar READ showTabsOnActionBar WRITE setShowTabsOnActionBar NOTIFY showTabsOnActionBarChanged)
+    inline bool showTabsOnActionBar(){ return m_showTabsOnActionBar; };
+    Q_INVOKABLE void setShowTabsOnActionBar(bool show){ m_showTabsOnActionBar = show; QSettings settings("simodax","bird10"); settings.setValue("showTabsOnActionBar", show); emit showTabsOnActionBarChanged();};
 
     Q_PROPERTY(DMApi* dm READ dmApi CONSTANT)
     inline DMApi* dmApi(){return m_dmApi;};
@@ -101,6 +105,7 @@ public:
 
 signals:
     void backgroundUpdatesEnabledChanged();
+    void showTabsOnActionBarChanged();
 
 public slots:
     void shareImageLoaded();
@@ -121,7 +126,7 @@ private:
     DMApi* m_dmApi;
     InvokeTargetReply * m_reply;
     InvokeQueryTargetsReply* _queryResults;
-    bool m_backgroundUpdatesEnabled;
+    bool m_backgroundUpdatesEnabled, m_showTabsOnActionBar;
 };
 
 #endif /* ApplicationUI_HPP_ */
