@@ -28,6 +28,7 @@ ListItemComponent {
     type: "main"
     
     BaseTweetContainer {
+        gestureHandlers: []    // we don't want to open another conversation identical to the current one when the user taps the main tweet
         
         id: itemRoot
         
