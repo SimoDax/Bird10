@@ -102,7 +102,7 @@ ApplicationUI::ApplicationUI() :
     QSettings settings("simodax","bird10");
     if(settings.value("theme", 0).toInt())
         Application::instance()->themeSupport()->setVisualStyle(settings.value("theme").toInt());
-    m_showTabsOnActionBar = settings.value("showTabsOnActionBar", false).toBool();
+    m_showTabsOnActionBar = settings.value("showTabsOnActionBar", true).toBool();
 
     // Create scene document from main.qml asset, the parent is set
     // to ensure the document gets destroyed properly at shut down.
