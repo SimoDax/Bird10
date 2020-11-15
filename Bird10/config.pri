@@ -87,6 +87,7 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/components/CardComponent.qml) \
         $$quote($$BASEDIR/assets/components/DMCompose.qml) \
         $$quote($$BASEDIR/assets/components/DMConversationComponent.qml) \
+        $$quote($$BASEDIR/assets/components/DMEmojiPicker.qml) \
         $$quote($$BASEDIR/assets/components/DMMessageComponent.qml) \
         $$quote($$BASEDIR/assets/components/DMPhotoCard.qml) \
         $$quote($$BASEDIR/assets/components/GifTweetComponent.qml) \
@@ -128,6 +129,7 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/images/btn_emoji_objects.png) \
         $$quote($$BASEDIR/assets/images/btn_emoji_people.png) \
         $$quote($$BASEDIR/assets/images/btn_emoji_places.png) \
+        $$quote($$BASEDIR/assets/images/btn_emoji_square.png) \
         $$quote($$BASEDIR/assets/images/btn_emoji_symbols.png) \
         $$quote($$BASEDIR/assets/images/btn_pressed_photo_gallery.png) \
         $$quote($$BASEDIR/assets/images/bubble_arrow_blue.png) \

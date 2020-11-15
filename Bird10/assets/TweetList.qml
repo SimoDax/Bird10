@@ -91,6 +91,13 @@ ListView {
         nav.push(page)
     }
     
+    // Needed when app is invoked through active text (twitter.com url)
+    function openConversationFromId(id){
+        var page = conversationPage.createObject()
+        page.twitterApi.loadConversation(id)
+        nav.push(page)
+    }
+    
     function openProfile(indexPath){
         var comp = Qt.createComponent("asset:///UserProfile.qml")
         var page = comp.createObject(nav)

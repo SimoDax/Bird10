@@ -113,9 +113,15 @@
         <invoke-target-type>application</invoke-target-type>
         <invoke-target-name>Bird10</invoke-target-name>
         <icon>
-            <image>icon.png</image>
+            <image>logo.png</image>
         </icon>
         <entry-point-id>Bird10</entry-point-id>
+        <filter>
+		    <action>bb.action.VIEW</action>
+		    <action>bb.action.OPEN</action>
+		    <mime-type>*</mime-type>
+		    <property var="uris" value="https://mobile.twitter.com/,http://mobile.twitter.com/,https://twitter.com/,http://twitter.com/,https://www.twitter.com/,http://www.twitter.com/,http://m.twitter.com,https://m.twitter.com"/>
+	  	</filter>
     </invoke-target>
 
     <!-- The name that is displayed in the BlackBerry 10 application installer.

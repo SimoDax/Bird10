@@ -22,6 +22,7 @@
 #include <bb/cascades/Application>
 #include <bb/cascades/QmlDocument>
 #include <bb/cascades/AbstractPane>
+#include <bb/cascades/TabbedPane>
 #include <bb/cascades/LocaleHandler>
 #include <bb/cascades/ThemeSupport>
 #include <bb/cascades/VisualStyle>
@@ -67,6 +68,7 @@ ApplicationUI::ApplicationUI() :
         , m_backgroundUpdatesEnabled(true)
         , m_dmApi(new DMApi(this))
         , m_displayInfo(new bb::device::DisplayInfo)
+        , m_invokeManager(new InvokeManager)
 {
     qmlRegisterType<OXTwitter>("com.pipacs.o2", 1, 0, "OXTwitter");
     qmlRegisterType<O1Twitter>("com.pipacs.o2", 1, 0, "O1Twitter");
@@ -92,6 +94,10 @@ ApplicationUI::ApplicationUI() :
     qRegisterMetaType<DMApi*>("DMAPi*");
     qRegisterMetaType<bb::device::DisplayInfo*>("bb::device::DisplayInfo*");
 
+    // Handle launch through invocation (e.g. if user taps on @mention or twitter url outside the app)
+    m_invokeManager->connect(m_invokeManager, SIGNAL(invoked(const bb::system::InvokeRequest&)),
+            this, SLOT(handleInvoke(const bb::system::InvokeRequest&)));
+
     // Start web requestor thread
     curlThread.start();
 
@@ -114,12 +120,12 @@ ApplicationUI::ApplicationUI() :
 
 
     // Create root object for the UI
-    AbstractPane *root = qml->createRootObject<AbstractPane>();
+    m_root = qml->createRootObject<AbstractPane>();
 
     // Set created root object as the application scene
-    Application::instance()->setScene(root);
+    Application::instance()->setScene(m_root);
 
-    m_dmApi->setAuthenticator(root->findChild<OXTwitter*>("o1Twitter"));
+    m_dmApi->setAuthenticator(m_root->findChild<OXTwitter*>("o1Twitter"));
 //    qDebug()<<"ApplicationUI::ApplicationUI: authenticator ptr "<<(root->findChild<OXTwitter*>("o1Twitter"));
     // Set cache in manager
 //    mNetManager->setCache(mNetworkDiskCache);
@@ -426,4 +432,36 @@ void ApplicationUI::lateInit()
 
 //    m_displayInfo = new bb::device::DisplayInfo();
     m_dmApi->loadInboxInitialState();
+}
+
+void ApplicationUI::handleInvoke(const bb::system::InvokeRequest& invoke)
+{
+    qDebug()<<"ApplicationUI::handleInvoke: ACTION IS "<<invoke.action();
+
+    if(m_root->findChild<OXTwitter*>("o1Twitter")->linked()){
+        QString path = invoke.uri().path();
+        if(path.endsWith('/'))  // remove trailing slash
+            path.chop(1);
+
+        if(path.contains("/status/")){
+            // User tapped on a tweet link
+            path = path.mid(path.indexOf("/status/")+8);
+            emit openConversation(path);
+            TabbedPane* p = static_cast<TabbedPane*>(m_root);   // a little bit of downcasting is all I need *saxophone music*
+            p->setActiveTab(p->at(0));
+        }
+        else if(path.lastIndexOf('/') == 0){
+            // User tapped on a profile link e.g. twitter.com/jack
+            emit openProfile(path.mid(1));  // all the path except for the first character, which is a slash
+            TabbedPane* p = static_cast<TabbedPane*>(m_root);
+            p->setActiveTab(p->at(0));
+        }
+        else if (path.contains("/lists/")){
+            // User tapped on a list link
+            TabbedPane* p = static_cast<TabbedPane*>(m_root);
+            p->setActiveTab(p->at(4));
+            path = path.mid(path.indexOf("/lists/")+7);
+            emit openList(path);
+        }
+    }
 }

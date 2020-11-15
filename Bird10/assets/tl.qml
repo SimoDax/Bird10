@@ -42,6 +42,8 @@ NavigationPane {
     TimelinePage {
         onCreationCompleted: {
             refreshAction.triggered.connect(twitterApi.requestTweets)
+            app.openConversation.connect(tweetList.openConversationFromId)
+            app.openProfile.connect(tweetList.openProfileFromScreenName)
         }
         
         function clear(){

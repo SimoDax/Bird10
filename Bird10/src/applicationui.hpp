@@ -28,10 +28,14 @@
 #include <bb/system/SystemDialog>
 #include <bb/system/InvokeTargetReply>
 #include <bb/system/InvokeQueryTargetsReply>
+#include <bb/system/InvokeRequest>
+#include <bb/system/InvokeManager>
 #include <bb/device/DisplayInfo>
+#include <bb/cascades/AbstractPane>
 #include <src/DMApi.hpp>
 
 using namespace bb::system;
+using namespace bb::cascades;
 /*!
  * @brief Application UI object
  *
@@ -107,6 +111,10 @@ signals:
     void backgroundUpdatesEnabledChanged();
     void showTabsOnActionBarChanged();
 
+    void openConversation(const QString& id);   // Emitted when app is invoked through active text (twitter.com url)
+    void openProfile(const QString& screen_name);
+    void openList(const QString& id);
+
 public slots:
     void shareImageLoaded();
     void saveImageLoaded();
@@ -119,11 +127,14 @@ private slots:
     void onDialogFinished(bb::system::SystemUiResult::Type result);
     void onQueryResponse();
     void lateInit();
+    void handleInvoke(const bb::system::InvokeRequest& invoke);
 
 private:
     static QNetworkAccessManager * mNetManager;
     bb::device::DisplayInfo* m_displayInfo;
     DMApi* m_dmApi;
+    AbstractPane* m_root;
+    InvokeManager* m_invokeManager;
     InvokeTargetReply * m_reply;
     InvokeQueryTargetsReply* _queryResults;
     bool m_backgroundUpdatesEnabled, m_showTabsOnActionBar;

@@ -32,6 +32,15 @@ NavigationPane {
         actionBarVisibility: app.showTabsOnActionBar ? ChromeVisibility.Visible : ChromeVisibility.Compact
         onCreationCompleted: {
             twitterApi.requestLists()
+            app.openList.connect(openListById)
+        }
+        
+        function openListById(id){
+            var page = listPage.createObject()
+            page.listId = id
+            page.name = "List"    // the id comes from the url the user tapped on, we don't know the actual list name
+            page.twitterApi.requestTweets()
+            nav.push(page)
         }
         
         Container {
