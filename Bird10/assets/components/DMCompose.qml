@@ -30,37 +30,38 @@ Container {
     property string selectedImagePath
     property variant pageHandle
     signal scrollDMListToEnd()
-    
-    Container {
 
-        function showPreviewImage(filePath) {
-            imagePreview.imageSoureFile = filePath;
-            _directMessagesController.setImageView(imagePreview, filePath);
-        }
-        
-        function requestFocus() {
-            dmInputField.requestFocus();
-        }
-        
-        function isLengthValid() {
-            var tweetLength = inputText.trim().length
-            return tweetLength < 10000
-        }
-        
-        function freeze(){
-            dmSendButton.enabled = false
-            dmInputField.enabled = false
-            clearImage.enabled = false
-            photoLibraryButton.enabled = false
-        }
-        
-        function unfreeze(){
-            dmSendButton.enabled = true
-            dmInputField.enabled = true
-            clearImage.enabled = true
-            photoLibraryButton.enabled = true
-        }
-        
+    function showPreviewImage(filePath) {
+        imagePreview.imageSoureFile = filePath;
+        _directMessagesController.setImageView(imagePreview, filePath);
+    }
+
+    function requestFocus() {
+        dmInputField.requestFocus();
+    }
+
+    function isLengthValid() {
+        var tweetLength = inputText.trim().length
+        return tweetLength < 10000
+    }
+
+    function freeze() {
+        dmSendButton.enabled = false
+        dmInputField.enabled = false
+        clearImage.enabled = false
+        photoLibraryButton.enabled = false
+        emojiBtn.enabled = false
+    }
+
+    function unfreeze() {
+        dmSendButton.enabled = true
+        dmInputField.enabled = true
+        clearImage.enabled = true
+        photoLibraryButton.enabled = true
+        emojiBtn.enabled = true
+    }
+
+    Container {
         minHeight: (128)
         layout: StackLayout {
             orientation: LayoutOrientation.LeftToRight
@@ -76,6 +77,7 @@ Container {
             focusPolicy: FocusPolicy.KeyAndTouch
             defaultImageSource: (imageSource != "") ? "asset:///images/btn_pressed_photo_gallery.png" : "asset:///images/btn_default_photo_gallery.png"
             pressedImageSource: "asset:///images/btn_pressed_photo_gallery.png"
+            disabledImageSource: "asset:///images/btn_default_photo_gallery.png"
             onClicked: {
                 filePicker.open()
             }
@@ -88,7 +90,9 @@ Container {
             }
         }
         ImageButton {
+            id: emojiBtn
             defaultImageSource: "asset:///images/btn_emoji_square.png"
+            disabledImageSource: "asset:///images/btn_emoji_square.png"
             verticalAlignment: VerticalAlignment.Center
             horizontalAlignment: HorizontalAlignment.Center
             onClicked: {
