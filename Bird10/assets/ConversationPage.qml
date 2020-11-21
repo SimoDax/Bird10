@@ -60,6 +60,8 @@ Page {
                         return "main_gif"
                     if (data.image_flag)
                         return "main_image"
+                    if(data.poll_flag)
+                        return "main_poll"
                     return "main"
                 }
                 if(data.image_flag)
@@ -68,6 +70,8 @@ Page {
                     return "video"
                 if (data.gif_flag)
                     return "gif"
+                if (data.poll_flag)
+                    return "poll"
 
                 return ""
             }

@@ -72,6 +72,8 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/VisualStyle.bright/btn_default_gallery.png) \
         $$quote($$BASEDIR/assets/VisualStyle.bright/btn_emoji.png) \
         $$quote($$BASEDIR/assets/VisualStyle.bright/btn_video.png) \
+        $$quote($$BASEDIR/assets/VisualStyle.bright/poll_button_disabled.amd) \
+        $$quote($$BASEDIR/assets/VisualStyle.bright/poll_button_disabled.png) \
         $$quote($$BASEDIR/assets/VisualStyle.bright/quoted_border.amd) \
         $$quote($$BASEDIR/assets/VisualStyle.bright/quoted_border.png) \
         $$quote($$BASEDIR/assets/VisualStyle.dark/btn_compose_tweet.png) \
@@ -79,6 +81,8 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/VisualStyle.dark/btn_default_gallery.png) \
         $$quote($$BASEDIR/assets/VisualStyle.dark/btn_emoji.png) \
         $$quote($$BASEDIR/assets/VisualStyle.dark/btn_video.png) \
+        $$quote($$BASEDIR/assets/VisualStyle.dark/poll_button_disabled.amd) \
+        $$quote($$BASEDIR/assets/VisualStyle.dark/poll_button_disabled.png) \
         $$quote($$BASEDIR/assets/VisualStyle.dark/quoted_border.amd) \
         $$quote($$BASEDIR/assets/VisualStyle.dark/quoted_border.png) \
         $$quote($$BASEDIR/assets/components/ArrowItemComponent.qml) \
@@ -98,6 +102,9 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/components/LoadingComponent.qml) \
         $$quote($$BASEDIR/assets/components/NotificationTweetComponent.qml) \
         $$quote($$BASEDIR/assets/components/PlayerCard.qml) \
+        $$quote($$BASEDIR/assets/components/PollButtonEntry.qml) \
+        $$quote($$BASEDIR/assets/components/PollResultEntry.qml) \
+        $$quote($$BASEDIR/assets/components/PollTweetComponent.qml) \
         $$quote($$BASEDIR/assets/components/ProfileHeaderBottom.qml) \
         $$quote($$BASEDIR/assets/components/ProfileHeaderTop.qml) \
         $$quote($$BASEDIR/assets/components/ProfilePic.qml) \
@@ -151,6 +158,7 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/images/home_80x80.png) \
         $$quote($$BASEDIR/assets/images/ic_doctype_video.png) \
         $$quote($$BASEDIR/assets/images/ic_done.png) \
+        $$quote($$BASEDIR/assets/images/ic_done_black.png) \
         $$quote($$BASEDIR/assets/images/ic_open.png) \
         $$quote($$BASEDIR/assets/images/ic_resume.png) \
         $$quote($$BASEDIR/assets/images/ic_save.png) \
@@ -174,6 +182,8 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/images/notifications_active_80x80.png) \
         $$quote($$BASEDIR/assets/images/play-50x50.png) \
         $$quote($$BASEDIR/assets/images/play.png) \
+        $$quote($$BASEDIR/assets/images/poll_button.amd) \
+        $$quote($$BASEDIR/assets/images/poll_button.png) \
         $$quote($$BASEDIR/assets/images/profile/avatar_border.amd) \
         $$quote($$BASEDIR/assets/images/profile/avatar_border.png) \
         $$quote($$BASEDIR/assets/images/profile/dark_background.png) \

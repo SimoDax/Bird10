@@ -279,7 +279,7 @@ void ProfileApi::insertMediaTweets(CurlEasy* reply, int offset)
 
                     QVariantMap tweet = entries[i].toMap()["content"].toMap();
                     QString id = tweet["item"].toMap()["content"].toMap()["tweet"].toMap()["id"].toString();
-                    QVariantMap tweetObject = parseTweetV2(realTweet(tweets[id].toMap()), tweets, users);
+                    QVariantMap tweetObject = parseTweetV2((tweets[id].toMap()), tweets, users);
 
                     if(tweetObject.keys().contains("extended_entities")){   // Filter links
 

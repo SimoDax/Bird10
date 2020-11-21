@@ -69,6 +69,23 @@ void TimelineDataModel::removeById(const QString& id)
     }
 }
 
+void TimelineDataModel::updateCard(const QString& url, const QVariantMap& newCard)
+{
+    int n = this->size();
+    for(int i = 0; i<n; i++){
+        QVariantMap data = this->value(i).toMap();
+
+        qDebug()<<data["card"].toMap()["url"].toString();
+
+        if(data["card"].toMap()["url"].toString() == url){
+            data["card"] = newCard;
+            this->ArrayDataModel::replace(i, data);
+            emit cardUpdated(i);
+            return;
+        }
+    }
+}
+
 QString TimelineDataModel::getTimeString(const QDateTime& dt)
 {
     QDateTime current = QDateTime::currentDateTime();
@@ -95,8 +112,58 @@ QString TimelineDataModel::getTimeString(const QDateTime& dt)
         return dt.toString("d MMM yyyy").toLower();
 }
 
+
 QString TimelineDataModel::getFullTimeString(const QDateTime& dt)
 {
     return dt.toString("h:mm AP " + QString::fromUtf8("\u00B7") +" d MMM yyyy").toLower();
 }
 
+void TimelineDataModel::clear(){
+    bb::cascades::ArrayDataModel::clear();
+    m_terminateBottom = false;
+    m_terminateTop = false;
+    m_cursorTop.clear();
+    m_cursorBottom.clear();
+}
+
+const QString& TimelineDataModel::cursorBottom() const
+{
+    return m_cursorBottom;
+}
+
+void TimelineDataModel::setCursorBottom(const QString& cursorBottom)
+{
+    qDebug()<<"TimelineDataModel::setCursorBottom: "<<cursorBottom;
+    m_cursorBottom = cursorBottom;
+}
+
+const QString& TimelineDataModel::cursorTop() const
+{
+    return m_cursorTop;
+}
+
+void TimelineDataModel::setCursorTop(const QString& cursorTop)
+{
+    qDebug()<<"TimelineDataModel::setCursorTop: "<<cursorTop;
+    m_cursorTop = cursorTop;
+}
+
+bool TimelineDataModel::isTerminateBottom() const
+{
+    return m_terminateBottom;
+}
+
+void TimelineDataModel::setTerminateBottom(bool terminateBottom)
+{
+    m_terminateBottom = terminateBottom;
+}
+
+bool TimelineDataModel::isTerminateTop() const
+{
+    return m_terminateTop;
+}
+
+void TimelineDataModel::setTerminateTop(bool terminateTop)
+{
+    m_terminateTop = terminateTop;
+}

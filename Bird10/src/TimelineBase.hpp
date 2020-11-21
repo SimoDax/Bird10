@@ -36,6 +36,7 @@ protected:
     QVariantMap parseTweet(QVariantMap tweet);
     QJsonObject realTweet(QJsonObject tweet);
     QVariantMap realTweet(QVariantMap tweet);
+    QVariantMap realTweetV2(const QVariantMap& tweet, const QVariantMap& tweets, const QVariantMap& users);
     QVariantMap parseTweetV2(QVariantMap tweet, const QVariantMap& tweets, const QVariantMap& users);
 };
 

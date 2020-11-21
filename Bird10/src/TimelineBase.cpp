@@ -47,6 +47,25 @@ QVariantMap TimelineBase::realTweet(QVariantMap tweet)
     }
 }
 
+QVariantMap TimelineBase::realTweetV2(const QVariantMap& tweet, const QVariantMap& tweets, const QVariantMap& users)
+{
+    if(tweet.keys().contains("retweeted_status_id_str")){
+        QVariantMap real_tweet = tweets[tweet["retweeted_status_id_str"].toString()].toMap();
+        real_tweet["rt_flag"] = true;
+        real_tweet["rt_id"] = tweet["id_str"];
+
+        QVariantMap user = users[tweet["user_id_str"].toString()].toMap();
+        real_tweet["rt_name"] = user["name"];
+        real_tweet["rt_screen_name"] = user["screen_name"];
+        return real_tweet;
+    }
+    else{
+        QVariantMap t = QVariantMap(tweet);
+        t["rt_flag"] = false;
+        return t;
+    }
+}
+
 QJsonObject TimelineBase::realTweet(QJsonObject tweet){
     if(tweet.keys().contains("retweeted_status"))
             return tweet["retweeted_status"].toObject();
@@ -72,6 +91,30 @@ QVariantMap TimelineBase::parseTweet(QVariantMap tweet)
         tweet["gif_flag"] = true;
     else
         tweet["gif_flag"] = false;
+
+    if(tweet.keys().contains("card") && tweet["card"].toMap()["name"].toString().contains("poll")){
+        tweet["poll_flag"] = true;
+
+        int choiceCount = tweet["card"].toMap()["name"].toString().at(4).digitValue();
+        QVariantMap pollValues = tweet["card"].toMap()["binding_values"].toMap();
+        int winner = 1;
+        int winnerScore = 0;
+        int totalScore = 0;
+
+        for(int i = 1; i<=choiceCount; i++){
+            QString c = "choice"+QString::number(i)+"_count";
+            if(pollValues[c].toMap()["string_value"].toInt() > winnerScore){
+                winner = i;
+                winnerScore = pollValues[c].toMap()["string_value"].toInt();
+            }
+            totalScore += pollValues[c].toMap()["string_value"].toInt();
+        }
+        tweet["poll_winner"] = winner;
+        tweet["poll_vote_count"] = totalScore;
+        tweet["poll_choice_count"] = choiceCount;
+    }
+    else
+        tweet["poll_flag"] = false;
 
 
     // Rewrite tweet, use utf-32 to count emoji only once
@@ -172,6 +215,7 @@ QVariantMap TimelineBase::parseTweet(QVariantMap tweet)
 
 QVariantMap TimelineBase::parseTweetV2(QVariantMap tweet, const QVariantMap& tweets, const QVariantMap& users){
 
+    tweet = realTweetV2(tweet, tweets, users);
     tweet = parseTweet(tweet);
 
     tweet["user"] = users[tweet["user_id_str"].toString()];

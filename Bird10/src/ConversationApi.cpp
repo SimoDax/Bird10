@@ -24,7 +24,6 @@
 
 ConversationApi::ConversationApi(QObject *parent) : TwitterApi(parent)
 {
-    tweetModel_ = new TimelineDataModel(parent);
 }
 
 void ConversationApi::loadConversation(const QString& id, bool includeCursor)
@@ -37,8 +36,19 @@ void ConversationApi::loadConversation(const QString& id, bool includeCursor)
     par.append(O0RequestParameter("count", "100"));
 
     if(includeCursor){
-        if(!m_cursor.isEmpty()){
-            par.append(O0RequestParameter("cursor", m_cursor.toUtf8()));
+        if(!tweetModel_->cursorBottom().isEmpty()){
+            /*
+             * Twitter api for conversations doesn't have two separate parameters for top and bottom cursor, so it works in this way:
+             * - if you send the cursor-top contained in a previous reply, the server will return at most <count> tweets towards the head of the thread
+             * - if you send the cursor-bottom contained in a previous reply, the server will return:
+             *      - at most <count> thread tweets towards the end of the thread
+             *      - if there are less than count, it will begin returning replies to the thread
+             *      - when all replies have been returned, cursor-bottom won't be present in the json anymore (this is inconsistent with other
+             *          endpoints which use a terminateTimeline entry to signal that there's no more content to retrieve)
+             */
+
+            // For now only additional tweets towards the bottom are retrieved
+            par.append(O0RequestParameter("cursor", tweetModel_->cursorBottom().toUtf8()));
         }
         else return;
     }
@@ -60,21 +70,7 @@ void ConversationApi::insertTweet(const QVariantMap& tweet)
 //    if(!m_tweets.keys().contains(id))
 //        return;
 
-    QVariantMap tweetObject = parseTweetV2(realTweet(m_tweets[id].toMap()), m_tweets, m_users);
-
-//    tweetObject["user"] = m_users[tweetObject["user_id_str"].toString()];
-//    //qDebug()<<tweetObject["user_id_str"].toString();
-//
-//    if(tweetObject["is_quote_status"].toBool() == true){
-//        QString quoteId = tweetObject["quoted_status_id_str"].toString();
-//
-//        QVariantMap quoteTweet = parseTweet((m_tweets[quoteId].toMap()));
-//
-//        quoteTweet["user"] = m_users[quoteTweet["user_id_str"].toString()];
-//
-//        tweetObject["quoted_status"] = quoteTweet;
-//
-//    }
+    QVariantMap tweetObject = parseTweetV2((m_tweets[id].toMap()), m_tweets, m_users);
 
     // Mark main tweet
     if(id == m_id){
@@ -117,7 +113,7 @@ void ConversationApi::conversationReceived()
 
     QVariantList instructions = content["timeline"].toMap()["instructions"].toList();
 
-    m_cursor = "";
+    tweetModel_->setCursorBottom("");
     m_tweetsCount = 0;
     for(int i = 0; i<instructions.size(); i++){
         if(instructions[i].toMap().keys().contains("addEntries")){
@@ -133,7 +129,7 @@ void ConversationApi::conversationReceived()
                 else if (ids[0].contains("Thread"))
                     insertTweetsFromThread(entries[i].toMap()["content"].toMap());
                 else if(ids[0].contains("cursor") && (ids[1].contains("bottom") || ids[1].contains("showMoreThreads")))
-                    m_cursor = entries[i].toMap()["content"].toMap()["operation"].toMap()["cursor"].toMap()["value"].toString();
+                    tweetModel_->setCursorBottom(entries[i].toMap()["content"].toMap()["operation"].toMap()["cursor"].toMap()["value"].toString());
                 //TODO: implement cursor top
             }
         }
@@ -146,7 +142,7 @@ void ConversationApi::conversationReceived()
      * Workaround: Twitter api's seem to have bugged recently - they don't return any terminateTimeline in the bottom direction, at least for conversations
      * When there are no more replies, however, no cursor is returned. The code that follows exploits this fact to artifically terminate the timeline
      */
-    if(m_cursor == "")
+    if(tweetModel_->cursorBottom() == "")
         tweetModel_->setTerminateBottom(true);
 
 

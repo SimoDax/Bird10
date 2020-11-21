@@ -139,7 +139,7 @@ void DiscoverApi::insertTweet(const QVariantMap& tweet)
 
     QString id = tweetContent["id"].toString();
 
-    QVariantMap tweetObject = parseTweetV2(realTweet(m_tweets[id].toMap()), m_tweets, m_users);
+    QVariantMap tweetObject = parseTweetV2((m_tweets[id].toMap()), m_tweets, m_users);
 
     //qDebug()<<tweetObject["user_id_str"].toString();
 

@@ -36,6 +36,12 @@
 class TwitterApi: public TimelineBase {
     Q_OBJECT
 
+    enum Direction{
+        NONE,
+        TOP,
+        BOTTOM
+    };
+
 public:
     /// List of tweets
     Q_PROPERTY(TimelineDataModel *tweetModel READ tweetModel WRITE setTweetModel NOTIFY tweetModelChanged)
@@ -47,9 +53,10 @@ public:
     virtual ~TwitterApi();
 
     Q_INVOKABLE inline void clearTweetModel(){  tweetModel_->clear();}
+    Q_INVOKABLE void votePoll(const QString& card_uri, const QString& tweet_id, int selected_choice, int choice_count);
 
 public slots:
-    Q_INVOKABLE virtual void requestTweets(QString max_id = QString(), QString since_id = QString());
+    Q_INVOKABLE virtual void requestTweets(Direction dir = NONE);
     Q_INVOKABLE virtual void requestFavoriteTweets(QString max_id = QString(), QString since_id = QString());
 //    Q_INVOKABLE virtual void requestProfileTweets(QString max_id = QString(), QString since_id = QString());
     Q_INVOKABLE void requestOlderTweets();
@@ -77,9 +84,12 @@ protected slots:
     void favorited();
     void retweet(QString id, bool state);
     void onDestroyTweet();
+    void onVotePoll();
 
 protected:
-    void appendTweets(CurlEasy* reply);
+    void processTimeline(CurlEasy* reply, Direction mode = NONE);
+    int insertTweet(const QVariantMap& tweet, const QVariantMap& tweets, const QVariantMap& users, int position = -1);
+    int insertTweetFromConversation(const QVariantMap& tweet, const QVariantMap& tweets, const QVariantMap& users, int position = -1);
     void terminateTimeline(QVariantMap instruction);
 };
 

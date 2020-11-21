@@ -60,35 +60,30 @@ void TwitterApi::setTweetModel(TimelineDataModel* tweetModel)
         oldModel->deleteLater();
 }
 
-void TwitterApi::requestTweets(QString max_id, QString since_id) {
+void TwitterApi::requestTweets(Direction dir) {
     if (!authenticator_ || !authenticator_->linked()) {
         tweetModel_->clear();
         emit tweetModelChanged();
         return;
     }
-    //CurlEasy * requestor = new CurlEasy(this);
 
-    //O1Requestor *requestor = new O1Requestor(authenticator_, this);
-    //requestor->moveToThread(thread);
-    QString url = ("https://api.twitter.com/1.1/statuses/home_timeline.json?tweet_mode=extended&count=40");
+    QString url = ("https://api.twitter.com/2/timeline/home_latest.json");
     QList<O0RequestParameter> par;
     par.append(O0RequestParameter("tweet_mode", "extended"));
     par.append(O0RequestParameter("count", "40"));
 
-    if(!max_id.isEmpty()){
-        url += "&max_id=" + QString("%1").arg(max_id.toLongLong()-1);
-        par.append(O0RequestParameter("max_id", QString("%1").arg(max_id.toLongLong()-1).toUtf8()));
+    if(dir == BOTTOM){
+        par.append(O0RequestParameter("cursor", QString("%1").arg(tweetModel_->cursorBottom()).toUtf8()));
     }
-    if(!since_id.isEmpty()){
-        url += "&since_id=" + QString("%1").arg(since_id.toLongLong());
-        par.append(O0RequestParameter("since_id", QString("%1").arg(since_id.toLongLong()).toUtf8()));
+    if(dir == TOP){
+        par.append(O0RequestParameter("cursor", QString("%1").arg(tweetModel_->cursorTop()).toUtf8()));
     }
 
     CurlEasy* reply = requestor->get(url, par);
 
-    if(!max_id.isEmpty())
+    if(dir == BOTTOM)
         connect(reply, SIGNAL(done(CURLcode)), this, SLOT(olderTweetsReceived()));
-    else if(!since_id.isEmpty())
+    else if(dir == TOP)
         connect(reply, SIGNAL(done(CURLcode)), this, SLOT(latestTweetsReceived()));
     else
         connect(reply, SIGNAL(done(CURLcode)), this, SLOT(tweetsReceived()));
@@ -170,17 +165,11 @@ void TwitterApi::requestFavoriteTweets(QString max_id, QString since_id) {
 
 
 void TwitterApi::requestOlderTweets(){
-    QString last_tweet_id = tweetModel_->value(tweetModel_->size()-1-1).toMap()["id_str"].toString();
-
-    requestTweets(last_tweet_id);
+    requestTweets(BOTTOM);
 }
 
 void TwitterApi::requestLatestTweets(){
-    QString top_tweet_id = tweetModel_->value(0).toMap()["rt_id"].toString();
-    if(top_tweet_id.isEmpty())
-        top_tweet_id = tweetModel_->value(0).toMap()["id_str"].toString();
-
-    requestTweets(QString(), top_tweet_id);
+    requestTweets(TOP);
 }
 
 void TwitterApi::requestOlderFavoriteTweets(){
@@ -202,7 +191,7 @@ void TwitterApi::tweetsReceived() {
     qDebug()<<"TwitterApi::tweetsReceived";
 
     tweetModel_->clear();
-    appendTweets(reply);
+    processTimeline(reply);
 
     reply->deleteLater();
 }
@@ -211,37 +200,21 @@ void TwitterApi::olderTweetsReceived() {
     CurlEasy* reply = qobject_cast<CurlEasy *>(sender());
 
     tweetModel_->removeAt(tweetModel_->size()-1);       // Remove loading element
-    appendTweets(reply);
+    processTimeline(reply, BOTTOM);
 
     reply->deleteLater();
 }
 
-void TwitterApi::latestTweetsReceived()
-{
+void TwitterApi::latestTweetsReceived(){
     CurlEasy* reply = qobject_cast<CurlEasy *>(sender());
 
     tweetModel_->refreshElapsedTime();
-
-    int count=0;
-    QJsonDocument jsonResponse = QJsonDocument::fromJson(reply->data());
-    QJsonArray jsonArray = jsonResponse.array();
-    qDebug()<<"TwitterApi::latestTweetsReceived: "<<jsonArray.size()<<" new tweets";
-    if(!jsonArray.isEmpty()){
-        foreach (const QJsonValue &v, jsonArray) {
-            QVariantMap item = v.toObject().toVariantMap();
-            QVariantMap tweet = TimelineBase::realTweet(item);
-
-            tweetModel_->insert(count, parseTweet(tweet));
-            count++;
-        }
-
-        emit tweetModelChanged();
-    }
+    processTimeline(reply, TOP);
 
     reply->deleteLater();
 }
 
-void TwitterApi::appendTweets(CurlEasy* reply){
+void TwitterApi::processTimeline(CurlEasy* reply, Direction mode){
 
 //    #ifdef QT_DEBUG
 //        QFile file("./data/tweets.json");
@@ -253,19 +226,69 @@ void TwitterApi::appendTweets(CurlEasy* reply){
 //    #endif
 
     QJsonDocument jsonResponse = QJsonDocument::fromJson(reply->data());
-    QJsonArray jsonArray = jsonResponse.array();
-    if(!jsonArray.isEmpty()){
-        foreach (const QJsonValue &v, jsonArray) {
-            QVariantMap item = v.toObject().toVariantMap();
-            QVariantMap tweet = TimelineBase::realTweet(item);
+    QJsonObject jsonObject = jsonResponse.object();
+    QVariantMap content = jsonResponse.object().toVariantMap();
 
-            tweetModel_->append(parseTweet(tweet));
+    QVariantMap users = content["globalObjects"].toMap()["users"].toMap();
+    QVariantMap tweets = content["globalObjects"].toMap()["tweets"].toMap();
+    QVariantList instructions = content["timeline"].toMap()["instructions"].toList();
+
+    int count=0;    // if mode is TOP we need to insert tweets preserving the order, so we need to insert each one at <count> position and increment count afterwise
+    for(int i = 0; i<instructions.size(); i++){
+        if(instructions[i].toMap().keys().contains("addEntries")){
+            QVariantList entries = instructions[i].toMap()["addEntries"].toMap()["entries"].toList();
+//            qDebug()<<instructions[i];
+
+            for(int i = 0; i<entries.size(); i++){
+                QStringList ids = entries[i].toMap()["entryId"].toString().split("-");
+
+                if(ids[0].contains("tweet"))
+                    count = insertTweet(entries[i].toMap()["content"].toMap(), tweets, users, mode == TOP ? count : -1);
+                else if (ids[0].contains("homeConversation"))
+                    count = insertTweetFromConversation(entries[i].toMap()["content"].toMap(), tweets, users, mode == TOP ? count : -1);
+                else if(mode != TOP && ids[0].contains("cursor") && (ids[1].contains("bottom")))
+                    tweetModel_->setCursorBottom(entries[i].toMap()["content"].toMap()["operation"].toMap()["cursor"].toMap()["value"].toString());
+                else if(mode != BOTTOM && ids[0].contains("cursor") && (ids[1].contains("top")))
+                    tweetModel_->setCursorTop(entries[i].toMap()["content"].toMap()["operation"].toMap()["cursor"].toMap()["value"].toString());
+            }
         }
-        tweetModel_->append(QVariant());    //Empty QVariant for loading element
-
-        emit tweetModelChanged();
     }
+    tweetModel_->append(QVariant());    //Empty QVariant for loading element
 
+    emit tweetModelChanged();
+}
+
+int TwitterApi::insertTweet(const QVariantMap& tweet, const QVariantMap& tweets, const QVariantMap& users, int position)
+{
+    const QString id = tweet["item"].toMap()["content"].toMap()["tweet"].toMap()["id"].toString();
+
+    //TODO: if it's not contained either we're blocked or the account is private, handle this
+//    if(!m_tweets.keys().contains(id))
+//        return;
+
+    QVariantMap tweetObject = parseTweetV2((tweets[id].toMap()), tweets, users);
+
+    if(position < 0)
+        tweetModel_->append(tweetObject);
+    else
+        tweetModel_->insert(position, tweetObject);
+
+    return position+1;  // return new position
+}
+
+int TwitterApi::insertTweetFromConversation(const QVariantMap& thread, const QVariantMap& tweets, const QVariantMap& users, int position){
+    QVariantList items = thread["timelineModule"].toMap()["items"].toList();
+    int count = position;
+    for(int i = 0; i<items.size(); i++){
+        QStringList ids = items[i].toMap()["entryId"].toString().split("-");
+
+        if(ids[0].contains("tweet") && items[i].toMap()["dispensable"].toBool() == false)
+            if(position < 0)
+                insertTweet(items[i].toMap(), tweets, users, position); // this will append() the tweet
+            else
+                count = insertTweet(items[i].toMap(), tweets, users, count);    // while this will insert it at the correct position
+    }
+    return count;    // return new position
 }
 
 
@@ -415,6 +438,36 @@ void TwitterApi::onDestroyTweet(){
     QVariantMap tweet = jsonResponse.object().toVariantMap();
 
     tweetModel_->removeById(tweet["id_str"].toString());
+
+    reply->deleteLater();
+}
+
+void TwitterApi::votePoll(const QString& card_uri, const QString& tweet_id, int selected_choice, int choice_count)
+{
+    QString url = ("https://caps.twitter.com/v2/capi/passthrough/1");
+
+    QList<O0RequestParameter> par;
+    par.append(O0RequestParameter("twitter:string:card_uri", card_uri.toUtf8()));
+    par.append(O0RequestParameter("twitter:long:original_tweet_id", tweet_id.toUtf8()));
+    par.append(O0RequestParameter("twitter:string:response_card_name", QString("poll"+ QString::number(choice_count) + "choice_text_only").toUtf8()));
+    par.append(O0RequestParameter("twitter:string:cards_platform", "Web-12"));
+    par.append(O0RequestParameter("twitter:string:selected_choice", QByteArray::number(selected_choice)));
+
+    CurlEasy * reply = requestor->post(url, par, QByteArray());
+    reply->set(CURLOPT_VERBOSE, 1L);
+
+    connect(reply, SIGNAL(done(CURLcode)), this, SLOT(onVotePoll()));
+    connect(reply, SIGNAL(error(CURLcode)), this, SLOT(requestFailed(CURLcode)));
+    QMetaObject::invokeMethod(reply, "perform", Qt::QueuedConnection);
+}
+
+void TwitterApi::onVotePoll()
+{
+    CurlEasy *reply = qobject_cast<CurlEasy *>(sender());
+    QJsonDocument jsonResponse = QJsonDocument::fromJson(reply->data());
+    QVariantMap newCard = jsonResponse.object().toVariantMap()["card"].toMap();
+
+    tweetModel_->updateCard(newCard["url"].toString(), newCard);
 
     reply->deleteLater();
 }

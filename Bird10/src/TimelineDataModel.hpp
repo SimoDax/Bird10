@@ -32,35 +32,29 @@ public:
     void refreshElapsedTime();
     void replaceById(const QString& id, const QVariantMap& newData);
     void removeById(const QString& id);
+    void updateCard(const QString& url, const QVariantMap& newData);
 
-    bool isTerminateBottom() const
-    {
-        return m_terminateBottom;
-    }
 
-    void setTerminateBottom(bool terminateBottom)
-    {
-        m_terminateBottom = terminateBottom;
-    }
+    // Getters and Setters - nothing interesting
+    const QString& cursorBottom() const;
+    void setCursorBottom(const QString& cursorBottom);
+    const QString& cursorTop() const;
+    void setCursorTop(const QString& cursorTop);
+    bool isTerminateBottom() const;
+    void setTerminateBottom(bool terminateBottom);
+    bool isTerminateTop() const;
+    void setTerminateTop(bool terminateTop);
 
-    bool isTerminateTop() const
-    {
-        return m_terminateTop;
-    }
-
-    void setTerminateTop(bool terminateTop)
-    {
-        m_terminateTop = terminateTop;
-    }
+signals:
+    void cardUpdated(int indexPath);
 
 public slots:
-    void clear(){
-        bb::cascades::ArrayDataModel::clear(); m_terminateBottom = false; m_terminateTop = false;
-    }
+    void clear();
 
 
-private:
+protected:
     bool m_terminateBottom, m_terminateTop;
+    QString m_cursorTop, m_cursorBottom;
 
 protected:
     QString getTimeString(const QDateTime& dt);

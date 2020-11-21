@@ -1,5 +1,5 @@
 1
-169
+181
 1440x1440/AttachedImage.qml
 1440x1440/ScreenContainer.qml
 720x1280/AttachedImage.qml
@@ -28,6 +28,9 @@ components/LargeSummaryCard.qml
 components/LoadingComponent.qml
 components/NotificationTweetComponent.qml
 components/PlayerCard.qml
+components/PollButtonEntry.qml
+components/PollResultEntry.qml
+components/PollTweetComponent.qml
 components/ProfileHeaderBottom.qml
 components/ProfileHeaderTop.qml
 components/ProfilePic.qml
@@ -89,6 +92,7 @@ images/icn_search_focused_100x100.png
 images/icn_search_white_100x100.png
 images/ic_doctype_video.png
 images/ic_done.png
+images/ic_done_black.png
 images/ic_open.png
 images/ic_resume.png
 images/ic_save.png
@@ -108,6 +112,8 @@ images/notifications_80x80.png
 images/notifications_active_80x80.png
 images/play-50x50.png
 images/play.png
+images/poll_button.amd
+images/poll_button.png
 images/profile/avatar_border.amd
 images/profile/avatar_border.png
 images/profile/dark_background.png
@@ -143,6 +149,8 @@ ListsPage.qml
 LoginSheet.qml
 main.qml
 NotificationsPage.qml
+NotoColorEmoji.ttf
+NotoSans-Light.ttf
 ProfileMediaPage.qml
 Search.qml
 SettingsSheet.qml
@@ -160,6 +168,8 @@ VisualStyle.bright/btn_default_camera.png
 VisualStyle.bright/btn_default_gallery.png
 VisualStyle.bright/btn_emoji.png
 VisualStyle.bright/btn_video.png
+VisualStyle.bright/poll_button_disabled.amd
+VisualStyle.bright/poll_button_disabled.png
 VisualStyle.bright/quoted_border.amd
 VisualStyle.bright/quoted_border.png
 VisualStyle.dark/btn_compose_tweet.png
@@ -167,5 +177,7 @@ VisualStyle.dark/btn_default_camera.png
 VisualStyle.dark/btn_default_gallery.png
 VisualStyle.dark/btn_emoji.png
 VisualStyle.dark/btn_video.png
+VisualStyle.dark/poll_button_disabled.amd
+VisualStyle.dark/poll_button_disabled.png
 VisualStyle.dark/quoted_border.amd
 VisualStyle.dark/quoted_border.png

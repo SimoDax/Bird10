@@ -44,6 +44,8 @@ ListView {
             return "image"
         if (data.gif_flag)
             return "gif"
+        if (data.poll_flag)
+            return "poll"
 
         return ""
     }
@@ -169,6 +171,9 @@ ListView {
         },
         GifTweetComponentMain {
             id: gtcm
+        },
+        PollTweetComponent {
+            id: ptc
         },
         TweetComponent {
             id: lic
