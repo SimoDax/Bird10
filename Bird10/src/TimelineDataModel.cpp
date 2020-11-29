@@ -74,9 +74,6 @@ void TimelineDataModel::updateCard(const QString& url, const QVariantMap& newCar
     int n = this->size();
     for(int i = 0; i<n; i++){
         QVariantMap data = this->value(i).toMap();
-
-        qDebug()<<data["card"].toMap()["url"].toString();
-
         if(data["card"].toMap()["url"].toString() == url){
             data["card"] = newCard;
             this->ArrayDataModel::replace(i, data);

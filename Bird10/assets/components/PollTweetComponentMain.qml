@@ -45,6 +45,11 @@ ListItemComponent {
             // Only update if the displayed tweet has changed (due to ListView's component recycling) or once the user has voted
             if (ListItemData.id_str != previousTweetId || userHasVoted() != previousUserHasVoted){
                 updatePollContainer()
+                
+                /*
+                 * Conversation tl needs to be scrolled to the right position after all poll containers appear, 
+                 * since their height misalignes the timeline vertically if other tweets are present on top of the main one
+                 */
                 itemRoot.ListItem.view.scrollToItem([ itemRoot.ListItem.view.index ], ScrollAnimation.None)
             }
         }

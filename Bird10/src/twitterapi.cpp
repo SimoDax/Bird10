@@ -94,30 +94,27 @@ void TwitterApi::requestTweets(Direction dir) {
     QMetaObject::invokeMethod(reply, "perform", Qt::QueuedConnection);
 }
 
-void TwitterApi::requestFavoriteTweets(QString max_id, QString since_id) {
+void TwitterApi::requestFavoriteTweets(Direction dir) {
     if (!authenticator_ || !authenticator_->linked()) {
         tweetModel_->clear();
         emit tweetModelChanged();
         return;
     }
 
-    QString url = ("https://api.twitter.com/1.1/favorites/list.json?tweet_mode=extended&count=40");
+    QString url = ("https://api.twitter.com/2/timeline/favorites/" + authenticator_->extraTokens()["user_id"].toString() +".json");
     QList<O0RequestParameter> par;
     par.append(O0RequestParameter("tweet_mode", "extended"));
     par.append(O0RequestParameter("count", "40"));
+    par.append(O0RequestParameter("sorted_by_time", "true"));
 
-    if(!max_id.isEmpty()){
-        url += "&max_id=" + QString("%1").arg(max_id.toLongLong()-1);
-        par.append(O0RequestParameter("max_id", QString("%1").arg(max_id.toLongLong()-1).toUtf8()));
-    }
-    if(!since_id.isEmpty()){
-        url += "&since_id=" + QString("%1").arg(since_id.toLongLong());
-        par.append(O0RequestParameter("since_id", QString("%1").arg(since_id.toLongLong()).toUtf8()));
+    if(dir == BOTTOM){
+        par.append(O0RequestParameter("cursor", QString("%1").arg(tweetModel_->cursorBottom()).toUtf8()));
     }
 
     CurlEasy* reply = requestor->get(url, par);
+    reply->set(CURLOPT_VERBOSE, 1L);
 
-    if(!max_id.isEmpty())
+    if(dir == BOTTOM)
         connect(reply, SIGNAL(done(CURLcode)), this, SLOT(olderTweetsReceived()));
     else
         connect(reply, SIGNAL(done(CURLcode)), this, SLOT(tweetsReceived()));
@@ -127,41 +124,6 @@ void TwitterApi::requestFavoriteTweets(QString max_id, QString since_id) {
     //This will trigger the perform method without making an unnecessary signal-slot connection
     QMetaObject::invokeMethod(reply, "perform", Qt::QueuedConnection);
 }
-
-//void TwitterApi::requestProfileTweets(QString max_id, QString since_id) {
-//    if (!authenticator_ || !authenticator_->linked()) {
-//        tweetModel_->clear();
-//        emit tweetModelChanged();
-//        return;
-//    }
-//
-//    QString url = ("https://api.twitter.com/1.1/statuses/user_timeline.json?tweet_mode=extended&count=40");
-//    QList<O0RequestParameter> par;
-//    par.append(O0RequestParameter("tweet_mode", "extended"));
-//    par.append(O0RequestParameter("count", "40"));
-//
-//    if(!max_id.isEmpty()){
-//        url += "&max_id=" + QString("%1").arg(max_id.toLongLong()-1);
-//        par.append(O0RequestParameter("max_id", QString("%1").arg(max_id.toLongLong()-1).toUtf8()));
-//    }
-//    if(!since_id.isEmpty()){
-//        url += "&since_id=" + QString("%1").arg(since_id.toLongLong()-1);
-//        par.append(O0RequestParameter("since_id", QString("%1").arg(since_id.toLongLong()-1).toUtf8()));
-//    }
-//
-//
-//    CurlEasy* reply = requestor->get(url, par);
-//
-//    if(!max_id.isEmpty())
-//        connect(reply, SIGNAL(done(CURLcode)), this, SLOT(olderTweetsReceived()));
-//    else
-//        connect(reply, SIGNAL(done(CURLcode)), this, SLOT(tweetsReceived()));
-//    connect(reply, SIGNAL(error(CURLcode)), this, SLOT(requestFailed(CURLcode)));
-//
-//    //Since the object lives on a different thread its function calls need to be queued
-//    //This will trigger the perform method without making an unnecessary signal-slot connection
-//    QMetaObject::invokeMethod(reply, "perform", Qt::QueuedConnection);
-//}
 
 
 void TwitterApi::requestOlderTweets(){
@@ -173,16 +135,8 @@ void TwitterApi::requestLatestTweets(){
 }
 
 void TwitterApi::requestOlderFavoriteTweets(){
-    QString last_tweet_id = tweetModel_->value(tweetModel_->size()-1-1).toMap()["id_str"].toString();
-
-    requestFavoriteTweets(last_tweet_id);
+    requestFavoriteTweets(BOTTOM);
 }
-
-//void TwitterApi::requestOlderProfileTweets(){
-//    QString last_tweet_id = tweetModel_->value(tweetModel_->size()-1-1).toMap()["id_str"].toString();
-//
-//    requestProfileTweets(last_tweet_id);
-//}
 
 void TwitterApi::tweetsReceived() {
     CurlEasy* reply = qobject_cast<CurlEasy *>(sender());
@@ -199,7 +153,12 @@ void TwitterApi::tweetsReceived() {
 void TwitterApi::olderTweetsReceived() {
     CurlEasy* reply = qobject_cast<CurlEasy *>(sender());
 
-    tweetModel_->removeAt(tweetModel_->size()-1);       // Remove loading element
+    // sometimes if the network is slow the user can trigger a loadOlder request before the previous returns, so more than 1 loading element may be present
+    for(int i = tweetModel_->size()-1; i>0; i--){
+        if(tweetModel_->value(i).isNull())
+            tweetModel_->removeAt(i);       // Remove loading element
+        else break;
+    }
     processTimeline(reply, BOTTOM);
 
     reply->deleteLater();

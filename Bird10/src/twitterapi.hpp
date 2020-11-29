@@ -57,11 +57,9 @@ public:
 
 public slots:
     Q_INVOKABLE virtual void requestTweets(Direction dir = NONE);
-    Q_INVOKABLE virtual void requestFavoriteTweets(QString max_id = QString(), QString since_id = QString());
-//    Q_INVOKABLE virtual void requestProfileTweets(QString max_id = QString(), QString since_id = QString());
+    Q_INVOKABLE virtual void requestFavoriteTweets(Direction dir = NONE);
     Q_INVOKABLE void requestOlderTweets();
     Q_INVOKABLE void requestOlderFavoriteTweets();
-//    Q_INVOKABLE void requestOlderProfileTweets();
     Q_INVOKABLE void requestLatestTweets();
 
     Q_INVOKABLE void favorite(QString id, bool state);

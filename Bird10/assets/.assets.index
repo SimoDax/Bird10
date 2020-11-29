@@ -1,5 +1,5 @@
 1
-181
+180
 1440x1440/AttachedImage.qml
 1440x1440/ScreenContainer.qml
 720x1280/AttachedImage.qml
@@ -31,6 +31,7 @@ components/PlayerCard.qml
 components/PollButtonEntry.qml
 components/PollResultEntry.qml
 components/PollTweetComponent.qml
+components/PollTweetComponentMain.qml
 components/ProfileHeaderBottom.qml
 components/ProfileHeaderTop.qml
 components/ProfilePic.qml
@@ -149,8 +150,6 @@ ListsPage.qml
 LoginSheet.qml
 main.qml
 NotificationsPage.qml
-NotoColorEmoji.ttf
-NotoSans-Light.ttf
 ProfileMediaPage.qml
 Search.qml
 SettingsSheet.qml
