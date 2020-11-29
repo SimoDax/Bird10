@@ -37,6 +37,7 @@ Page {
         
         TweetList {
             id: tweetList
+            property int index: main_index
 
             attachedObjects: [
                 ListScrollStateHandler {

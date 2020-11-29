@@ -175,6 +175,9 @@ ListView {
         PollTweetComponent {
             id: ptc
         },
+        PollTweetComponentMain {
+            id: ptcm
+        },
         TweetComponent {
             id: lic
             //type: ""

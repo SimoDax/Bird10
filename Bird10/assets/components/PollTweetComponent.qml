@@ -227,25 +227,6 @@ ListItemComponent {
                     id: actionBar
                     visible: itemRoot.ListItem.component.actionsVisible
                 }
-                
-                //                                ControlDelegate {
-                //                                    id:imageGrid
-                //                                    delegateActive: ListItemData.image_flag
-                //                                    sourceComponent: gridDefinition
-                //
-                //                                    onCreationCompleted: {
-                //                                        if(delegateActive)
-                //                                            for(var i = 0; i<ListItemData.extended_entities.media.length; i++){
-                //                                                var x = imageDefinition.createObject()
-                //                                                var url_string = ListItemData.extended_entities.media[i].media_url.toString()
-                //                                                url_string.slice(0, -4)
-                //                                                url_string = url_string.concat("?format=jpg&name=medium")
-                    //                                                x.url = url_string
-                    //                                                imageGrid.control.add(x)
-                    //                                                console.debug(ListItemData.user.screen_name+" "+url_string)
-                    //                                            }
-                    //                                    }
-                    //                                }
                 }
             }
 

@@ -105,6 +105,7 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/components/PollButtonEntry.qml) \
         $$quote($$BASEDIR/assets/components/PollResultEntry.qml) \
         $$quote($$BASEDIR/assets/components/PollTweetComponent.qml) \
+        $$quote($$BASEDIR/assets/components/PollTweetComponentMain.qml) \
         $$quote($$BASEDIR/assets/components/ProfileHeaderBottom.qml) \
         $$quote($$BASEDIR/assets/components/ProfileHeaderTop.qml) \
         $$quote($$BASEDIR/assets/components/ProfilePic.qml) \

@@ -46,6 +46,6 @@ Container {
         horizontalAlignment: HorizontalAlignment.Right
         scalingMethod: ScalingMethod.AspectFit
         maxHeight: ui.du(4)
-        rightMargin: ui.du(1)
+//        rightMargin: ui.du(1)
     }
 }
