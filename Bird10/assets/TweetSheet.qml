@@ -954,8 +954,5 @@ Sheet {
                 authenticator: o1Twitter
             }
         ]
-        onCreationCompleted: {
-            console.debug(twitterApi)
-        }
     }
 }

@@ -111,7 +111,7 @@ void Service::handleInvoke(const bb::system::InvokeRequest & request)
         }
 
         // Register timer and check for notifications
-        registerTimer();
+//        registerTimer();
         checkNotifications();
     }
     else if(request.action().compare("com.simodax.Bird10HeadlessService.STOP") == 0){
