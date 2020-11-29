@@ -67,47 +67,21 @@ void TweetApi::imageTweet(QString status, QVariantList images, QString in_reply_
     m_attachment_url = attachment_url;
     qDebug()<<"TweetApi::imageTweet, status length: "<<status.size();
 
-    for(int i = 0; i<images.size(); i++){
-       if(images[i].toString().isEmpty())
-           continue;
-
-       QString url = ("https://upload.twitter.com/1.1/media/upload.json");
-
-       //TODO check for file size < 5MB
-       QFile image(images[i].toString());
-       image.open(QIODevice::ReadOnly);
-       if(!image.isOpen())
-           continue;
-
-       QList<O0RequestParameter> par;
-       QByteArray imageBytes  = image.readAll();
-       //qDebug()<<imageBytes.size();
-       par.append(O0RequestParameter("media_data", imageBytes.toBase64()));
-
-       image.close();
-       mediaLeft++;
-
-       CurlEasy * reply = requestor->post(url, par, QByteArray());
-
-       qDebug()<<connect(reply, SIGNAL(done(CURLcode)), this, SLOT(imagePosted()), Qt::QueuedConnection); //Force queued so that slots won't be called simultaneously
-       qDebug()<<connect(reply, SIGNAL(error(CURLcode)), this, SLOT(onRequestFailed(CURLcode)));
-       QMetaObject::invokeMethod(reply, "perform", Qt::QueuedConnection);
-
-    }
+    MediaUploader* mu = new MediaUploader(authenticator_, this);
+    connect(mu, SIGNAL(uploadComplete(QString)), this, SLOT(postMediaTweet(QString)));
+    connect(mu, SIGNAL(error(QString)), this, SIGNAL(error(QString)));
+    mu->uploadPictures(QVariant(images).toStringList());
 }
 
-void TweetApi::imagePosted(){
-    CurlEasy *reply = qobject_cast<CurlEasy *>(sender());
-
-    qDebug()<<reply->data();
-    QJsonDocument jsonResponse = QJsonDocument::fromJson(reply->data());
-    media_ids << jsonResponse.object().value("media_id_string").toString();
-
-    mediaLeft--;
-    if(!mediaLeft)
-       postImageTweet();
-
-    reply->deleteLater();
+void TweetApi::videoTweet(const QString& status, const QString& video, const QString& in_reply_to_status_id, const QString& attachment_url)
+{
+    m_status = status;
+    reply_status_id = in_reply_to_status_id;
+    m_attachment_url = attachment_url;
+    MediaUploader* mu = new MediaUploader(authenticator_, this);
+    connect(mu, SIGNAL(uploadComplete(QString)), this, SLOT(postMediaTweet(QString)));
+    connect(mu, SIGNAL(error(QString)), this, SIGNAL(error(QString)));
+    mu->uploadVideo(video);
 }
 
 void TweetApi::postMediaTweet(const QString& media_ids)
@@ -135,53 +109,4 @@ void TweetApi::postMediaTweet(const QString& media_ids)
     QMetaObject::invokeMethod(reply, "perform", Qt::QueuedConnection);
 
     sender()->deleteLater();    //clean up mediauploader
-}
-
-void TweetApi::postImageTweet(){
-    QString url = ("https://api.twitter.com/1.1/statuses/update.json");
-
-    QList<O0RequestParameter> par;
-    par.append(O0RequestParameter("status", m_status.toUtf8()));
-    if(!reply_status_id.isEmpty()){
-            par.append(O0RequestParameter("in_reply_to_status_id", reply_status_id.toLatin1()));
-            par.append(O0RequestParameter("auto_populate_reply_metadata", "true"));
-            reply_status_id.clear();
-    }
-    if(!m_attachment_url.isEmpty()){
-            par.append(O0RequestParameter("attachment_url", m_attachment_url.toLatin1()));
-            m_attachment_url.clear();
-    }
-
-    qDebug()<<media_ids;
-    if(media_ids.size()){
-        QString media_id = media_ids[0].toString();
-        for(int i = 1; i<media_ids.size(); i++)
-            media_id += "," + media_ids[i].toString();
-
-        par.append(O0RequestParameter("media_ids", media_id.toLatin1()));
-    }
-
-    CurlEasy * reply = requestor->post(url, par, QByteArray());
-    connect(reply, SIGNAL(done(CURLcode)), this, SLOT(onTweeted()));
-    bool ok = connect(reply, SIGNAL(error(CURLcode)), this, SLOT(onRequestFailed(CURLcode)));
-    Q_ASSERT(ok);
-    QMetaObject::invokeMethod(reply, "perform", Qt::QueuedConnection);
-}
-
-void TweetApi::videoTweet(const QString& status, const QString& video, const QString& in_reply_to_status_id, const QString& attachment_url)
-{
-    m_status = status;
-    reply_status_id = in_reply_to_status_id;
-    m_attachment_url = attachment_url;
-    MediaUploader* mu = new MediaUploader(authenticator_, this);
-    connect(mu, SIGNAL(uploadComplete(QString)), this, SLOT(postMediaTweet(QString)));
-    connect(mu, SIGNAL(error(QString)), this, SIGNAL(error(QString)));
-    mu->uploadVideo(video);
-}
-
-qint64 TweetApi::fileSize(const QString& path)
-{
-    QFile f(path);
-    f.open(QIODevice::ReadOnly);
-    return f.size();
 }

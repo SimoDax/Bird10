@@ -20,6 +20,7 @@
 #include <src/DMApi.hpp>
 #include <src/QJson4/QJsonObject.h>
 #include <src/QJson4/QJsonDocument.h>
+#include <src/MediaUploader.hpp>
 #include <iostream>
 
 bool lessThan(const QVariant& l, const QVariant& r);
@@ -501,48 +502,23 @@ void DMApi::updateLastSeenId()
 
 void DMApi::uploadMedia(const QString& filePath)
 {
-    QString url = ("https://upload.twitter.com/1.1/media/upload.json");
-
-    //TODO check for file size < 5MB
-    QFile image(filePath);
-    image.open(QIODevice::ReadOnly);
-    if(!image.isOpen()){
-        emit mediaUploaded("");
-        return;
-    }
-
-    QList<O0RequestParameter> par;
-    QByteArray imageBytes  = image.readAll();
-    //qDebug()<<imageBytes.size();
-    par.append(O0RequestParameter("media_data", imageBytes.toBase64()));
-
-    image.close();
-
-    CurlEasy * reply = requestor->post(url, par, QByteArray());
-
-    qDebug()<<connect(reply, SIGNAL(done(CURLcode)), this, SLOT(onMediaUploaded()));
-    qDebug()<<connect(reply, SIGNAL(error(CURLcode)), this, SLOT(onMediaUploadFailed()));
-    QMetaObject::invokeMethod(reply, "perform", Qt::QueuedConnection);
+    MediaUploader* mu = new MediaUploader(authenticator_, this);
+    connect(mu, SIGNAL(uploadComplete(QString)), this, SLOT(onMediaUploaded(QString)));
+    connect(mu, SIGNAL(error(QString)), this, SLOT(onMediaUploadFailed(QString)));
+    mu->setMediaContext(MediaUploader::DM);
+    mu->uploadPictures(QStringList(filePath));
 }
 
-void DMApi::onMediaUploaded(){
-    CurlEasy *reply = qobject_cast<CurlEasy *>(sender());
-
-    qDebug()<<reply->data();
-    QJsonDocument jsonResponse = QJsonDocument::fromJson(reply->data());
-    QString media_id = jsonResponse.object().value("media_id_string").toString();
+void DMApi::onMediaUploaded(const QString& media_id){
 
     emit mediaUploaded(media_id);
-
-    reply->deleteLater();
+    sender()->deleteLater();
 }
 
-void DMApi::onMediaUploadFailed(){
-    CurlEasy *reply = qobject_cast<CurlEasy *>(sender());
+void DMApi::onMediaUploadFailed(const QString& error){
 
-    emit mediaUploaded("");
-
-    reply->deleteLater();
+    emit mediaUploadError(error);
+    sender()->deleteLater();
 }
 
 void DMApi::updateInboxPreview(Conversation* conversation, const QVariantMap& content){

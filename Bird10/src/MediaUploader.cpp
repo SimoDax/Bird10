@@ -27,6 +27,7 @@ MediaUploader::MediaUploader(O1Twitter* authenticator, QObject* parent) : Twitte
 {
     setAuthenticator(authenticator);
     m_index = 0;
+    m_mediaContext = TWEET;
 }
 
 void MediaUploader::uploadVideo(const QString& path)
@@ -60,7 +61,6 @@ void MediaUploader::uploadVideo(const QString& path)
 
     CurlEasy* reply = requestor->post(url, par);
 
-
     connect(reply, SIGNAL(done(CURLcode)), this, SLOT(append()));
     connect(reply, SIGNAL(error(CURLcode)), this, SLOT(onRequestFailed(CURLcode)));
 
@@ -69,8 +69,47 @@ void MediaUploader::uploadVideo(const QString& path)
     QMetaObject::invokeMethod(reply, "perform", Qt::QueuedConnection);
 }
 
-void MediaUploader::uploadPictures(const QList<QString> paths)
+void MediaUploader::uploadPictures(const QList<QString>& paths)
 {
+    m_mediaType = IMAGE;
+    m_paths = paths;
+
+    if (!authenticator_ || !authenticator_->linked()) {
+        emit error("Not logged in");
+        return;
+    }
+
+    uploadPicture(paths[0]);    // Pictures are sent sequentially one at a time to preserve their order of appearance in the tweet
+}
+
+void MediaUploader::uploadPicture(const QString& path)
+{
+    if(m_currentFile.isOpen())
+        m_currentFile.close();
+    m_currentFile.setFileName(path);
+    m_currentFile.open(QIODevice::ReadOnly);
+    if(!m_currentFile.isOpen()){
+        emit error("Cannot open media");
+        return;
+    }
+
+    QString url = ("https://upload.twitter.com/1.1/media/upload.json");
+    QList<O0RequestParameter> par;
+    par.append(O0RequestParameter("command", "INIT"));
+    par.append(O0RequestParameter("total_bytes", QByteArray::number(m_currentFile.size())));
+    par.append(O0RequestParameter("media_type", path.contains(".png", Qt::CaseInsensitive) ? "image/png" : "image/jpeg"));
+    par.append(O0RequestParameter("media_category", m_mediaContext == TWEET ? "tweet_image" : "dm_image"));
+
+    qDebug()<<"MediaUploader::uploadPicture: total_bytes: "<<QByteArray::number(m_currentFile.size());
+
+    CurlEasy* reply = requestor->post(url, par);
+
+    connect(reply, SIGNAL(done(CURLcode)), this, SLOT(append()));
+    connect(reply, SIGNAL(error(CURLcode)), this, SLOT(onRequestFailed(CURLcode)));
+
+    //Since the object lives on a different thread its function calls need to be queued
+    //This will trigger the perform method without making an unnecessary signal-slot connection
+    QMetaObject::invokeMethod(reply, "perform", Qt::QueuedConnection);
 }
 
 void MediaUploader::append()
@@ -158,7 +197,10 @@ void MediaUploader::checkStatus()
     m_mediaIds << content["media_id_string"].toString();
     m_index = 0;
 
-    emit uploadComplete(m_mediaIds.join(","));
+    if(m_mediaType == VIDEO)
+        emit uploadComplete(m_mediaIds.join(","));
+    else
+        onImageUploadSucceeded();
 
     reply->deleteLater();
 }
@@ -178,4 +220,13 @@ void MediaUploader::status()
     //Since the object lives on a different thread its function calls need to be queued
     //This will trigger the perform method without making an unnecessary signal-slot connection
     QMetaObject::invokeMethod(reply, "perform", Qt::QueuedConnection);
+}
+
+void MediaUploader::onImageUploadSucceeded()
+{
+    m_paths.removeFirst();
+    if(m_paths.isEmpty())
+        emit uploadComplete(m_mediaIds.join(","));
+    else
+        uploadPicture(m_paths[0]);
 }

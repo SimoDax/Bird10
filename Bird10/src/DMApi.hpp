@@ -69,7 +69,8 @@ signals:
     void currentConversationChanged();
     void scrollToLast(bool forceScroll);
     void unreadCountChanged();
-    void mediaUploaded(QString media_id);
+    void mediaUploaded(const QString& media_id);
+    void mediaUploadError(const QString& error);
 
 protected slots:
     void onInboxInitialStateReceived();
@@ -78,8 +79,8 @@ protected slots:
     void onUpdatesFailed(CURLcode c);
     void onOlderDM();
     void onBadgeCount();
-    void onMediaUploaded();
-    void onMediaUploadFailed();
+    void onMediaUploaded(const QString& media_id);
+    void onMediaUploadFailed(const QString& error);
 
 protected:
     void insertMessage(const QVariantMap& message, const QVariantMap& users);

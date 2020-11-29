@@ -32,7 +32,6 @@ public:
     Q_INVOKABLE void tweet(QString status, QString in_reply_to_status_id, QString attachment_url);
     Q_INVOKABLE void imageTweet(QString status, QVariantList images, QString in_reply_to_status_id, QString attachment_url);
     Q_INVOKABLE void videoTweet(const QString& status, const QString& video, const QString& in_reply_to_status_id, const QString& attachment_url);
-    Q_INVOKABLE qint64 fileSize(const QString& path);
 
 signals:
     void tweeted();
@@ -40,16 +39,10 @@ signals:
 
 protected slots:
     void onTweeted();
-    void imagePosted();
     void postMediaTweet(const QString& media_ids);
 
 protected:
     QString m_status, reply_status_id, m_attachment_url;
-    char mediaLeft;
-    QVariantList media_ids;
-
-protected:
-    void postImageTweet();
 };
 
 #endif /* TWEETAPI_HPP_ */

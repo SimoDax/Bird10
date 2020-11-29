@@ -29,33 +29,43 @@ class MediaUploader : public TwitterApiBase
 {
     Q_OBJECT
 
+public:
     enum MediaType{
         IMAGE,
         VIDEO,
         GIF
     };
+    enum MediaContext{
+        TWEET,
+        DM
+    };
 
-public:
     MediaUploader(O1Twitter* authenticator, QObject* parent = 0);
 
+    void setMediaContext(MediaContext context){m_mediaContext = context;};
     void uploadVideo(const QString& path);
-    void uploadPictures(const QList<QString> paths);
+    void uploadPictures(const QList<QString>& paths);
 
 signals:
     void uploadComplete(QString media_ids);
+
+protected:
+    void uploadPicture(const QString& path);
 
 protected slots:
     void append();
     void finalize();
     void checkStatus();
     void status();
+    void onImageUploadSucceeded();
 
 protected:
     MediaType m_mediaType;
+    MediaContext m_mediaContext;
     QString m_id;
     QFile m_currentFile;
     int m_index;
-    QStringList m_mediaIds;
+    QStringList m_mediaIds, m_paths;
 };
 
 #endif /* MEDIAUPLOADER_HPP_ */

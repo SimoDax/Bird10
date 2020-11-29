@@ -48,8 +48,18 @@ Sheet {
             acceptAction: ActionItem {
                 title: "Tweet"
                 onTriggered: {
-                    if (composer.image1 != "")
-                        tweetApi.imageTweet(tweet.text, Array(composer.image1, composer.image2, composer.image3, composer.image4), in_reply_to_status_id, attachment_url);
+                    if (composer.image1 != ""){
+                        var a = new Array(composer.image1);
+
+                        if (composer.image2 != "")
+                            a.push(composer.image2)
+                        if (composer.image3 != "")
+                            a.push(composer.image3);
+                        if (composer.image4 != "")
+                            a.push(composer.image4)
+                            
+                        tweetApi.imageTweet(tweet.text, a, in_reply_to_status_id, attachment_url);
+                    }
                     else if (composer.video != "")
                         tweetApi.videoTweet(tweet.text, composer.video, in_reply_to_status_id, attachment_url);
                     else
@@ -901,10 +911,6 @@ Sheet {
                 //directories: [ "/accounts/1000/shared/camera", "/accounts/1000/shared/photos" ]
                 onFileSelected: {
                     if(type == FileType.Picture){
-                        if(tweetApi.fileSize(selectedFiles[0]) > 5*1000*1000){
-                            error_message("File size is too big!")
-                            return;
-                        }
                         if (composer.image1 == "")
                             composer.image1 = selectedFiles[0];
                         else if (composer.image2 == "")

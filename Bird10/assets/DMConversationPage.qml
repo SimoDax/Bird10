@@ -51,9 +51,13 @@ Page {
             dmComposer.unfreeze()
         }
         else{
-            dmComposer.unfreeze()
-            message("Media upload failed. Image size may be > 5 MB")
+            onMediaUploadError("Media upload failed. Image size may be > 5 MB")
         }
+    }
+    
+    function onMediaUploadError(error){
+        dmComposer.unfreeze()
+        message(error)
     }
 
     function sendButtonClicked() {
