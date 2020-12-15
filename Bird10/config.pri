@@ -44,6 +44,7 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/720x720/ScreenContainer.qml) \
         $$quote($$BASEDIR/assets/768x1280/AttachedImage.qml) \
         $$quote($$BASEDIR/assets/768x1280/ScreenContainer.qml) \
+        $$quote($$BASEDIR/assets/About.qml) \
         $$quote($$BASEDIR/assets/BrowserSheet.qml) \
         $$quote($$BASEDIR/assets/ConversationPage.qml) \
         $$quote($$BASEDIR/assets/DMAttachmentPage.qml) \
@@ -51,6 +52,7 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/DMInbox.qml) \
         $$quote($$BASEDIR/assets/DMInboxPage.qml) \
         $$quote($$BASEDIR/assets/DiscoverPage.qml) \
+        $$quote($$BASEDIR/assets/FleetPage.qml) \
         $$quote($$BASEDIR/assets/ItemPage.qml) \
         $$quote($$BASEDIR/assets/ItemPage_scroll.qml) \
         $$quote($$BASEDIR/assets/ListPage.qml) \
@@ -72,6 +74,8 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/VisualStyle.bright/btn_default_gallery.png) \
         $$quote($$BASEDIR/assets/VisualStyle.bright/btn_emoji.png) \
         $$quote($$BASEDIR/assets/VisualStyle.bright/btn_video.png) \
+        $$quote($$BASEDIR/assets/VisualStyle.bright/fleet_border.png) \
+        $$quote($$BASEDIR/assets/VisualStyle.bright/fleet_border_blue.png) \
         $$quote($$BASEDIR/assets/VisualStyle.bright/poll_button_disabled.amd) \
         $$quote($$BASEDIR/assets/VisualStyle.bright/poll_button_disabled.png) \
         $$quote($$BASEDIR/assets/VisualStyle.bright/quoted_border.amd) \
@@ -81,6 +85,8 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/VisualStyle.dark/btn_default_gallery.png) \
         $$quote($$BASEDIR/assets/VisualStyle.dark/btn_emoji.png) \
         $$quote($$BASEDIR/assets/VisualStyle.dark/btn_video.png) \
+        $$quote($$BASEDIR/assets/VisualStyle.dark/fleet_border.png) \
+        $$quote($$BASEDIR/assets/VisualStyle.dark/fleet_border_blue.png) \
         $$quote($$BASEDIR/assets/VisualStyle.dark/poll_button_disabled.amd) \
         $$quote($$BASEDIR/assets/VisualStyle.dark/poll_button_disabled.png) \
         $$quote($$BASEDIR/assets/VisualStyle.dark/quoted_border.amd) \
@@ -130,6 +136,7 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/components/actions/LoginAction.qml) \
         $$quote($$BASEDIR/assets/components/actions/PayAction.qml) \
         $$quote($$BASEDIR/assets/favorites.qml) \
+        $$quote($$BASEDIR/assets/fonts/Twemoji.ttf) \
         $$quote($$BASEDIR/assets/images/add_to_list_80x80.png) \
         $$quote($$BASEDIR/assets/images/bird_logo_white.png) \
         $$quote($$BASEDIR/assets/images/btn_default_photo_gallery.png) \
@@ -147,19 +154,23 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/images/chat_bubble_blue.png) \
         $$quote($$BASEDIR/assets/images/chat_bubble_gray.amd) \
         $$quote($$BASEDIR/assets/images/chat_bubble_gray.png) \
+        $$quote($$BASEDIR/assets/images/default_profile_image.png) \
         $$quote($$BASEDIR/assets/images/delete_80x80.png) \
         $$quote($$BASEDIR/assets/images/emoji_nature.xml) \
         $$quote($$BASEDIR/assets/images/emoji_objects.xml) \
         $$quote($$BASEDIR/assets/images/emoji_people.xml) \
         $$quote($$BASEDIR/assets/images/emoji_places.xml) \
         $$quote($$BASEDIR/assets/images/emoji_symbols.xml) \
+        $$quote($$BASEDIR/assets/images/fleet_gradient.png) \
         $$quote($$BASEDIR/assets/images/heart.png) \
         $$quote($$BASEDIR/assets/images/heart_grey.png) \
         $$quote($$BASEDIR/assets/images/heart_red.png) \
         $$quote($$BASEDIR/assets/images/home_80x80.png) \
+        $$quote($$BASEDIR/assets/images/ic_collapse.png) \
         $$quote($$BASEDIR/assets/images/ic_doctype_video.png) \
         $$quote($$BASEDIR/assets/images/ic_done.png) \
         $$quote($$BASEDIR/assets/images/ic_done_black.png) \
+        $$quote($$BASEDIR/assets/images/ic_expand.png) \
         $$quote($$BASEDIR/assets/images/ic_open.png) \
         $$quote($$BASEDIR/assets/images/ic_resume.png) \
         $$quote($$BASEDIR/assets/images/ic_save.png) \
@@ -224,6 +235,7 @@ config_pri_source_group1 {
         $$quote($$BASEDIR/src/ConversationApi.cpp) \
         $$quote($$BASEDIR/src/DMApi.cpp) \
         $$quote($$BASEDIR/src/DiscoverApi.cpp) \
+        $$quote($$BASEDIR/src/FleetApi.cpp) \
         $$quote($$BASEDIR/src/ListApi.cpp) \
         $$quote($$BASEDIR/src/MediaUploader.cpp) \
         $$quote($$BASEDIR/src/NotificationsApi.cpp) \
@@ -241,6 +253,7 @@ config_pri_source_group1 {
         $$quote($$BASEDIR/src/SearchApi.cpp) \
         $$quote($$BASEDIR/src/TimelineBase.cpp) \
         $$quote($$BASEDIR/src/TimelineDataModel.cpp) \
+        $$quote($$BASEDIR/src/Timer.cpp) \
         $$quote($$BASEDIR/src/TweetApi.cpp) \
         $$quote($$BASEDIR/src/TwitterApiBase.cpp) \
         $$quote($$BASEDIR/src/WebImageView/AuthorizedWebImageView.cpp) \
@@ -266,6 +279,7 @@ config_pri_source_group1 {
         $$quote($$BASEDIR/src/ConversationApi.hpp) \
         $$quote($$BASEDIR/src/DMApi.hpp) \
         $$quote($$BASEDIR/src/DiscoverApi.hpp) \
+        $$quote($$BASEDIR/src/FleetApi.hpp) \
         $$quote($$BASEDIR/src/ListApi.hpp) \
         $$quote($$BASEDIR/src/MediaUploader.hpp) \
         $$quote($$BASEDIR/src/NotificationsApi.hpp) \
@@ -284,6 +298,7 @@ config_pri_source_group1 {
         $$quote($$BASEDIR/src/SearchApi.hpp) \
         $$quote($$BASEDIR/src/TimelineBase.hpp) \
         $$quote($$BASEDIR/src/TimelineDataModel.hpp) \
+        $$quote($$BASEDIR/src/Timer.hpp) \
         $$quote($$BASEDIR/src/TweetApi.hpp) \
         $$quote($$BASEDIR/src/TwitterApiBase.hpp) \
         $$quote($$BASEDIR/src/WebImageView/AuthorizedWebImageView.hpp) \
@@ -370,6 +385,9 @@ lupdate_inclusion {
         $$quote($$BASEDIR/../assets/components/actions/*.qml) \
         $$quote($$BASEDIR/../assets/components/actions/*.js) \
         $$quote($$BASEDIR/../assets/components/actions/*.qs) \
+        $$quote($$BASEDIR/../assets/fonts/*.qml) \
+        $$quote($$BASEDIR/../assets/fonts/*.js) \
+        $$quote($$BASEDIR/../assets/fonts/*.qs) \
         $$quote($$BASEDIR/../assets/images/*.qml) \
         $$quote($$BASEDIR/../assets/images/*.js) \
         $$quote($$BASEDIR/../assets/images/*.qs) \

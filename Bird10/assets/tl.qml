@@ -46,6 +46,19 @@ NavigationPane {
             refreshAction.triggered.connect(twitterApi.requestTweets)
             app.openConversation.connect(tweetList.openConversationFromId)
             app.openProfile.connect(tweetList.openProfileFromScreenName)
+            app.openTweetSheet.connect(tweet)
+        }
+        
+        function tweet(text, image, video){
+            topBar.ts.active = true
+            if(text != "")
+                topBar.ts.object.text = text
+            else if (image != "")
+                topBar.ts.object.image1 = image
+            else if(video != "")
+                topBar.ts.object.video = video
+            
+            topBar.ts.object.open()
         }
         
         function clear(){

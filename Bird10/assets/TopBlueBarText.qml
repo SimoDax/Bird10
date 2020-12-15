@@ -23,6 +23,7 @@ Container {
     property alias text : titleText.text
     property alias searchVisible : searchBtn.visible
     property alias tweetVisible: tweetBtn.visible
+    property alias ts: tweetSheet
     
     layout: DockLayout {
     }

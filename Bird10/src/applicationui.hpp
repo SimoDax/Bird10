@@ -114,6 +114,7 @@ signals:
     void openConversation(const QString& id);   // Emitted when app is invoked through active text (twitter.com url)
     void openProfile(const QString& screen_name);
     void openList(const QString& id);
+    void openTweetSheet(const QString& text, const QString& image, const QString& video);
 
 public slots:
     void shareImageLoaded();

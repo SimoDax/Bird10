@@ -25,22 +25,27 @@ import bb.multimedia 1.4
 import "/components"
 
 Sheet {
+    id: sheet
     property string in_reply_to: ""
     property string in_reply_to_status_id: ""
     property string attachment_url: ""
+    property string image1: ""
+    property string image2: ""
+    property string image3: ""
+    property string image4: ""
+    property string video: ""
+    property alias text: tweet.text
     property variant referencedTweet
     property bool busy: false
 
     Page {
         id: composer
-        property string image1: ""
-        property string image2: ""
-        property string image3: ""
-        property string image4: ""
-        property string video: ""
         
         function noImageSelected(){
-            return composer.image1 == "" && composer.image2 == "" && composer.image3 == "" && composer.image4 == ""
+            return sheet.image1 == "" && sheet.image2 == "" && sheet.image3 == "" && sheet.image4 == ""
+        }
+        onCreationCompleted: {
+            tweet.requestFocus()
         }
 
         titleBar: TitleBar {
@@ -48,20 +53,20 @@ Sheet {
             acceptAction: ActionItem {
                 title: "Tweet"
                 onTriggered: {
-                    if (composer.image1 != ""){
-                        var a = new Array(composer.image1);
+                    if (sheet.image1 != ""){
+                        var a = new Array(sheet.image1);
 
-                        if (composer.image2 != "")
-                            a.push(composer.image2)
-                        if (composer.image3 != "")
-                            a.push(composer.image3);
-                        if (composer.image4 != "")
-                            a.push(composer.image4)
+                        if (sheet.image2 != "")
+                            a.push(sheet.image2)
+                        if (sheet.image3 != "")
+                            a.push(sheet.image3)
+                        if (sheet.image4 != "")
+                            a.push(sheet.image4)
                             
                         tweetApi.imageTweet(tweet.text, a, in_reply_to_status_id, attachment_url);
                     }
-                    else if (composer.video != "")
-                        tweetApi.videoTweet(tweet.text, composer.video, in_reply_to_status_id, attachment_url);
+                    else if (sheet.video != "")
+                        tweetApi.videoTweet(tweet.text, sheet.video, in_reply_to_status_id, attachment_url);
                     else
                         tweetApi.tweet(tweet.text, in_reply_to_status_id, attachment_url)
                     busy = true
@@ -215,27 +220,27 @@ Sheet {
                 }
                 AttachedImage {
                     id: image1
-                    imageSource: "file://" + composer.image1
+                    imageSource: "file://" + sheet.image1
                 }
                 AttachedImage {
                     id: image2
-                    imageSource: "file://" + composer.image2
+                    imageSource: "file://" + sheet.image2
                     leftMargin: 10
                 }
                 AttachedImage {
                     id: image3
-                    imageSource: "file://" + composer.image3
+                    imageSource: "file://" + sheet.image3
                     leftMargin: 10
                 }
                 AttachedImage {
                     id: image4
-                    imageSource: "file://" + composer.image4
+                    imageSource: "file://" + sheet.image4
                     leftMargin: 10
                 }
                 Label {
-                    visible: composer.video != ""
+                    visible: sheet.video != ""
                     text: { 
-                         var a = composer.video.split("/")
+                         var a = sheet.video.split("/")
                          return " Attached video: " + a[a.length-1]
                      }
                 }
@@ -313,6 +318,7 @@ Sheet {
                 topPadding: 10
                 visible: false
                 ListView {
+                    property variant twemojiStyle: twemoji.style
                     snapMode: SnapMode.LeadingEdge
                     layout: GridListLayout {
                         columnCount: 8
@@ -326,12 +332,16 @@ Sheet {
                     }
                     listItemComponents: [
                         ListItemComponent {
-                            type: "label"
+                            type: "emoji"
                             Label {
                                 text: ListItemData.unicode
+//                                                                text: '<html><span style="font-family:Twemoji">' + ListItemData.unicode + '</span></html>'
                                 textStyle.textAlign: TextAlign.Center
                                 textStyle.fontSize: FontSize.PointValue
                                 textStyle.fontSizeValue: 8
+                                textStyle.base: ListItem.view.twemojiStyle
+                                textStyle.fontFamily: "Twemoji"
+                                textFormat: TextFormat.Html
                             }
                         }
                     ]
@@ -350,6 +360,7 @@ Sheet {
                 topPadding: 10
                 visible: false
                 ListView {
+                    property variant twemojiStyle: twemoji.style
                     snapMode: SnapMode.LeadingEdge
                     layout: GridListLayout {
                         columnCount: 8
@@ -363,12 +374,14 @@ Sheet {
                     }
                     listItemComponents: [
                         ListItemComponent {
-                            type: "label"
+                            type: "emoji"
                             Label {
                                 text: ListItemData.unicode
                                 textStyle.textAlign: TextAlign.Center
                                 textStyle.fontSize: FontSize.PointValue
                                 textStyle.fontSizeValue: 8
+                                textStyle.base: ListItem.view.twemojiStyle
+                                textStyle.fontFamily: "Twemoji"
                             }
                         }
                     ]
@@ -387,6 +400,7 @@ Sheet {
                 topPadding: 10
                 visible: false
                 ListView {
+                    property variant twemojiStyle: twemoji.style
                     snapMode: SnapMode.LeadingEdge
                     layout: GridListLayout {
                         columnCount: 8
@@ -400,12 +414,14 @@ Sheet {
                     }
                     listItemComponents: [
                         ListItemComponent {
-                            type: "label"
+                            type: "emoji"
                             Label {
                                 text: ListItemData.unicode
                                 textStyle.textAlign: TextAlign.Center
                                 textStyle.fontSize: FontSize.PointValue
                                 textStyle.fontSizeValue: 8
+                                textStyle.base: ListItem.view.twemojiStyle
+                                textStyle.fontFamily: "Twemoji"
                             }
                         }
                     ]
@@ -424,6 +440,7 @@ Sheet {
                 topPadding: 10
                 visible: false
                 ListView {
+                    property variant twemojiStyle: twemoji.style
                     snapMode: SnapMode.LeadingEdge
                     layout: GridListLayout {
                         columnCount: 8
@@ -437,12 +454,14 @@ Sheet {
                     }
                     listItemComponents: [
                         ListItemComponent {
-                            type: "label"
+                            type: "emoji"
                             Label {
                                 text: ListItemData.unicode
                                 textStyle.textAlign: TextAlign.Center
                                 textStyle.fontSize: FontSize.PointValue
                                 textStyle.fontSizeValue: 8
+                                textStyle.base: ListItem.view.twemojiStyle
+                                textStyle.fontFamily: "Twemoji"
                             }
                         }
                     ]
@@ -461,6 +480,7 @@ Sheet {
                 topPadding: 10
                 visible: false
                 ListView {
+                    property variant twemojiStyle: twemoji.style
                     snapMode: SnapMode.LeadingEdge
                     layout: GridListLayout {
                         columnCount: 8
@@ -474,12 +494,14 @@ Sheet {
                     }
                     listItemComponents: [
                         ListItemComponent {
-                            type: "label"
+                            type: "emoji"
                             Label {
                                 text: ListItemData.unicode
                                 textStyle.textAlign: TextAlign.Center
                                 textStyle.fontSize: FontSize.PointValue
                                 textStyle.fontSizeValue: 8
+                                textStyle.base: ListItem.view.twemojiStyle
+                                textStyle.fontFamily: "Twemoji"
                             }
                         }
                     ]
@@ -514,7 +536,7 @@ Sheet {
                         //enabled: CommonUtilities.checkFileSystemAccessible()
                         //opacity: CommonUtilities.checkFileSystemAccessible() ? 1 : 0.5
                         objectName: "Pictures Button"
-                        enabled: composer.image4 == "" && composer.video == ""
+                        enabled: sheet.image4 == "" && sheet.video == ""
                         //preferredWidth: SizeSelector.convert(120)
                         //maxWidth: SizeSelector.convert(120)
                         //preferredHeight: SizeSelector.convert(86)
@@ -911,21 +933,21 @@ Sheet {
                 //directories: [ "/accounts/1000/shared/camera", "/accounts/1000/shared/photos" ]
                 onFileSelected: {
                     if(type == FileType.Picture){
-                        if (composer.image1 == "")
-                            composer.image1 = selectedFiles[0];
-                        else if (composer.image2 == "")
-                            composer.image2 = selectedFiles[0];
-                        else if (composer.image3 == "")
-                            composer.image3 = selectedFiles[0];
-                        else if (composer.image4 == "")
-                            composer.image4 = selectedFiles[0]
+                        if (sheet.image1 == "")
+                            sheet.image1 = selectedFiles[0];
+                        else if (sheet.image2 == "")
+                            sheet.image2 = selectedFiles[0];
+                        else if (sheet.image3 == "")
+                            sheet.image3 = selectedFiles[0];
+                        else if (sheet.image4 == "")
+                            sheet.image4 = selectedFiles[0]
                     }
                     else{
 //                        if (tweetApi.fileSize(selectedFiles[0]) > 15 * 1000 * 1000) {
 //                            error_message("File size is too big!")
 //                            return;
 //                        }
-                        composer.video = selectedFiles[0]
+                        sheet.video = selectedFiles[0]
                     }
 
                     //console.log("FileSelected signal received : " + selectedFiles)
@@ -952,6 +974,14 @@ Sheet {
             SearchApi {
                 id: searchApi
                 authenticator: o1Twitter
+            },
+            TextStyleDefinition {
+                id: twemoji
+                rules: FontFaceRule {
+                    id: font1
+                    source: "asset:///fonts/Twemoji.ttf"
+                    fontFamily: "Twemoji"
+                }
             }
         ]
     }

@@ -122,6 +122,15 @@
 		    <mime-type>*</mime-type>
 		    <property var="uris" value="https://mobile.twitter.com/,http://mobile.twitter.com/,https://twitter.com/,http://twitter.com/,https://www.twitter.com/,http://www.twitter.com/,http://m.twitter.com,https://m.twitter.com"/>
 	  	</filter>
+        <filter>
+		    <action>bb.action.SHARE</action>
+		    <mime-type>image/*</mime-type>
+		    <mime-type>video/*</mime-type>
+		    <mime-type>text/*</mime-type>
+		    <mime-type>application/vnd.rim.message.twitter</mime-type>
+		    <property var="uris" value="file://,data://,pim:"/>
+		</filter>
+        
     </invoke-target>
 
     <!-- The name that is displayed in the BlackBerry 10 application installer.
