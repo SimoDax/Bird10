@@ -26,7 +26,7 @@ ListApi::ListApi(QObject *parent): TwitterApi(parent)
     m_listsModel = new bb::cascades::ArrayDataModel(this);
 }
 
-void ListApi::requestTweets(QString max_id, QString since_id)
+void ListApi::requestTweets(Direction dir)
 {
     if (!authenticator_ || !authenticator_->linked()) {
         tweetModel_->clear();
@@ -34,24 +34,20 @@ void ListApi::requestTweets(QString max_id, QString since_id)
         return;
     }
 
-    QString url = ("https://api.twitter.com/1.1/lists/statuses.json?tweet_mode=extended&count=40&list_id=" + m_listId);
+    QString url = ("https://api.twitter.com/2/timeline/list.json");
     QList<O0RequestParameter> par;
     par.append(O0RequestParameter("tweet_mode", "extended"));
+    par.append(O0RequestParameter("ranking_mode", "reverse_chronological"));
     par.append(O0RequestParameter("count", "40"));
     par.append(O0RequestParameter("list_id", m_listId.toUtf8()));
 
-    if(!max_id.isEmpty()){
-        url += "&max_id=" + QString("%1").arg(max_id.toLongLong()-1);
-        par.append(O0RequestParameter("max_id", QString("%1").arg(max_id.toLongLong()-1).toUtf8()));
-    }
-    if(!since_id.isEmpty()){
-        url += "&since_id=" + QString("%1").arg(since_id.toLongLong()-1);
-        par.append(O0RequestParameter("since_id", QString("%1").arg(since_id.toLongLong()-1).toUtf8()));
+    if(dir == BOTTOM){
+        par.append(O0RequestParameter("cursor", QString("%1").arg(tweetModel_->cursorBottom()).toUtf8()));
     }
 
     CurlEasy* reply = requestor->get(url, par);
 
-    if(!max_id.isEmpty())
+    if(dir == BOTTOM)
         connect(reply, SIGNAL(done(CURLcode)), this, SLOT(olderTweetsReceived()));
     else
         connect(reply, SIGNAL(done(CURLcode)), this, SLOT(tweetsReceived()));

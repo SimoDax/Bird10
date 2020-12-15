@@ -36,7 +36,7 @@ public:
 
     ListApi(QObject* parent = 0);
 
-    Q_INVOKABLE void requestTweets(QString max_id = QString(), QString since_id = QString());
+    Q_INVOKABLE void requestTweets(Direction dir = NONE);
 
     Q_INVOKABLE void requestLists();
 

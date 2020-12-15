@@ -36,7 +36,7 @@
 class TwitterApi: public TimelineBase {
     Q_OBJECT
 
-    enum Direction{
+protected: enum Direction{
         NONE,
         TOP,
         BOTTOM
