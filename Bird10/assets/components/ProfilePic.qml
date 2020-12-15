@@ -28,6 +28,9 @@ WebImageView {
     //url: ListItemData.user.profile_image_url_https.replace("https","http")
     minWidth: 80.0
     minHeight: 80.0
+    maxWidth: minWidth
+    maxHeight: minHeight
+    scalingMethod: ScalingMethod.AspectFit
 
     gestureHandlers: TapHandler {
         onTapped: {

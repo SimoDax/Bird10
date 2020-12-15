@@ -53,6 +53,12 @@ void WebImageView::setUrl(const QUrl& url) {
     if(mUrl == url)
         return;
 
+    if(url.path().endsWith("default_profile_normal.png")){ // the default profile image is available only through https, so we load it locally
+        setImageSource(QUrl("asset:///images/default_profile_image.png"));
+        return;
+    }
+
+
     // Variables
     //mUrl = url;   //Now set only after the image has been received
     mDesiredUrl = url;

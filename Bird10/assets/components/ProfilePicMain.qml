@@ -25,6 +25,8 @@ WebImageView {
     url: "http://" + ListItemData.user.profile_image_url_https.substring(8) // replace https with http
     minWidth: 100.0
     minHeight: 100.0
+    maxWidth: minWidth
+    maxHeight: minHeight
 
     gestureHandlers: TapHandler {
         onTapped: {
