@@ -42,6 +42,7 @@ Container{
         topPadding: 10
         visible: false
         ListView {
+            property variant twemojiStyle: twemoji.style
             snapMode: SnapMode.LeadingEdge
             layout: GridListLayout {
                 columnCount: 8
@@ -55,12 +56,15 @@ Container{
             }
             listItemComponents: [
                 ListItemComponent {
-                    type: "label"
+                    type: "emoji"
                     Label {
                         text: ListItemData.unicode
                         textStyle.textAlign: TextAlign.Center
                         textStyle.fontSize: FontSize.PointValue
                         textStyle.fontSizeValue: 8
+                        textStyle.base: ListItem.view.twemojiStyle
+                        textStyle.fontFamily: "Twemoji"
+                        textFormat: TextFormat.Html
                     }
                 }
             ]
@@ -79,6 +83,7 @@ Container{
         topPadding: 10
         visible: false
         ListView {
+            property variant twemojiStyle: twemoji.style
             snapMode: SnapMode.LeadingEdge
             layout: GridListLayout {
                 columnCount: 8
@@ -92,12 +97,15 @@ Container{
             }
             listItemComponents: [
                 ListItemComponent {
-                    type: "label"
+                    type: "emoji"
                     Label {
                         text: ListItemData.unicode
                         textStyle.textAlign: TextAlign.Center
                         textStyle.fontSize: FontSize.PointValue
                         textStyle.fontSizeValue: 8
+                        textStyle.base: ListItem.view.twemojiStyle
+                        textStyle.fontFamily: "Twemoji"
+                        textFormat: TextFormat.Html
                     }
                 }
             ]
@@ -116,6 +124,7 @@ Container{
         topPadding: 10
         visible: false
         ListView {
+            property variant twemojiStyle: twemoji.style
             snapMode: SnapMode.LeadingEdge
             layout: GridListLayout {
                 columnCount: 8
@@ -129,12 +138,15 @@ Container{
             }
             listItemComponents: [
                 ListItemComponent {
-                    type: "label"
+                    type: "emoji"
                     Label {
                         text: ListItemData.unicode
                         textStyle.textAlign: TextAlign.Center
                         textStyle.fontSize: FontSize.PointValue
                         textStyle.fontSizeValue: 8
+                        textStyle.base: ListItem.view.twemojiStyle
+                        textStyle.fontFamily: "Twemoji"
+                        textFormat: TextFormat.Html
                     }
                 }
             ]
@@ -153,6 +165,7 @@ Container{
         topPadding: 10
         visible: false
         ListView {
+            property variant twemojiStyle: twemoji.style
             snapMode: SnapMode.LeadingEdge
             layout: GridListLayout {
                 columnCount: 8
@@ -166,12 +179,15 @@ Container{
             }
             listItemComponents: [
                 ListItemComponent {
-                    type: "label"
+                    type: "emoji"
                     Label {
                         text: ListItemData.unicode
                         textStyle.textAlign: TextAlign.Center
                         textStyle.fontSize: FontSize.PointValue
                         textStyle.fontSizeValue: 8
+                        textStyle.base: ListItem.view.twemojiStyle
+                        textStyle.fontFamily: "Twemoji"
+                        textFormat: TextFormat.Html
                     }
                 }
             ]
@@ -190,6 +206,7 @@ Container{
         topPadding: 10
         visible: false
         ListView {
+            property variant twemojiStyle: twemoji.style
             snapMode: SnapMode.LeadingEdge
             layout: GridListLayout {
                 columnCount: 8
@@ -203,12 +220,15 @@ Container{
             }
             listItemComponents: [
                 ListItemComponent {
-                    type: "label"
+                    type: "emoji"
                     Label {
                         text: ListItemData.unicode
                         textStyle.textAlign: TextAlign.Center
                         textStyle.fontSize: FontSize.PointValue
                         textStyle.fontSizeValue: 8
+                        textStyle.base: ListItem.view.twemojiStyle
+                        textStyle.fontFamily: "Twemoji"
+                        textFormat: TextFormat.Html
                     }
                 }
             ]

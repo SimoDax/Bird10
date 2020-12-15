@@ -61,7 +61,8 @@ Page {
                 property bool itemActive: false
                 property variant authenticator: o1Twitter
                 property variant pageSize: handler
-                
+                property variant twemojiStyle: twemoji.style
+
                 dataModel: app.dm.inbox
                 
                 //                    function itemType(data, indexPath){
@@ -89,11 +90,6 @@ Page {
                             profImageUrl: ListItemData.previewData.avatar_image
                             timeStamp: ListItemData.previewData.date
                             messageStatus: ListItemData.previewData.status
-                            //                                userScreenName: ListItemData.screen_name != "" ? '@' + ListItemData.screen_name : ""
-                            //                                userFullName: ListItemData.name
-                            //                                profImageUrl: ListItemData.avatar_image
-                            //                                timeStamp: ListItemData.date
-                            //                                messageStatus: ListItemData.status
                         }
                     }
                 ]

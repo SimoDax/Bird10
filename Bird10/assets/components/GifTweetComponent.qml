@@ -79,6 +79,7 @@ ListItemComponent {
                     textStyle.fontFamily: 'Slate Pro'
                     topMargin: 10
                     content.flags: TextContentFlag.ActiveText | TextContentFlag.Emoticons
+                    textStyle.base: itemRoot.ListItem.view.twemojiStyle
                     activeTextHandler: TweetTextHandler {
                     }
                 }

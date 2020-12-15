@@ -101,6 +101,7 @@ ControlDelegate {
                 textFormat: TextFormat.Html
                 topMargin: 10
                 content.flags: TextContentFlag.ActiveText | TextContentFlag.Emoticons
+                textStyle.base: itemRoot.ListItem.view.twemojiStyle
                 activeTextHandler: ActiveTextHandler {
                     onTriggered: {
                         event.abort()

@@ -6,12 +6,12 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-* 
+*
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
@@ -144,6 +144,9 @@ int NotificationsApi::insertNotification(const QString& id, int pos, const QStri
     if(targetObjects.size()){
         QVariantMap tweet = qvariant_cast<QVariantMap>(m_tweets[targetObjects[0].toMap()["tweet"].toMap()["id"].toString()]);
 //        tweet["user"] = m_users[tweet["user_id_str"].toString()];
+        std::wstring text = tweet["full_text"].toString().toStdWString();
+        parseEmojiInText(text);
+        tweet["full_text"] = QString::fromWCharArray(text.c_str());
 
         item["tweet"] = tweet;
 
@@ -168,6 +171,10 @@ int NotificationsApi::insertNotification(const QString& id, int pos, const QStri
 int NotificationsApi::insertTweet(const QString& id, int pos, const QString& sortIndex){
     QVariantMap item = m_tweets[id].toMap();
     item["user"] = m_users[item["user_id_str"].toString()];
+
+    std::wstring text = item["full_text"].toString().toStdWString();
+    parseEmojiInText(text);
+    item["full_text"] = QString::fromWCharArray(text.c_str());
 
     item["type"] = "tweet";
     item["sortIndex"] = sortIndex;

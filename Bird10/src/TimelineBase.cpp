@@ -20,6 +20,7 @@
 #include <src/TimelineBase.hpp>
 #include <QDateTime>
 #include <QDebug>
+#include <stddef.h>
 
 TimelineBase::TimelineBase(QObject *parent) : TwitterApiBase(parent)
 {
@@ -144,7 +145,10 @@ QVariantMap TimelineBase::parseTweet(QVariantMap tweet)
         offset += htmlUrl.length() - (endIndex - beginIndex);   //keeps track of indexes changes due to html insertion
 
     }
-    tweet["full_text"] = QString::fromStdWString(text);
+
+    parseEmojiInText(text);
+
+    tweet["full_text"] = "<span>" + QString::fromWCharArray(text.c_str()) + " </span>";
 
     if(tweet.keys().contains("limited_actions") && tweet["limited_actions"].toString() == "limited_replies")
         tweet["limited_replies"] = true;

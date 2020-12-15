@@ -44,6 +44,7 @@ signals:
 protected:
     QList<O0RequestParameter> basicGetParameters();
     void saveReply(CurlEasy * reply, const QString& filename);
+    void parseEmojiInText(std::wstring& text);
 
 protected slots:
     void onRequestFailed(CURLcode error);

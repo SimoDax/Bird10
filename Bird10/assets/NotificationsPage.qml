@@ -55,6 +55,7 @@ NavigationPane {
                 searchVisible: false
             }
             ListView {
+                property variant twemojiStyle: twemoji.style
                 dataModel: notificationsApi.notifications
 
                 function reply(screen_name, id_str) {
@@ -135,6 +136,8 @@ NavigationPane {
                                         //                                    textFormat: TextFormat.Html
                                         textStyle.color: Application.themeSupport.theme.colorTheme.style == VisualStyle.Bright ? Color.create("#767676") : Color.create("#969696")
                                         topMargin: 10
+                                        textStyle.base: itemRoot.ListItem.view.twemojiStyle
+                                        textFormat: TextFormat.Html
                                     }
                                 }
                             }

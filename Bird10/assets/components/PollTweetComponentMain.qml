@@ -134,6 +134,7 @@ ListItemComponent {
             textStyle.fontSize: FontSize.PointValue
             textStyle.fontSizeValue: 7.5
             content.flags: TextContentFlag.ActiveText | TextContentFlag.Emoticons
+            textStyle.base: itemRoot.ListItem.view.twemojiStyle
             activeTextHandler: TweetTextHandler {
             }
         }

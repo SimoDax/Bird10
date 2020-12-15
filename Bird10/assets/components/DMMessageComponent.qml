@@ -189,19 +189,20 @@ Container {
                                 textStyle.fontSize: FontSize.Small
                                 textStyle.color: isSentDM ? Color.create("#000000") : Color.White
                                 textStyle.fontWeight: FontWeight.W400
+                                textStyle.base: dmListItem.ListItem.view.twemojiStyle
                                 text: ListItemData.text
-                                textFormat: TextFormat.Auto
-                                content.flags: TextContentFlag.Emoticons | TextContentFlag.ActiveText
-                                activeTextHandler: ActiveTextHandler {
-                                    onTriggered: {
-                                        if (dmListItem.ListItem.view.getController !== undefined && dmListItem.ListItem.view.getController().invokeActiveText !== undefined) {
-                                            dmContentLabel.text = dmListItem.ListItem.view.getController().highlightActiveTextBackground(dmContentLabel.text, event.text);
-                                            dmListItem.ListItem.view.getController().invokeActiveText(event);
-                                        } else {
-                                            console.debug("Error invokeActiveText or controller are undefined.");
-                                        }
-                                    }
-                                }
+                                textFormat: TextFormat.Html
+                                content.flags: TextContentFlag.EmoticonsOff | TextContentFlag.ActiveText
+//                                activeTextHandler: ActiveTextHandler {
+//                                    onTriggered: {
+//                                        if (dmListItem.ListItem.view.getController !== undefined && dmListItem.ListItem.view.getController().invokeActiveText !== undefined) {
+//                                            dmContentLabel.text = dmListItem.ListItem.view.getController().highlightActiveTextBackground(dmContentLabel.text, event.text);
+//                                            dmListItem.ListItem.view.getController().invokeActiveText(event);
+//                                        } else {
+//                                            console.debug("Error invokeActiveText or controller are undefined.");
+//                                        }
+//                                    }
+//                                }
                             }
                         }
                         attachedObjects: [

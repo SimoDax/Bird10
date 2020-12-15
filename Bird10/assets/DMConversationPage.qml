@@ -117,6 +117,8 @@ Page {
                 property variant pageSize: display.pixelSize
                 property variant authenticator: o1Twitter
                 property alias attachmentPage: fullViewPicturePageDefinition
+                property variant twemojiStyle: twemoji.style
+                
 
                 dataModel: dmApi.currentConversation
                 

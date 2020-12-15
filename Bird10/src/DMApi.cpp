@@ -288,7 +288,6 @@ void DMApi::onOlderDM(){
         //FIXME we're supposing this reply arrives so quickly that the user has not changed conversation, since there doesn't seem to be a way to get the conversation id in this case..
         if(m_currentConversation->data(m_currentConversation->last()).toMap()["time"] == 0) // Only if the spinner hasn't been removed by previous requestOlderDM
             m_currentConversation->removeAt(m_currentConversation->last());
-        return;
     }
 
     bool firstTime = true;
@@ -413,7 +412,9 @@ void DMApi::insertMessageInConversation(const QVariantMap& message_, const QVari
         offset += htmlUrl.length() - (endIndex - beginIndex);   //keeps track of indexes changes due to html insertion
 
     }
-    message["text"] = QString::fromStdWString(text);
+    parseEmojiInText(text);
+
+    message["text"] = "<span>" + QString::fromWCharArray(text.c_str()) + "</span>";
 
     conversation->insertMessage(message);
 

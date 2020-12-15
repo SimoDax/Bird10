@@ -153,6 +153,10 @@ TabbedPane {
             id: dmInboxPage
             source: "asset:///DMInboxPage.qml"
         },
+        Delegate{
+            id: aboutSheet
+            source: "asset:///About.qml"
+        },
         
         OXTwitter {
             id: o1Twitter
@@ -244,8 +248,15 @@ TabbedPane {
         SystemToast {
             id: errorToast
             body: ""
+        },
+        TextStyleDefinition {
+            id: twemoji
+            rules: FontFaceRule {
+                id: font1
+                source: "asset:///fonts/Twemoji.ttf"
+                fontFamily: "Twemoji"
+            }
         }
-
     ]
 
     Menu.definition: MenuDefinition {
@@ -273,6 +284,13 @@ TabbedPane {
 //                onTriggered: app.exportCore()
 //            }
         ]
+        helpAction: HelpActionItem {
+            title: "About"
+            onTriggered: {
+                aboutSheet.active = true
+                aboutSheet.object.open()
+            }
+        }
     }
     
 } //end tabbedPane

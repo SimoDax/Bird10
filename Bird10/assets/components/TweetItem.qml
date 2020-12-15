@@ -20,7 +20,7 @@
 import bb.cascades 1.4
 
 Container {
-//    property alias imageUrl: profilePic.image_url
+    id: itemRoot
 
     layout: StackLayout {
         orientation: LayoutOrientation.LeftToRight
@@ -74,6 +74,7 @@ Container {
             //textStyle.fontFamily: 'Slate Pro'
             topMargin: 10
             content.flags: TextContentFlag.ActiveText | TextContentFlag.Emoticons
+            textStyle.base: itemRoot.ListItem.view.twemojiStyle
 
             activeTextHandler: TweetTextHandler {
             }

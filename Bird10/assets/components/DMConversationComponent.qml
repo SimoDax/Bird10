@@ -252,9 +252,10 @@ import org.labsquare 1.0
                             textStyle.fontSize: FontSize.Small
                             textStyle.color: ui.palette.text
                             textStyle.fontWeight: FontWeight.W400
+                            textStyle.base: dmListItem.ListItem.view.twemojiStyle
                             text: ListItemData.previewData.message
                             textFormat: TextFormat.Html
-                            content.flags: TextContentFlag.Emoticons
+                            content.flags: TextContentFlag.Emoticons | TextContentFlag.ActiveText
                             activeTextHandler: ActiveTextHandler {
                                 onTriggered: {
                                     event.abort()

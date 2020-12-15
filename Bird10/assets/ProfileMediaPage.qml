@@ -54,6 +54,7 @@ Page {
                 property variant scrolling: scrollStateHandler.scrolling
                 property variant mediaPage: mediaPage
                 property variant a: app
+                property variant twemojiStyle: twemoji.style
 
                 snapMode: SnapMode.LeadingEdge
                 flickMode: FlickMode.SingleItem

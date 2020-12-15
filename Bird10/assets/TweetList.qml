@@ -32,6 +32,7 @@ ListView {
     property variant deleteDialog: deleteDialog
     property variant pane: tabbedPane    //for accessing global definitions (main.qml) inside list item
     property variant authenticator: o1Twitter
+    property variant twemojiStyle: twemoji.style
 
     function itemType(data, indexPath) {
         //console.debug(indexPath + " " + data)
