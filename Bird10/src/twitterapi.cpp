@@ -241,7 +241,8 @@ int TwitterApi::insertTweetFromConversation(const QVariantMap& thread, const QVa
     for(int i = 0; i<items.size(); i++){
         QStringList ids = items[i].toMap()["entryId"].toString().split("-");
 
-        if(ids[0].contains("tweet") && items[i].toMap()["dispensable"].toBool() == false)
+        // TODO: ignore dispensable iff it's own tweet, in which case all of them should be displayed in the timeline
+        if((ids[0].contains("homeConversation") || ids[0].contains("tweet")) && items[i].toMap()["dispensable"].toBool() == false)
             if(position < 0)
                 insertTweet(items[i].toMap(), tweets, users, position); // this will append() the tweet
             else
