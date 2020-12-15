@@ -78,6 +78,7 @@ void WebImageView::setUrl(const QUrl& url) {
     //Q_ASSERT(ok);
 
     emit urlChanged();
+    emit loadingChanged();
 }
 
 void WebImageView::sslError(const QList<QSslError>& errors){
@@ -106,6 +107,7 @@ void WebImageView::imageLoaded() {
 
             emit imageChanged(Image(imageData));
             emit loadingFinished();
+            emit loadingChanged();
     }
     else{
         qDebug()<<"WebImageView error: "<<reply->error();

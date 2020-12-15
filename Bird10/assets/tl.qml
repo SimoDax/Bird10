@@ -21,6 +21,7 @@ import bb.cascades 1.4
 import com.pipacs.o2 1.0
 import bb.system 1.2
 import org.labsquare 1.0
+import com.simodax 1.0
 import "/components"
 import "/components/actions"
 
@@ -31,6 +32,7 @@ NavigationPane {
     onCreationCompleted: {
         if (o1Twitter.linked){
             twitterApi.requestTweets()
+            fleetApi.requestFleets()
             timer.start()
         }
         else
@@ -57,7 +59,62 @@ NavigationPane {
             verticalAlignment: VerticalAlignment.Fill
             
             TopBlueBarText{
+                id: topBar
                 horizontalAlignment: HorizontalAlignment.Fill
+            }
+            
+            Container {
+                id: fleets
+                visible: true
+                preferredWidth: Infinity
+                preferredHeight: ui.du(12)
+                topPadding: ui.du(1)
+//                bottomMargin: topPadding
+                leftPadding: ui.du(0.5)
+                ListView {
+                    dataModel: fleetApi.fleetThreads
+                    layout: StackListLayout {
+                        orientation: LayoutOrientation.LeftToRight
+                    }
+                    onTriggered: {
+                        var p = fleetPage.createObject()
+                        p.thread = dataModel.data(indexPath)
+                        nav.push(p)
+                    }
+                    listItemComponents: [
+                        ListItemComponent {
+                            type: ""
+                            Container {
+                                preferredHeight: Infinity
+                                preferredWidth: ui.du(11)
+                                layout: DockLayout {
+                                }
+                                WebImageView {
+                                    id: profilePic
+                                    preferredWidth: parent.preferredWidth - 20
+                                    preferredHeight: parent.preferredWidth - 20
+                                    verticalAlignment: VerticalAlignment.Center
+                                    horizontalAlignment: HorizontalAlignment.Center
+                                    url: ListItemData.user.profile_image_url_https
+                                    scalingMethod: ScalingMethod.AspectFit
+                                }
+                                ImageView {
+                                    verticalAlignment: VerticalAlignment.Fill
+                                    horizontalAlignment: HorizontalAlignment.Fill
+                                    imageSource: ListItemData.fully_read ? "asset:///fleet_border.png" : "asset:///fleet_border_blue.png"
+                                    scalingMethod: ScalingMethod.AspectFit
+                                    visible: !profilePic.loading
+                                }
+                            }
+                        }
+                    ]
+                }
+                Divider {
+                }
+                attachedObjects: ComponentDefinition {
+                    id: fleetPage
+                    source: "asset:///FleetPage.qml"
+                }
             }
             
             TweetList {
@@ -73,6 +130,7 @@ NavigationPane {
                 ]
             }
             QmlTimer {
+                property int fleetTimerCount: 0
                 id: timer
                 duration: 60000
                 onTriggered: {
@@ -80,10 +138,48 @@ NavigationPane {
                         console.debug('refresh id : ' + ((tweetList.dataModel.data([ 0 ]).id_str)))
                         twitterApi.requestLatestTweets()
                         timer.start()
+                        
+                        fleetTimerCount++
+                        if(fleetTimerCount >= 5 && nav.top.objectName != "fleetPage"){
+                            fleetTimerCount = 0
+                            fleetApi.requestFleets()
+                        }
                     }
                 }
             }
         }
+        actions: [
+            ActionItem {
+                id: toggleFleets
+                title: fleets.visible ? "Hide Fleets" : "Show Fleets"
+                imageSource: fleets.visible ? "asset:///images/ic_collapse.png" : "asset:///images/ic_expand.png"
+                onTriggered: {
+                    fleets.visible = ! fleets.visible
+                }
+            },
+            ActionItem {
+                id: scrollTop
+                title: "Scroll to top"
+                imageSource: "asset:///images/ic_to_top.png"
+                onTriggered: {
+                    tweetList.scrollToItem([ 0 ])
+                }
+                ActionBar.placement: ActionBarPlacement.InOverflow
+            },
+            ActionItem {
+                id: refreshAction
+                enabled: o1Twitter.linked
+                title: "Refresh"
+                imageSource: "asset:///images/ic_resume.png"
+                ActionBar.placement: ActionBarPlacement.InOverflow
+            },
+            LoginAction {
+                id: loginAction
+            },
+            PayAction {
+                id: payAction
+            }
+        ]
     }
     attachedObjects: [
         TwitterApi {
@@ -101,6 +197,10 @@ NavigationPane {
 //                tweetSheet.object.attachment_url = url;
 //                tweetSheet.object.open()
 //            }
+        },
+        FleetApi{
+            id: fleetApi
+            authenticator: o1Twitter
         }
     ]
     onPopTransitionEnded: {

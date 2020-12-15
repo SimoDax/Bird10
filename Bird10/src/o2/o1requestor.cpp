@@ -30,7 +30,13 @@ CurlEasy* O1Requestor::get(const QString& url, const QList<O0RequestParameter> &
 
 CurlEasy* O1Requestor::post(const QString& url, const QList<O0RequestParameter> &signingParameters, const QByteArray &data) {
     CurlEasy* request = setup(url, signingParameters, QNetworkAccessManager::PostOperation);
-    QByteArray fields = authenticator_->createQueryParameters(signingParameters);
+    QByteArray fields;
+    if(signingParameters.isEmpty()){ // if there are no parameters then the request body is a generic byte sequence to be uploaded
+        fields = data;
+        request->setHttpHeaderRaw("Content-Type", "application/json");
+    }
+    else
+        fields = authenticator_->createQueryParameters(signingParameters);  // otherwise generate an application/x-www-form-urlencoded body
 
     //qDebug()<<fields<<fields.size();
 

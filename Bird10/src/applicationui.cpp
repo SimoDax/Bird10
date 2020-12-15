@@ -48,6 +48,8 @@
 #include <src/SearchApi.hpp>
 #include <src/DMApi.hpp>
 #include <src/ListApi.hpp>
+#include <src/FleetApi.hpp>
+#include <src/Timer.hpp>
 #include <QString>
 #include <Qnetworkaccessmanager>
 #include <QNetworkRequest>
@@ -85,6 +87,8 @@ ApplicationUI::ApplicationUI() :
     qmlRegisterType<DMApi>("com.simodax", 1, 0, "DMApi");
     qmlRegisterType<ListApi>("com.simodax", 1, 0, "ListApi");
     qmlRegisterType<TimelineDataModel>("com.simodax", 1, 0, "TimelineDataModel");
+    qmlRegisterType<FleetApi>("com.simodax", 1, 0, "FleetApi");
+    qmlRegisterType<Timer>("com.simodax", 1, 0, "Timer");
     qRegisterMetaType<CURLcode>("CURLcode");
     qRegisterMetaType< QMap<QString, GroupDataModel*> >("QMap<QString COMMA GroupDataModel*>");
     qRegisterMetaType< QMap<QString, Conversation*> >("QMap<QString COMMA Conversation*>");
