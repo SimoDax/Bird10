@@ -78,7 +78,7 @@ NavigationPane {
             
             Container {
                 id: fleets
-                visible: true
+                visible: !fleetApi.allRead
                 preferredWidth: Infinity
                 preferredHeight: ui.du(12)
                 topPadding: ui.du(1)

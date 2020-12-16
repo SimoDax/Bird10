@@ -11,9 +11,10 @@
 
 using namespace bb::cascades;
 
-FleetApi::FleetApi(QObject* parent) : TwitterApiBase(parent), m_fleetThreads(new ArrayDataModel(this))
+FleetApi::FleetApi(QObject* parent) : TwitterApiBase(parent)
+    , m_fleetThreads(new ArrayDataModel(this))
+    , m_allRead(true)
 {
-//    m_fleetThreads = new ArrayDataModel(this);
 }
 
 void FleetApi::requestFleets()
@@ -64,7 +65,7 @@ void FleetApi::markRead(const QString& id)
     QString url = ("https://api.twitter.com/fleets/v1/mark_read");
 
     CurlEasy* reply = requestor->post(url, QList<O0RequestParameter>(), QString("{\"fleet_ids\":[\"" + id + "\"]}").toUtf8());
-    reply->set(CURLOPT_VERBOSE, 1L);
+
     connect(reply, SIGNAL(done(CURLcode)), reply, SLOT(deleteLater()));
     connect(reply, SIGNAL(error(CURLcode)), this, SLOT(onRequestFailed(CURLcode)));
 
@@ -87,10 +88,13 @@ void FleetApi::onFleetsReceived()
 
     m_threads = content["hydrated_threads"].toList();
 
+    m_allRead = true;
     for(int i = 0; i<m_threads.size(); i++){
         requestUserInfo(i);
+        m_allRead &= m_threads[i].toMap()["fully_read"].toBool();
     }
 
+    emit allReadChanged();
     reply->deleteLater();
 }
 

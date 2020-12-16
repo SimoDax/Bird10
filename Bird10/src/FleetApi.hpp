@@ -20,6 +20,9 @@ class FleetApi: public TwitterApiBase
     Q_PROPERTY(bb::cascades::ArrayDataModel* fleetThreads READ fleetThreads CONSTANT)
     ArrayDataModel* fleetThreads(){return m_fleetThreads;};
 
+    Q_PROPERTY(bool allRead READ allRead NOTIFY allReadChanged)
+    bool allRead(){return m_allRead;};
+
 public:
     FleetApi(QObject* parent = 0);
 
@@ -30,6 +33,7 @@ public:
 
 signals:
     void fleetsLoaded();
+    void allReadChanged();
 
 protected slots:
     void onFleetsReceived();
@@ -44,6 +48,7 @@ protected:
     ArrayDataModel* m_fleetThreads;
     QVariantList m_threads;
     int m_fleetsParsed;
+    bool m_allRead;
 };
 
 #endif /* FLEETAPI_HPP_ */

@@ -9,6 +9,7 @@ Page {
     objectName: "fleetPage"
     property variant thread
     property int currentFleet: -1
+    
     actionBarVisibility: ChromeVisibility.Compact
     
     Container {
@@ -89,25 +90,6 @@ Page {
             }
         }
         
-        QmlTimer {
-            id: tmr
-            duration: 10000
-            onTriggered: {
-                if(currentFleet < thread.fleets.length - 1){
-                    //                    // switch between the images
-                    //                    img1.visible = ! img1.visible // the visible binding will toggle img2 as well
-                    //                    
-                    //                    if(img1.visible)    // start preloading on the one that has become hidden
-                    //                        img2.index = currentFleet + 2     // no problem if it accesses an invalid index, if that's the case it won't be shown anyway
-                    //                    else 
-                    //                        img1.index = currentFleet + 2
-                    
-                    currentFleet ++
-                    switchFleet()
-                }
-                else nav.pop()
-            }
-        }
         attachedObjects: [
             Timer{
                 id: fleetTimer
