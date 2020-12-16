@@ -35,13 +35,8 @@ ListView {
                         orientation: LayoutOrientation.LeftToRight
                     }
                     ProfilePic {
+                        image_url: "http://" + ListItemData.profile_image_url_https.substring(8)
                     }
-//                    WebImageView {
-//                        id: profilePic
-//                        url: "http://" + ListItemData.profile_image_url_https.substring(8) // replace https with http
-//                        minWidth: 80.0
-//                        minHeight: 80.0
-//                    }
                     Label {
                         id: username
                         text: ListItemData.name
