@@ -47,8 +47,7 @@ Container {
     preferredWidth: Infinity
     background: (itemRoot.ListItem.selected || itemRoot.ListItem.active) ? ui.palette.primary : SystemDefaults.Paints.ContainerBackground
 
-
-        contextActions: [
+    contextActions: [
             ActionSet {
                 id: actionSet
                 ActionItem {
@@ -78,7 +77,7 @@ Container {
                     title: "DM user"
                     imageSource: "asset:///images/mail_80x80.png"
                     onTriggered: itemRoot.ListItem.view.dmUser(ListItemData.user)
-                    enabled: ListItemData.user.followed_by
+                    enabled: ListItemData.user.can_dm
                 }
 //                                                    ActionItem {
 //                                                        title: "Share Tweet"
