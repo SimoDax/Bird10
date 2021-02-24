@@ -45,7 +45,7 @@ public:
     inline TimelineDataModel *mediaTweetModel() { return mediaTweetModel_; } ;
 
     /// Small list of tweets
-    Q_PROPERTY(TimelineDataModel *previewTweetModel READ previewTweetModel NOTIFY previewTweetModelChanged)
+    Q_PROPERTY(TimelineDataModel *previewTweetModel READ previewTweetModel )
     inline TimelineDataModel *previewTweetModel() { return previewTweetModel_; } ;
 
     /// Profile data
@@ -70,6 +70,7 @@ public slots:
     Q_INVOKABLE void requestMediaUserTweets(QString cursor = QString());
     Q_INVOKABLE void requestOlderMediaUserTweets();
     Q_INVOKABLE void followUser(const QString& id, bool following);
+    Q_INVOKABLE void requestUserData();
 
 signals:
     void tweetModelChanged();
@@ -90,15 +91,12 @@ protected slots:
     void onMediaTweetsReceived();
     void onOlderMediaTweetsReceived();
     void onFollowed();
+    void onUserData();
 
 protected:
-//    QVariantMap realTweet(QVariantMap tweet);
-//    //QJsonObject realTweet(QJsonObject tweet);
-//    QVariantMap parseTweet(QVariantMap tweet);
     void appendTweets(CurlEasy* reply, TimelineDataModel * dataModel);
     void insertMediaTweets(CurlEasy* reply, int offset = 0);
-    void requestUserData();
-    void populateUserData(const QJsonArray& tweets);
+    void populateUserData(const QVariantMap& tweets);
 
 protected:
     TimelineDataModel *previewTweetModel_, *tweetModel_, *mediaTweetModel_, *fullTweetModel_, *userModel_;

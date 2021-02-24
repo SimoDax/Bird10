@@ -38,6 +38,7 @@ protected:
     QVariantMap realTweet(QVariantMap tweet);
     QVariantMap realTweetV2(const QVariantMap& tweet, const QVariantMap& tweets, const QVariantMap& users);
     QVariantMap parseTweetV2(QVariantMap tweet, const QVariantMap& tweets, const QVariantMap& users);
+    void rewriteUrls(std::wstring& text, const QVariantList& urls);
 };
 
 #endif /* TIMELINEBASE_HPP_ */

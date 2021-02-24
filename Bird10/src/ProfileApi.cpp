@@ -91,18 +91,13 @@ void ProfileApi::onTweetsReceived()
 
     tweetModel_->clear();
     previewTweetModel_->clear();
-    userModel_->clear();
 
     appendTweets(reply, tweetModel_);   // C is back
 
     for(int i = 0; i < 3 && i < tweetModel_->size(); i++)
         previewTweetModel_->append(tweetModel_->value(i));
 
-    if(!jsonArray.isEmpty())        // if profile is not private we can get user info from their tweets
-        populateUserData(jsonArray);
-    else
-        requestUserData();
-
+    emit previewTweetModelChanged();
     reply->deleteLater();
 }
 
@@ -118,8 +113,40 @@ void ProfileApi::onOlderTweetsReceived()
 
 void ProfileApi::requestUserData()
 {
+    if (!authenticator_ || !authenticator_->linked()) {
+        userModel_->clear();
+        return;
+    }
+
+    QString url = ("https://api.twitter.com/graphql/hc-pka9A7gyS3xODIafnrQ/UserByScreenName");
+    QList<O0RequestParameter> par;
+    QString query("{\"screen_name\":\""+ m_screen_name +"\",\"withHighlightedLabel\":true}");
+    par.append(O0RequestParameter("variables", query.toUtf8()));
+
+    CurlEasy* reply = requestor->get(url, par);
+
+    connect(reply, SIGNAL(done(CURLcode)), this, SLOT(onUserData()));
+    connect(reply, SIGNAL(error(CURLcode)), this, SLOT(onRequestFailed(CURLcode)));
+
+    //Since the object lives on a different thread its function calls need to be queued
+    //This will trigger the perform method without making an unnecessary signal-slot connection
+    QMetaObject::invokeMethod(reply, "perform", Qt::QueuedConnection);
 }
 
+void ProfileApi::onUserData(){
+    CurlEasy* reply = qobject_cast<CurlEasy *>(sender());
+    QJsonDocument jsonResponse = QJsonDocument::fromJson(reply->data());
+    QVariantMap content = jsonResponse.object().toVariantMap();
+
+    QVariantMap userData = content["data"].toMap()["user"].toMap()["legacy"].toMap();
+    userData["id_str"] = content["data"].toMap()["user"].toMap()["rest_id"].toString();
+
+    std::wstring desc = userData["description"].toString().toStdWString();
+    rewriteUrls(desc, userData["entities"].toMap()["description"].toMap()["urls"].toList());
+    userData["description"] = QString::fromWCharArray(desc.c_str());
+
+    populateUserData(userData);
+}
 
 void ProfileApi::appendTweets(CurlEasy* reply, TimelineDataModel* dataModel)
 {
@@ -331,15 +358,15 @@ void ProfileApi::onOlderMediaTweetsReceived()
 }
 
 
-void ProfileApi::populateUserData(const QJsonArray& tweets)
+void ProfileApi::populateUserData(const QVariantMap& data)
 {
     userModel_->clear();
-    userModel_->append(tweets[0].toObject().toVariantMap()["user"].toMap());
-    userModel_->append(tweets[0].toObject().toVariantMap()["user"].toMap());
+    userModel_->append(data);
+    userModel_->append(data);
 
-    m_id_str = tweets[0].toObject().toVariantMap()["user"].toMap()["id_str"].toString();
+    m_id_str = data["id_str"].toString();
     //qDebug()<<m_id_str;
-    m_following = tweets[0].toObject().toVariantMap()["user"].toMap()["following"].toBool();
+    m_following = data["following"].toBool();
 
     emit followingChanged();
     emit userModelChanged();
@@ -382,73 +409,3 @@ void ProfileApi::onFollowed(){
 
     emit followingChanged();
 }
-
-//QVariantMap ProfileApi::realTweet(QVariantMap tweet)
-//{
-//    if(tweet.keys().contains("retweeted_status")){
-//        QVariantMap real_tweet = tweet["retweeted_status"].toMap();
-//        //real_tweet["id_str"] = tweet["id_str"];     //omg haxor
-//        real_tweet["rt_flag"] = true;
-//        real_tweet["rt_name"] = tweet["user"].toMap()["name"];
-//        real_tweet["rt_screen_name"] = tweet["user"].toMap()["screen_name"];
-//        real_tweet["rt_id"] = tweet["id_str"];
-//        return real_tweet;
-//    }
-//    else{
-//        tweet["rt_flag"] = false;
-//        return tweet;
-//    }
-//}
-//
-//QVariantMap ProfileApi::parseTweet(QVariantMap tweet)
-//{
-//    // Parse media type (if any)
-//
-//    if(tweet.keys().contains("extended_entities") && tweet["extended_entities"].toMap()["media"].toList()[0].toMap()["type"].toString() == "photo")
-//        tweet["image_flag"] = true;
-//    else
-//        tweet["image_flag"] = false;
-//
-//    if(tweet.keys().contains("extended_entities") && tweet["extended_entities"].toMap()["media"].toList()[0].toMap()["type"].toString() == "video")
-//        tweet["video_flag"] = true;
-//    else
-//        tweet["video_flag"] = false;
-//
-//    if(tweet.keys().contains("extended_entities") && tweet["extended_entities"].toMap()["media"].toList()[0].toMap()["type"].toString() == "animated_gif")
-//        tweet["gif_flag"] = true;
-//    else
-//        tweet["gif_flag"] = false;
-//
-//
-//    // Rewrite tweet, use utf-32 to count emoji only once
-//    std::wstring text = tweet["full_text"].toString().toStdWString();
-//
-//    if(tweet.keys().contains("display_text_range")){
-//        // Crop quoted tweet link
-//        text.erase(tweet["display_text_range"].toList()[1].toInt());
-//    }
-//
-//    QVariantList urls = tweet["entities"].toMap()["urls"].toList();
-//
-//    int offset = 0;
-//    for(int i = 0; i<urls.size(); i++){
-//        int beginIndex = urls[i].toMap()["indices"].toList()[0].toInt();
-//        if(beginIndex+offset >= text.size())   //link already cropped out by display_text_range
-//            continue;
-//        int endIndex = urls[i].toMap()["indices"].toList()[1].toInt();
-//
-//        //QString htmlUrl = "<a href = \"" + urls[i].toMap()["url"].toString() + "\">"+ urls[i].toMap()["expanded_url"].toString() + "</a>";
-//        QString htmlUrl = urls[i].toMap()["expanded_url"].toString();   // coupled with content.flags in textbox
-//
-//        text.replace(beginIndex+offset, endIndex-beginIndex, htmlUrl.toStdWString());
-//        //text.remove(beginIndex+offset, endIndex-beginIndex);
-//        //text.insert(beginIndex+offset, htmlUrl);
-//
-//        offset += htmlUrl.length() - (endIndex - beginIndex);   //keeps track of indexes changes due to html insertion
-//
-//    }
-//    tweet["full_text"] = QString::fromStdWString(text);
-//
-//    return tweet;
-//}
-

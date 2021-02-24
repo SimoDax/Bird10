@@ -370,6 +370,7 @@ Container {
                                     //textStyle.fontWeight: Qt.generalStyles.normalFontWeight
                                     text: ListItemData.description
                                     textStyle.textAlign: TextAlign.Center
+                                    content.flags: TextContentFlag.ActiveText | TextContentFlag.Emoticons
                                 }
                                 Label {
                                     id: labelLocation

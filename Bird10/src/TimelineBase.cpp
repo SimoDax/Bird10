@@ -74,6 +74,26 @@ QJsonObject TimelineBase::realTweet(QJsonObject tweet){
             return tweet;
 }
 
+void TimelineBase::rewriteUrls(std::wstring& text, const QVariantList& urls)
+{
+    int offset = 0;
+    for (int i = 0; i < urls.size(); i++) {
+        int beginIndex = urls[i].toMap()["indices"].toList()[0].toInt();
+        if (beginIndex + offset >= text.size())
+            //link already cropped out by display_text_range
+            continue;
+
+        int endIndex = urls[i].toMap()["indices"].toList()[1].toInt();
+        QString htmlUrl = "<a href = \"" + urls[i].toMap()["url"].toString() + "\">"+ urls[i].toMap()["display_url"].toString() + "</a>";
+//        QString htmlUrl = urls[i].toMap()["expanded_url"].toString();    // coupled with content.flags in textbox
+//        htmlUrl = htmlUrl.remove(QRegExp("https?://"));
+        text.replace(beginIndex + offset, endIndex - beginIndex, htmlUrl.toStdWString());
+        //text.remove(beginIndex+offset, endIndex-beginIndex);
+        //text.insert(beginIndex+offset, htmlUrl);
+        offset += htmlUrl.length() - (endIndex - beginIndex);    //keeps track of indexes changes due to html insertion
+    }
+}
+
 QVariantMap TimelineBase::parseTweet(QVariantMap tweet)
 {
     // Parse media type (if any)
@@ -128,24 +148,7 @@ QVariantMap TimelineBase::parseTweet(QVariantMap tweet)
 
     QVariantList urls = tweet["entities"].toMap()["urls"].toList();
 
-    int offset = 0;
-    for(int i = 0; i<urls.size(); i++){
-        int beginIndex = urls[i].toMap()["indices"].toList()[0].toInt();
-        if(beginIndex+offset >= text.size())   //link already cropped out by display_text_range
-            continue;
-        int endIndex = urls[i].toMap()["indices"].toList()[1].toInt();
-
-        //QString htmlUrl = "<a href = \"" + urls[i].toMap()["url"].toString() + "\">"+ urls[i].toMap()["expanded_url"].toString() + "</a>";
-        QString htmlUrl = urls[i].toMap()["expanded_url"].toString();   // coupled with content.flags in textbox
-
-        text.replace(beginIndex+offset, endIndex-beginIndex, htmlUrl.toStdWString());
-        //text.remove(beginIndex+offset, endIndex-beginIndex);
-        //text.insert(beginIndex+offset, htmlUrl);
-
-        offset += htmlUrl.length() - (endIndex - beginIndex);   //keeps track of indexes changes due to html insertion
-
-    }
-
+    rewriteUrls(text, urls);
     parseEmojiInText(text);
 
     tweet["full_text"] = "<span>" + QString::fromWCharArray(text.c_str()) + " </span>";

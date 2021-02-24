@@ -28,8 +28,8 @@ import "/components/actions"
 Page {
     id: profilePage
     //property alias twitterApi: twitterApi
-    property string screen_name
-    property string name
+//    property string screen_name
+//    property string name
 
     actionBarVisibility: app.showTabsOnActionBar ? ChromeVisibility.Visible : ChromeVisibility.Compact
 
@@ -39,6 +39,7 @@ Page {
         waiter.open()
         profileApi.screenName = user_screen_name
         profileApi.requestUserTweets()
+        profileApi.requestUserData()
     }
 
     Container {
@@ -355,7 +356,7 @@ Page {
                 waiter.close()
                 nav.pop()
             }
-            onUserModelChanged: {
+            onPreviewTweetModelChanged: {
                 waiter.close()
                 var m = profileApi.previewTweetModel
                 m.insert(0, [ "pht", "phb" ])
@@ -368,7 +369,7 @@ Page {
                     if(profileApi.screenName == o1Twitter.extraTokens.screen_name)
                         actionArray.push(refreshAction, payAction);
                     else
-                        actionArray.push(followAction, refreshAction, payAction);
+                        actionArray.push(followAction, dmAction, refreshAction, payAction);
                         
                     actions=actionArray
                 }
@@ -397,6 +398,13 @@ Page {
         ComponentDefinition {
             id: profileMediaPage
             source: "asset:///ProfileMediaPage.qml"
+        },
+        ActionItem {
+            id: dmAction
+            title: "DM user"
+            imageSource: "asset:///images/mail_80x80.png"
+            onTriggered: lv.dmUser(profileApi.userModel.value(0))
+            enabled: profileApi.userModel.value(0).can_dm
         },
          ActionItem {
              id: followAction
