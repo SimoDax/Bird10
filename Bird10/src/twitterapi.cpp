@@ -68,7 +68,7 @@ void TwitterApi::requestTweets(Direction dir) {
     }
 
     QString url = ("https://api.twitter.com/2/timeline/home_latest.json");
-    QList<O0RequestParameter> par;
+    QList<O0RequestParameter> par = basicGetParameters();
     par.append(O0RequestParameter("tweet_mode", "extended"));
     par.append(O0RequestParameter("count", "40"));
 
@@ -217,7 +217,7 @@ void TwitterApi::processTimeline(CurlEasy* reply, Direction mode){
     emit tweetModelChanged();
 }
 
-int TwitterApi::insertTweet(const QVariantMap& tweet, const QVariantMap& tweets, const QVariantMap& users, int position)
+int TwitterApi::insertTweet(const QVariantMap& tweet, const QVariantMap& tweets, const QVariantMap& users, int position, bool dividerVisible)
 {
     const QString id = tweet["item"].toMap()["content"].toMap()["tweet"].toMap()["id"].toString();
 
@@ -226,6 +226,7 @@ int TwitterApi::insertTweet(const QVariantMap& tweet, const QVariantMap& tweets,
 //        return;
 
     QVariantMap tweetObject = parseTweetV2((tweets[id].toMap()), tweets, users);
+    tweetObject["divider_visible_flag"] = dividerVisible;
 
     if(position < 0)
         tweetModel_->append(tweetObject);
@@ -237,16 +238,55 @@ int TwitterApi::insertTweet(const QVariantMap& tweet, const QVariantMap& tweets,
 
 int TwitterApi::insertTweetFromConversation(const QVariantMap& thread, const QVariantMap& tweets, const QVariantMap& users, int position){
     QVariantList items = thread["timelineModule"].toMap()["items"].toList();
-    int count = position;
-    for(int i = 0; i<items.size(); i++){
-        QStringList ids = items[i].toMap()["entryId"].toString().split("-");
 
-        // TODO: ignore dispensable iff it's own tweet, in which case all of them should be displayed in the timeline
-        if((ids[0].contains("homeConversation") || ids[0].contains("tweet")) && items[i].toMap()["dispensable"].toBool() == false)
-            if(position < 0)
-                insertTweet(items[i].toMap(), tweets, users, position); // this will append() the tweet
-            else
-                count = insertTweet(items[i].toMap(), tweets, users, count);    // while this will insert it at the correct position
+    // check if the mini thread is just tweets of the same author grouped together or if it's actually uninteresting conversation stuff
+    bool sameAuthor = true;
+    QString author = items[0].toMap()["item"].toMap()["content"].toMap()["tweet"].toMap()["user"].toMap()["id_str"].toString();
+    for(int i = 0; i<items.size() && sameAuthor; i++){
+        sameAuthor &= author == items[i].toMap()["item"].toMap()["content"].toMap()["tweet"].toMap()["user"].toMap()["id_str"].toString();
+    }
+
+    QStringList allTweetIds = thread["timelineModule"].toMap()["metadata"].toMap()["conversationMetadata"].toMap()["allTweetIds"].toStringList();
+
+    int count = position;
+    if(sameAuthor){
+        bool showThreadInserted = false;
+        for(int i = 0; i<items.size(); i++){
+            QStringList ids = items[i].toMap()["entryId"].toString().split("-");
+
+            if((ids[0].contains("homeConversation") || ids[0].contains("tweet"))){
+                if(ids.last() != allTweetIds[i] && !showThreadInserted && !allTweetIds.isEmpty()){
+                    // The id of the current tweet is different from the i-th tweet in the thread -> some have been omissed, insert "Show this thread" element
+                    QVariantMap element;
+                    element["show_thread_flag"] = true;
+
+                    if(position < 0)
+                        tweetModel_->append(element);
+                    else{
+                        tweetModel_->insert(count, element);
+                        count++;
+                    }
+                    showThreadInserted = true;
+                }
+
+                if(position < 0)
+                    insertTweet(items[i].toMap(), tweets, users, position, i == items.size()-1); // this will append() the tweet
+                else
+                    count = insertTweet(items[i].toMap(), tweets, users, count, i == items.size()-1);    // while this will insert it at the correct position
+            }
+        }
+    }
+    else{
+        for(int i = 0; i<items.size(); i++){
+            QStringList ids = items[i].toMap()["entryId"].toString().split("-");
+
+            if((ids[0].contains("homeConversation") || ids[0].contains("tweet")) && items[i].toMap()["dispensable"].toBool() == false){
+                if(position < 0)
+                    insertTweet(items[i].toMap(), tweets, users, position); // this will append() the tweet
+                else
+                    count = insertTweet(items[i].toMap(), tweets, users, count);    // while this will insert it at the correct position
+            }
+        }
     }
     return count;    // return new position
 }

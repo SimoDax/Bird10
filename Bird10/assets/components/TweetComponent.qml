@@ -38,7 +38,12 @@ ListItemComponent {
         }
         
         Container{
-            
+            attachedObjects: ImagePaintDefinition {
+                id: bg
+                imageSource: "asset:///thread_bar.amd"
+            }
+            background: typeof(ListItemData.divider_visible_flag) == 'undefined' || ListItemData.divider_visible_flag ? SystemDefaults.Paints.ContainerBackground : bg.imagePaint
+
             layout: StackLayout {
                 orientation: LayoutOrientation.LeftToRight
                 }
@@ -47,8 +52,20 @@ ListItemComponent {
                 leftPadding: 15.0
                 rightPadding: 15.0
                 bottomPadding: 15.0
-                
-                ProfilePic {
+
+                Container {
+                topPadding: 0
+                leftPadding: 0
+                rightPadding: 0
+                bottomPadding: 0
+                layout: StackLayout {
+                        orientation: LayoutOrientation.TopToBottom
+                    }
+    
+                    ProfilePic {
+                    }
+                    
+                    
                 }
                 
                 Container {
@@ -107,6 +124,7 @@ ListItemComponent {
             }
 
         Divider {
+            visible: ListItemData.divider_visible_flag
         }
     }
 }

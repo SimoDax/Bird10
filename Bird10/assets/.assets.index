@@ -1,5 +1,5 @@
 1
-191
+200
 1440x1440/AttachedImage.qml
 1440x1440/ScreenContainer.qml
 720x1280/AttachedImage.qml
@@ -41,6 +41,7 @@ components/ProfilesList.qml
 components/QmlTimer.qml
 components/QuotedTweetComponent.qml
 components/RtContainer.qml
+components/ShowThreadComponent.qml
 components/SummaryCard.qml
 components/TimelinePage.qml
 components/TweetActionBar.qml
@@ -180,6 +181,10 @@ VisualStyle.bright/poll_button_disabled.amd
 VisualStyle.bright/poll_button_disabled.png
 VisualStyle.bright/quoted_border.amd
 VisualStyle.bright/quoted_border.png
+VisualStyle.bright/thread_bar.amd
+VisualStyle.bright/thread_bar.png
+VisualStyle.bright/three_dots.amd
+VisualStyle.bright/three_dots.png
 VisualStyle.dark/btn_compose_tweet.png
 VisualStyle.dark/btn_default_camera.png
 VisualStyle.dark/btn_default_gallery.png
@@ -191,3 +196,7 @@ VisualStyle.dark/poll_button_disabled.amd
 VisualStyle.dark/poll_button_disabled.png
 VisualStyle.dark/quoted_border.amd
 VisualStyle.dark/quoted_border.png
+VisualStyle.dark/thread_bar.amd
+VisualStyle.dark/thread_bar.png
+VisualStyle.dark/three_dots.amd
+VisualStyle.dark/three_dots.png

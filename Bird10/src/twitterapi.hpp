@@ -86,7 +86,7 @@ protected slots:
 
 protected:
     void processTimeline(CurlEasy* reply, Direction mode = NONE);
-    int insertTweet(const QVariantMap& tweet, const QVariantMap& tweets, const QVariantMap& users, int position = -1);
+    int insertTweet(const QVariantMap& tweet, const QVariantMap& tweets, const QVariantMap& users, int position = -1, bool dividerVisible = true);
     int insertTweetFromConversation(const QVariantMap& tweet, const QVariantMap& tweets, const QVariantMap& users, int position = -1);
     void terminateTimeline(QVariantMap instruction);
 };

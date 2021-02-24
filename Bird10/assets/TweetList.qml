@@ -47,6 +47,8 @@ ListView {
             return "gif"
         if (data.poll_flag)
             return "poll"
+        if(data.show_thread_flag)
+            return "showThread"
 
         return ""
     }
@@ -151,6 +153,9 @@ ListView {
     listItemComponents: [
         LoadingComponent {
             id: lc
+        },
+        ShowThreadComponent {
+            id: stc
         },
         VideoTweetComponent {
             id: vtc

@@ -80,6 +80,10 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/VisualStyle.bright/poll_button_disabled.png) \
         $$quote($$BASEDIR/assets/VisualStyle.bright/quoted_border.amd) \
         $$quote($$BASEDIR/assets/VisualStyle.bright/quoted_border.png) \
+        $$quote($$BASEDIR/assets/VisualStyle.bright/thread_bar.amd) \
+        $$quote($$BASEDIR/assets/VisualStyle.bright/thread_bar.png) \
+        $$quote($$BASEDIR/assets/VisualStyle.bright/three_dots.amd) \
+        $$quote($$BASEDIR/assets/VisualStyle.bright/three_dots.png) \
         $$quote($$BASEDIR/assets/VisualStyle.dark/btn_compose_tweet.png) \
         $$quote($$BASEDIR/assets/VisualStyle.dark/btn_default_camera.png) \
         $$quote($$BASEDIR/assets/VisualStyle.dark/btn_default_gallery.png) \
@@ -91,6 +95,10 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/VisualStyle.dark/poll_button_disabled.png) \
         $$quote($$BASEDIR/assets/VisualStyle.dark/quoted_border.amd) \
         $$quote($$BASEDIR/assets/VisualStyle.dark/quoted_border.png) \
+        $$quote($$BASEDIR/assets/VisualStyle.dark/thread_bar.amd) \
+        $$quote($$BASEDIR/assets/VisualStyle.dark/thread_bar.png) \
+        $$quote($$BASEDIR/assets/VisualStyle.dark/three_dots.amd) \
+        $$quote($$BASEDIR/assets/VisualStyle.dark/three_dots.png) \
         $$quote($$BASEDIR/assets/components/ArrowItemComponent.qml) \
         $$quote($$BASEDIR/assets/components/BaseTweetContainer.qml) \
         $$quote($$BASEDIR/assets/components/BigPic.qml) \
@@ -120,6 +128,7 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/components/QmlTimer.qml) \
         $$quote($$BASEDIR/assets/components/QuotedTweetComponent.qml) \
         $$quote($$BASEDIR/assets/components/RtContainer.qml) \
+        $$quote($$BASEDIR/assets/components/ShowThreadComponent.qml) \
         $$quote($$BASEDIR/assets/components/SummaryCard.qml) \
         $$quote($$BASEDIR/assets/components/TimelinePage.qml) \
         $$quote($$BASEDIR/assets/components/TweetActionBar.qml) \
