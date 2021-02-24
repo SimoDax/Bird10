@@ -62,7 +62,7 @@ ControlDelegate {
                 }
                 leftMargin: 15.0
 
-                WebImageView {
+                ProfilePic {
                     id: profilePic
                     //                    url: rtDialog.tweet.user.profile_image_url_https
                     url: ListItemData.quoted_status.user.profile_image_url_https

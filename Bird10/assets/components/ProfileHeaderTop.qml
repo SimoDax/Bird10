@@ -178,11 +178,19 @@ Container {
                                     objectName: "Profile Avatar"
                                     horizontalAlignment: HorizontalAlignment.Center
                                     verticalAlignment: VerticalAlignment.Center
-                                    url: ListItemData.profile_image_url_https.replace("https", "http").replace("normal", "bigger")
+                                    url: {
+                                        if(ListItemData.profile_image_url_https.indexOf("default_profile_normal.png") != -1){
+                                            imageSource = "asset:///images/default_profile_image.png"
+                                            return String()
+                                        }
+                                        else return ListItemData.profile_image_url_https.replace("https", "http").replace("normal", "bigger")
+                                    }
                                     minHeight: ui.du(14)
+                                    maxHeight: ui.du(14)
                                     minWidth: ui.du(14)
+                                    maxWidth: ui.du(14)
 
-//                                    borderWidthLeft: (8)
+                                    //                                    borderWidthLeft: (8)
 //                                    borderWidthTop: (8)
 //                                    borderWidthRight: (8)
 //                                    borderWidthBottom: (8)
