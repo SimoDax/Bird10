@@ -36,11 +36,16 @@ NavigationPane {
 
     property variant unread: dmApi.unreadCount
     property bool isActiveTab: tabbedPane.activeTab.title == "Messages" // Used to decide whether to call updateLastSeenId on new messages
+    onIsActiveTabChanged: {
+        if(isActiveTab){
+            thisDMHistory.scrollToTop()
+            resetUnreadCount()
+        }
+    }
 
     // Called when the tab becomes the current one
     function resetUnreadCount() {
         dmApi.updateLastSeenId() // this also resets dmApi.unreadCount
-        dmHistoryId.scrollToItem(0)
     }
 
     function loadInbox() { // called by main on login

@@ -70,7 +70,6 @@ TabbedPane {
         }
         unreadContentCount: inbox.unread
         newContentAvailable: unreadContentCount > 0
-        onTriggered: inbox.resetUnreadCount()
         
 //        delegate: Delegate {
 //            id: dmDelegate

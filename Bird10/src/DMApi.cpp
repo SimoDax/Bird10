@@ -598,7 +598,7 @@ QString DMApi::getConversationIdFromUser(const QString& user)
 
 Conversation* DMApi::createConversation(const QString& conversation_id)
 {
-    Conversation* conversation = new Conversation();
+    Conversation* conversation = new Conversation(false);
     m_conversations.insert(conversation_id, conversation);
     m_inbox->insert(conversation);
 
