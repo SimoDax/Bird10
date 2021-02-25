@@ -70,19 +70,6 @@ TabbedPane {
         }
         unreadContentCount: inbox.unread
         newContentAvailable: unreadContentCount > 0
-        
-//        delegate: Delegate {
-//            id: dmDelegate
-//            source: "asset:///DMInboxPage.qml"
-//        }
-//        delegateActivationPolicy: TabDelegateActivationPolicy.ActivateImmediately
-//        unreadContentCount: {
-//            if (dmDelegate.active)
-//                return dmDelegate.object.unread;
-//            else return 0
-//        }
-//        newContentAvailable: unreadContentCount > 0
-//        onTriggered: dmDelegate.object.resetUnreadCount()
 
     }
 
@@ -234,16 +221,6 @@ TabbedPane {
                 error_message("Account linking experienced an error. Please check your credentials and that you have an active internet connection")
             }
         },
-        //        TwitterApi {
-        //            id: twitterApi
-        //            authenticator: o1Twitter
-        //            onError: {
-        //                error_message(error)
-        //            }
-        //            onNetworkError: {
-        //                error_message("Network error")
-        //            }
-        //        },
         SystemToast {
             id: errorToast
             body: ""
