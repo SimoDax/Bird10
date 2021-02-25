@@ -37,13 +37,14 @@ public:
    TwitterApiBase(QObject *parent = 0);
    virtual ~TwitterApiBase();
 
+   static void saveReply(CurlEasy * reply, const QString& filename);
+
 signals:
     void networkError();
     void error(const QString& error);
 
 protected:
     QList<O0RequestParameter> basicGetParameters();
-    void saveReply(CurlEasy * reply, const QString& filename);
     void parseEmojiInText(std::wstring& text);
 
 protected slots:

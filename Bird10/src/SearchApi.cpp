@@ -64,13 +64,12 @@ void SearchApi::onTrendsReceived()
 
     QVariantList instructions = content["timeline"].toMap()["instructions"].toList();
 
-
     m_trends->clear();
 
     for(int i = 0; i<instructions.size(); i++){
         if(instructions[i].toMap().find("addEntries") != instructions[i].toMap().end()){
             QVariantList entries = instructions[i].toMap()["addEntries"].toMap()["entries"].toList();
-            qDebug()<<instructions[i];
+            //qDebug()<<instructions[i];
 
             for(int i = 0; i<entries.size(); i++){
                 QString id = entries[i].toMap()["entryId"].toString();
