@@ -72,6 +72,17 @@ NavigationPane {
                 ]
             }
         }
+        actions: [
+            ScrollToTop {
+                
+            },
+            RefreshAction {
+                
+            },
+            PayAction {
+                
+            }
+        ]
     }
     attachedObjects: [
         ComponentDefinition {

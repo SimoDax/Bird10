@@ -94,13 +94,11 @@ Page {
     }
     
     actions: [
-        ActionItem {
-            id: refreshAction
-            enabled: o1Twitter.linked
-            title: "Refresh"
-            imageSource: "asset:///images/ic_resume.png"
+        ScrollToTop {
+            id: scrollToTopAction
+        },
+        RefreshAction {
             onTriggered: twitterApi.requestSearch(discoverPage.query, seg.selectedOption.text.toLowerCase())
-            ActionBar.placement: ActionBarPlacement.InOverflow
         },
         PayAction {
             id: payAction

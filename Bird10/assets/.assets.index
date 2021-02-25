@@ -1,5 +1,5 @@
 1
-200
+202
 1440x1440/AttachedImage.qml
 1440x1440/ScreenContainer.qml
 720x1280/AttachedImage.qml
@@ -12,6 +12,8 @@ About.qml
 BrowserSheet.qml
 components/actions/LoginAction.qml
 components/actions/PayAction.qml
+components/actions/RefreshAction.qml
+components/actions/ScrollToTop.qml
 components/ArrowItemComponent.qml
 components/BaseTweetContainer.qml
 components/BigPic.qml

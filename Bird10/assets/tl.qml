@@ -43,7 +43,6 @@ NavigationPane {
     
     TimelinePage {
         onCreationCompleted: {
-            refreshAction.triggered.connect(twitterApi.requestTweets)
             app.openConversation.connect(tweetList.openConversationFromId)
             app.openProfile.connect(tweetList.openProfileFromScreenName)
             app.openTweetSheet.connect(tweet)
@@ -170,21 +169,11 @@ NavigationPane {
                     fleets.visible = ! fleets.visible
                 }
             },
-            ActionItem {
-                id: scrollTop
-                title: "Scroll to top"
-                imageSource: "asset:///images/ic_to_top.png"
-                onTriggered: {
-                    tweetList.scrollToItem([ 0 ])
-                }
-                ActionBar.placement: ActionBarPlacement.InOverflow
+            ScrollToTop {
+                id: scrollTopAction
             },
-            ActionItem {
+            RefreshAction {
                 id: refreshAction
-                enabled: o1Twitter.linked
-                title: "Refresh"
-                imageSource: "asset:///images/ic_resume.png"
-                ActionBar.placement: ActionBarPlacement.InOverflow
             },
             LoginAction {
                 id: loginAction

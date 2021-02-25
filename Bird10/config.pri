@@ -144,6 +144,8 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/components/Waiter.qml) \
         $$quote($$BASEDIR/assets/components/actions/LoginAction.qml) \
         $$quote($$BASEDIR/assets/components/actions/PayAction.qml) \
+        $$quote($$BASEDIR/assets/components/actions/RefreshAction.qml) \
+        $$quote($$BASEDIR/assets/components/actions/ScrollToTop.qml) \
         $$quote($$BASEDIR/assets/favorites.qml) \
         $$quote($$BASEDIR/assets/fonts/Twemoji.ttf) \
         $$quote($$BASEDIR/assets/images/add_to_list_80x80.png) \

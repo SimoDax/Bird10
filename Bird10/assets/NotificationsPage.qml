@@ -55,6 +55,7 @@ NavigationPane {
                 searchVisible: false
             }
             ListView {
+                id: notificationList
                 property variant twemojiStyle: twemoji.style
                 dataModel: notificationsApi.notifications
 
@@ -176,6 +177,12 @@ NavigationPane {
         ]
         
         actions: [
+            ScrollToTop {
+                id: scrollToTopAction
+                onTriggered: {
+                    notificationList.scrollToItem([0])
+                }
+            },
             ActionItem {
                 id: refreshAction
                 enabled: o1Twitter.linked
