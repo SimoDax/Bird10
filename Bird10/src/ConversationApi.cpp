@@ -113,6 +113,11 @@ void ConversationApi::conversationReceived()
 
     QVariantList instructions = content["timeline"].toMap()["instructions"].toList();
 
+    // The api returns the first tweet of the conversation even when retrieving older tweets. The id of this tweet coincides with the id of the conversation
+    // so we gotta extract it from the reply and use it in the parsing loop below to filter out this misplaced tweet.
+    QStringList ids = content["timeline"].toMap()["id"].toString().split("-");
+    QString conversationId = ids.size() > 1 ? ids[1] : "";
+
     tweetModel_->setCursorBottom("");
     m_tweetsCount = 0;
     for(int i = 0; i<instructions.size(); i++){
@@ -124,7 +129,7 @@ void ConversationApi::conversationReceived()
 //                qDebug()<<"entry: "<<i<<" of "<<entries.size();
                 QStringList ids = entries[i].toMap()["entryId"].toString().split("-");
 
-                if(ids[0].contains("tweet") && !ids[0].contains("Composer"))   // - to avoid tweetComposer on self threads
+                if(ids[0].contains("tweet") && !ids[0].contains("Composer") && ids[1] != conversationId)   // - to avoid tweetComposer on self threads and the first tweet of the converstion
                     insertTweet(entries[i].toMap()["content"].toMap());
                 else if (ids[0].contains("Thread"))
                     insertTweetsFromThread(entries[i].toMap()["content"].toMap());
