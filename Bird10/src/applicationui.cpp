@@ -405,6 +405,16 @@ void ApplicationUI::lateInit()
         m_listdialog->exec();
     }
 
+    // Download the latest user agent (to simulate an up-to-date twitter app)
+    CurlEasy * uareq = new CurlEasy(NULL, &ApplicationUI::curlThread);
+    uareq->set(CURLOPT_URL, QUrl("https://bird10app.netlify.com/ua.txt"));
+    uareq->set(CURLOPT_FAILONERROR, 1L);
+    uareq->set(CURLOPT_FOLLOWLOCATION, 1L);   // Follow netlify 3xx redirects
+    connect(uareq, SIGNAL(done(CURLcode)), this, SLOT(onUserAgent()));
+    connect(uareq, SIGNAL(error(CURLcode)), uareq, SLOT(deleteLater()));
+
+    QMetaObject::invokeMethod(uareq, "perform", Qt::QueuedConnection);
+
     // Check for updates
     CurlEasy * request = new CurlEasy(NULL, &ApplicationUI::curlThread);
     request->set(CURLOPT_URL, QUrl("https://bird10app.netlify.com/version.txt"));
@@ -436,6 +446,14 @@ void ApplicationUI::lateInit()
 
 //    m_displayInfo = new bb::device::DisplayInfo();
     m_dmApi->loadInboxInitialState();
+}
+
+void ApplicationUI::onUserAgent()
+{
+    CurlEasy* reply = qobject_cast<CurlEasy *>(sender());
+    O1::setUserAgent(reply->data());
+
+    reply->deleteLater();
 }
 
 void ApplicationUI::handleInvoke(const bb::system::InvokeRequest& invoke)

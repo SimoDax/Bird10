@@ -85,6 +85,8 @@ public:
 
     static void spoofHeaders(CurlEasy* request);
 
+    static void setUserAgent(const QByteArray& ua);
+
 public Q_SLOTS:
     /// Authenticate.
     Q_INVOKABLE virtual void link();
@@ -130,6 +132,8 @@ protected:
     QNetworkAccessManager *manager_;
     O2ReplyServer *replyServer_;
     //bool active_;
+
+    static QByteArray userAgent_;
 };
 
 #endif // O1_H

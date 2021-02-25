@@ -25,6 +25,8 @@
 
 #include <iostream>
 
+QByteArray O1::userAgent_ = "TwitterAndroid/8.72.0-release.00 (28720000-r-0) Google Pixel XL/7.1.1 (Google;Google Pixel XL;Android;vbox86p;0;;1;2013)";
+
 O1::O1(QObject *parent): O0BaseAuth(parent) {
     //active_ = false;
     setSignatureMethod(O2_SIGNATURE_TYPE_HMAC_SHA1);
@@ -450,7 +452,7 @@ QByteArray O1::nonce() {
 
 void O1::spoofHeaders(CurlEasy* request){
     request->setHttpHeaderRaw("Cache-Control", "no-store");
-    request->setHttpHeaderRaw("User-Agent", "TwitterAndroid/8.25.1-release.01 (18251001-r-1) Google Pixel XL/7.1.1 (Google;Google Pixel XL;Android;vbox86p;0;;1;2013)");
+    request->setHttpHeaderRaw("User-Agent", userAgent_);
     //request->setHttpHeaderRaw("Accept-Encoding", "gzip, deflate");
     request->setHttpHeaderRaw("Timezone", "America/New_York");
     request->setHttpHeaderRaw("X-Twitter-Client-Limit-Ad-Tracking", "1");
@@ -460,4 +462,9 @@ void O1::spoofHeaders(CurlEasy* request){
     request->setHttpHeaderRaw("X-Twitter-Active-User", "yes");
     request->setHttpHeaderRaw("X-Twitter-Client-Version", "8.25.1-release.01");
     request->setHttpHeaderRaw("Accept", "application/json");
+}
+
+void O1::setUserAgent(const QByteArray& ua)
+{
+    userAgent_ = ua;
 }

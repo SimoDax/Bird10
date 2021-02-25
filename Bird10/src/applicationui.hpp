@@ -125,6 +125,7 @@ public slots:
 private slots:
     void onInvokeResult();
     void checkVersion();
+    void onUserAgent();
     void onDialogFinished(bb::system::SystemUiResult::Type result);
     void onQueryResponse();
     void lateInit();
