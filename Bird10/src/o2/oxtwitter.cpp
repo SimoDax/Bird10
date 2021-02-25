@@ -149,13 +149,13 @@ void OXTwitter::onTokenRequestFinished(CURLcode code){
     }
     else if(response.keys().contains("login_verification_request_url")){
 
-//            QFile file("./shared/documents/bird10log.txt");
-//            file.open(QIODevice::Append);
-//            if(file.isOpen()){
-//                QTextStream out(&file);
-//                out << "\n" << QDateTime::currentDateTime().toString(Qt::ISODate) << " OXTwitter::onTokenRequestFinished: Opening verification url";
-//            }
-//            file.close();
+            QFile file("./shared/documents/bird10log.txt");
+            file.open(QIODevice::Append);
+            if(file.isOpen()){
+                QTextStream out(&file);
+                out << "\n" << QDateTime::currentDateTime().toString(Qt::ISODate) << " OXTwitter::onTokenRequestFinished: Opening verification url";
+            }
+            file.close();
 
             login_verification_user_id = response.take("login_verification_user_id").value<QString>();
             login_verification_request_id = response.take("login_verification_request_id").value<QString>();
