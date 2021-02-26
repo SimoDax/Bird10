@@ -129,7 +129,7 @@ void ConversationApi::conversationReceived()
 //                qDebug()<<"entry: "<<i<<" of "<<entries.size();
                 QStringList ids = entries[i].toMap()["entryId"].toString().split("-");
 
-                if(ids[0].contains("tweet") && !ids[0].contains("Composer") && ids[1] != conversationId)   // - to avoid tweetComposer on self threads and the first tweet of the converstion
+                if(ids[0].contains("tweet") && !ids[0].contains("Composer") && (ids[1] != conversationId || tweetModel_->size() == 0))   // - to avoid tweetComposer on self threads and the first tweet of the converstion (as long it's not actually the first tweet!)
                     insertTweet(entries[i].toMap()["content"].toMap());
                 else if (ids[0].contains("Thread"))
                     insertTweetsFromThread(entries[i].toMap()["content"].toMap());
