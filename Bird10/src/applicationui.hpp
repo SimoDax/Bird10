@@ -115,10 +115,13 @@ signals:
     void openProfile(const QString& screen_name);
     void openList(const QString& id);
     void openTweetSheet(const QString& text, const QString& image, const QString& video);
+    void showBlackBg();
+    void hideBlackBg();
 
 public slots:
     void shareImageLoaded();
     void saveImageLoaded();
+    void onVideoCardClosed(const bb::system::CardDoneMessage&);
 
     void onManualExit();
 

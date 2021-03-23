@@ -286,9 +286,13 @@ void ApplicationUI::openVideo(const QUrl& url, const QString& title){
     QByteArray requestData = bb::PpsObject::encode(map, NULL);
     request.setData(requestData);
 
-    m_reply = manager.invoke(request);
+    emit showBlackBg();
+
+    m_reply = m_invokeManager->invoke(request);
     m_reply->setParent(this);
     connect(m_reply, SIGNAL(finished()), this,  SLOT(onInvokeResult()));
+    connect(m_invokeManager, SIGNAL(childCardDone(const bb::system::CardDoneMessage&)),
+            this, SLOT(onVideoCardClosed(const bb::system::CardDoneMessage&)));
 }
 
 void ApplicationUI::onInvokeResult(){   //helper function pasted stright from docs, saves a lot of headaches
@@ -454,6 +458,11 @@ void ApplicationUI::onUserAgent()
     O1::setUserAgent(reply->data());
 
     reply->deleteLater();
+}
+
+void ApplicationUI::onVideoCardClosed(const bb::system::CardDoneMessage&)
+{
+    emit hideBlackBg();
 }
 
 void ApplicationUI::handleInvoke(const bb::system::InvokeRequest& invoke)
