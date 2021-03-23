@@ -113,8 +113,8 @@ Container {
         leftPadding: 10.0
         Label {
             text: {
-                if (ListItemData.retweet_count != 0)
-                    return ListItemData.retweet_count < 10000 ? ListItemData.favorite_count : (Math.round(ListItemData.favorite_count / 1000) + "k");
+                if (ListItemData.favorite_count != 0)
+                    return ListItemData.favorite_count < 10000 ? ListItemData.favorite_count : (Math.round(ListItemData.favorite_count / 1000) + "k");
                 else
                     return ""
             }
