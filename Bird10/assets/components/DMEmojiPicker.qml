@@ -18,6 +18,7 @@
  */
 
 import bb.cascades 1.4
+import "../"
 
 Container{
     id: emojiPicker
@@ -30,6 +31,8 @@ Container{
         emojiNatureButtonContainer.visible = true;
         emojiObjectsButtonContainer.visible = true;
         emojiSymbolsButtonContainer.visible = true;
+        emojiFlagsButtonContainer.visible = true;
+        emojiFoodButtonContainer.visible = true;
         emojiButtonContainer.visible = true;
         // Set the people category as active
         emojiPeople.visible = true;
@@ -44,6 +47,8 @@ Container{
         emojiNatureButtonContainer.visible = false;
         emojiObjectsButtonContainer.visible = false;
         emojiSymbolsButtonContainer.visible = false;
+        emojiFlagsButtonContainer.visible = false;
+        emojiFoodButtonContainer.visible = false;
         emojiButtonContainer.visible = false;
 
         // Set all emoji categories hidden
@@ -52,6 +57,8 @@ Container{
         emojiNature.visible = false;
         emojiObjects.visible = false;
         emojiSymbols.visible = false;
+        emojiFlags.visible = false;
+        emojiFood.visible = false;
 
         messageField.requestFocus();
     }
@@ -74,17 +81,7 @@ Container{
                 source: "asset:///images/emoji_people.xml"
             }
             listItemComponents: [
-                ListItemComponent {
-                    type: "emoji"
-                    Label {
-                        text: ListItemData.unicode
-                        textStyle.textAlign: TextAlign.Center
-                        textStyle.fontSize: FontSize.PointValue
-                        textStyle.fontSizeValue: 8
-                        textStyle.base: ListItem.view.twemojiStyle
-                        textStyle.fontFamily: "Twemoji"
-                        textFormat: TextFormat.Html
-                    }
+                EmojiComponent {
                 }
             ]
             onTriggered: {
@@ -94,48 +91,7 @@ Container{
             }
         }
     }
-    
-    // List of Emoji in the Places category
-    Container {
-        id: emojiPlaces
-        //background: composer.invokedAsCard == true ? Color.create("#f0f0f0") : Qt.colorStyles.emojiBkgColor
-        topPadding: 10
-        visible: false
-        ListView {
-            property variant twemojiStyle: twemoji.style
-            snapMode: SnapMode.LeadingEdge
-            layout: GridListLayout {
-                columnCount: 8
-                cellAspectRatio: 1
-                horizontalCellSpacing: 0.0
-                verticalCellSpacing: 0.0
-                orientation: LayoutOrientation.TopToBottom
-            }
-            dataModel: XmlDataModel {
-                source: "asset:///images/emoji_places.xml"
-            }
-            listItemComponents: [
-                ListItemComponent {
-                    type: "emoji"
-                    Label {
-                        text: ListItemData.unicode
-                        textStyle.textAlign: TextAlign.Center
-                        textStyle.fontSize: FontSize.PointValue
-                        textStyle.fontSizeValue: 8
-                        textStyle.base: ListItem.view.twemojiStyle
-                        textStyle.fontFamily: "Twemoji"
-                        textFormat: TextFormat.Html
-                    }
-                }
-            ]
-            onTriggered: {
-                var selectedItem = dataModel.data(indexPath);
-                messageField.editor.insertPlainText(selectedItem.unicode);
-                messageField.requestFocus();
-            }
-        }
-    }
-    
+
     // List of Emoji in the Nature category
     Container {
         id: emojiNature
@@ -156,17 +112,69 @@ Container{
                 source: "asset:///images/emoji_nature.xml"
             }
             listItemComponents: [
-                ListItemComponent {
-                    type: "emoji"
-                    Label {
-                        text: ListItemData.unicode
-                        textStyle.textAlign: TextAlign.Center
-                        textStyle.fontSize: FontSize.PointValue
-                        textStyle.fontSizeValue: 8
-                        textStyle.base: ListItem.view.twemojiStyle
-                        textStyle.fontFamily: "Twemoji"
-                        textFormat: TextFormat.Html
-                    }
+                EmojiComponent {
+                }
+            ]
+            onTriggered: {
+                var selectedItem = dataModel.data(indexPath);
+                messageField.editor.insertPlainText(selectedItem.unicode);
+                messageField.requestFocus();
+            }
+        }
+    }
+
+    // List of Emoji in the Food category
+    Container {
+        id: emojiFood
+        //background: composer.invokedAsCard == true ? Color.create("#f0f0f0") : Qt.colorStyles.emojiBkgColor
+        topPadding: 10
+        visible: false
+        ListView {
+            property variant twemojiStyle: twemoji.style
+            snapMode: SnapMode.LeadingEdge
+            layout: GridListLayout {
+                columnCount: 8
+                cellAspectRatio: 1
+                horizontalCellSpacing: 0.0
+                verticalCellSpacing: 0.0
+                orientation: LayoutOrientation.TopToBottom
+            }
+            dataModel: XmlDataModel {
+                source: "asset:///images/emoji_foods.xml"
+            }
+            listItemComponents: [
+                EmojiComponent {
+                }
+            ]
+            onTriggered: {
+                var selectedItem = dataModel.data(indexPath);
+                tweet.editor.insertPlainText(selectedItem.unicode);
+                tweet.requestFocus();
+            }
+        }
+    }
+
+    // List of Emoji in the Places category
+    Container {
+        id: emojiPlaces
+        //background: composer.invokedAsCard == true ? Color.create("#f0f0f0") : Qt.colorStyles.emojiBkgColor
+        topPadding: 10
+        visible: false
+        ListView {
+            property variant twemojiStyle: twemoji.style
+            snapMode: SnapMode.LeadingEdge
+            layout: GridListLayout {
+                columnCount: 8
+                cellAspectRatio: 1
+                horizontalCellSpacing: 0.0
+                verticalCellSpacing: 0.0
+                orientation: LayoutOrientation.TopToBottom
+            }
+            dataModel: XmlDataModel {
+                source: "asset:///images/emoji_places.xml"
+            }
+            listItemComponents: [
+                EmojiComponent {
                 }
             ]
             onTriggered: {
@@ -197,17 +205,7 @@ Container{
                 source: "asset:///images/emoji_objects.xml"
             }
             listItemComponents: [
-                ListItemComponent {
-                    type: "emoji"
-                    Label {
-                        text: ListItemData.unicode
-                        textStyle.textAlign: TextAlign.Center
-                        textStyle.fontSize: FontSize.PointValue
-                        textStyle.fontSizeValue: 8
-                        textStyle.base: ListItem.view.twemojiStyle
-                        textStyle.fontFamily: "Twemoji"
-                        textFormat: TextFormat.Html
-                    }
+                EmojiComponent {
                 }
             ]
             onTriggered: {
@@ -238,17 +236,7 @@ Container{
                 source: "asset:///images/emoji_symbols.xml"
             }
             listItemComponents: [
-                ListItemComponent {
-                    type: "emoji"
-                    Label {
-                        text: ListItemData.unicode
-                        textStyle.textAlign: TextAlign.Center
-                        textStyle.fontSize: FontSize.PointValue
-                        textStyle.fontSizeValue: 8
-                        textStyle.base: ListItem.view.twemojiStyle
-                        textStyle.fontFamily: "Twemoji"
-                        textFormat: TextFormat.Html
-                    }
+                EmojiComponent {
                 }
             ]
             onTriggered: {
@@ -258,7 +246,38 @@ Container{
             }
         }
     }
-    
+
+    // List of Emoji in the Flags category
+    Container {
+        id: emojiFlags
+        //background: composer.invokedAsCard == true ? Color.create("#f0f0f0") : Qt.colorStyles.emojiBkgColor
+        topPadding: 10
+        visible: false
+        ListView {
+            property variant twemojiStyle: twemoji.style
+            snapMode: SnapMode.LeadingEdge
+            layout: GridListLayout {
+                columnCount: 8
+                cellAspectRatio: 1
+                horizontalCellSpacing: 0.0
+                verticalCellSpacing: 0.0
+                orientation: LayoutOrientation.TopToBottom
+            }
+            dataModel: XmlDataModel {
+                source: "asset:///images/emoji_flags.xml"
+            }
+            listItemComponents: [
+                EmojiComponent {
+                }
+            ]
+            onTriggered: {
+                var selectedItem = dataModel.data(indexPath);
+                tweet.editor.insertPlainText(selectedItem.unicode);
+                tweet.requestFocus();
+            }
+        }
+    }
+
     //Button container
     Container {
         property bool emojiSelectionActive: false
@@ -322,6 +341,8 @@ Container{
                     emojiNature.visible = false;
                     emojiObjects.visible = false;
                     emojiSymbols.visible = false;
+                    emojiFlags.visible = false;
+                    emojiFood.visible = false;
                     
                     messageField.requestFocus();
                 }
@@ -352,12 +373,46 @@ Container{
                     emojiNature.visible = true;
                     emojiObjects.visible = false;
                     emojiSymbols.visible = false;
-                    
+                    emojiFlags.visible = false;
+                    emojiFood.visible = false;
+
                     messageField.requestFocus();
                 }
             }
         }
-        
+
+        // Emoji Food button - only shown when emoji selection is active
+        Container {
+            id: emojiFoodButtonContainer
+            visible: false
+            layoutProperties: StackLayoutProperties {
+                spaceQuota: 0.25
+            }
+            layout: DockLayout {
+            }
+            ImageButton {
+                id: emojiFoodButton
+                objectName: "Emoji Nature button"
+                //preferredWidth: SizeSelector.convert(120)
+                //maxWidth: SizeSelector.convert(120)
+                //preferredHeight: SizeSelector.convert(86)
+                verticalAlignment: VerticalAlignment.Center
+                horizontalAlignment: HorizontalAlignment.Center
+                defaultImageSource: "asset:///images/btn_emoji_food.png"
+                onClicked: {
+                    emojiPeople.visible = false;
+                    emojiPlaces.visible = false;
+                    emojiNature.visible = false;
+                    emojiFood.visible = true;
+                    emojiObjects.visible = false;
+                    emojiSymbols.visible = false;
+                    emojiFlags.visible = false;
+
+                    tweet.requestFocus();
+                }
+            }
+        }
+
         // Emoji Objects button - only shown when emoji selection is active
         Container {
             id: emojiObjectsButtonContainer
@@ -382,7 +437,9 @@ Container{
                     emojiNature.visible = false;
                     emojiObjects.visible = true;
                     emojiSymbols.visible = false;
-                    
+                    emojiFlags.visible = false;
+                    emojiFood.visible = false;
+
                     messageField.requestFocus();
                 }
             }
@@ -412,11 +469,46 @@ Container{
                     emojiNature.visible = false;
                     emojiObjects.visible = false;
                     emojiSymbols.visible = true;
-                    
+                    emojiFlags.visible = false;
+                    emojiFood.visible = false;
+
                     messageField.requestFocus();
                 }
             }
         }
+        
+        // Emoji Flags button - only shown when emoji selection is active
+        Container {
+            id: emojiFlagsButtonContainer
+            visible: false
+            layoutProperties: StackLayoutProperties {
+                spaceQuota: 0.25
+            }
+            layout: DockLayout {
+            }
+            ImageButton {
+                id: emojiFlagsButton
+                objectName: "Emoji Flags button"
+                //preferredWidth: SizeSelector.convert(120)
+                //maxWidth: SizeSelector.convert(120)
+                //preferredHeight: SizeSelector.convert(86)
+                verticalAlignment: VerticalAlignment.Center
+                horizontalAlignment: HorizontalAlignment.Center
+                defaultImageSource: "asset:///images/btn_emoji_flags.png"
+                onClicked: {
+                    emojiPeople.visible = false;
+                    emojiPlaces.visible = false;
+                    emojiNature.visible = false;
+                    emojiFood.visible = false;
+                    emojiObjects.visible = false;
+                    emojiSymbols.visible = false;
+                    emojiFlags.visible = true;
+
+                    messageField.requestFocus();
+                }
+            }
+        }
+        
         // Emoji selection button
         Container {
             id: emojiButtonContainer
