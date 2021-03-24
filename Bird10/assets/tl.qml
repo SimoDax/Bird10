@@ -182,6 +182,26 @@ NavigationPane {
                 id: payAction
             }
         ]
+        shortcuts: [
+            Shortcut {
+                key: 't'
+                onTriggered: {
+                    tweetList.scrollToPosition(ScrollPosition.Beginning, ScrollAnimation.Default)
+                }
+            },
+            Shortcut {
+                key: ' '
+                onTriggered: {
+                    tweetList.scroll(display.pixelSize.height - ui.du(20))
+                }
+            },
+            Shortcut {
+                key: 'b'
+                onTriggered: {
+                    tweetList.scrollToPosition(ScrollPosition.End, ScrollAnimation.Default)
+                }
+            }
+        ]
     }
     attachedObjects: [
         TwitterApi {
