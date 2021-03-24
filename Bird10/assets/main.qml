@@ -143,6 +143,9 @@ TabbedPane {
             id: aboutSheet
             source: "asset:///About.qml"
         },
+        BlackSheet {
+            
+        },
         
         OXTwitter {
             id: o1Twitter
