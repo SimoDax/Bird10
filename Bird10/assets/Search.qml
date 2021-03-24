@@ -30,6 +30,7 @@ Sheet {
         id: searchPage
         property variant appScene: Application.scene
         property bool showTrends: true
+        property url queryUrl    // needed to cast the query string into an url type, it's not really a property
         
         onAppSceneChanged: searchfield.requestFocus()
         onCreationCompleted: {
@@ -37,9 +38,15 @@ Sheet {
         }
         
         function searchQuery(query){
-            var page = discoverPage.createObject(nav)
-            page.search(query)
-            nav.push(page)
+            if(query.substring(0,4).toLowerCase() == 'http'){
+                queryUrl = query
+                app.handleUrl(queryUrl)
+            }
+            else{
+                var page = discoverPage.createObject(nav)
+                page.search(query)
+                nav.push(page)
+            }
             close()
             searchSheet.active = false
         }

@@ -69,6 +69,7 @@ public:
     Q_INVOKABLE void saveImage(const QUrl& url);
     Q_INVOKABLE void shareImage(const QUrl& url);
     Q_INVOKABLE void openVideo(const QUrl& url, const QString& name);
+    Q_INVOKABLE void handleUrl(QUrl url);
 
     Q_INVOKABLE inline void setTheme(int theme){QSettings settings("simodax","bird10"); settings.setValue("theme", theme);};
 

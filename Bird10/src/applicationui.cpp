@@ -448,7 +448,6 @@ void ApplicationUI::lateInit()
         file.close();
     }
 
-//    m_displayInfo = new bb::device::DisplayInfo();
     m_dmApi->loadInboxInitialState();
 }
 
@@ -480,30 +479,40 @@ void ApplicationUI::handleInvoke(const bb::system::InvokeRequest& invoke)
                 emit openTweetSheet("", "", invoke.uri().toString().remove("file://"));
         }
         else{
-            QString path = invoke.uri().path();
-            if(path.endsWith('/'))  // remove trailing slash
-                path.chop(1);
-
-            if(path.contains("/status/")){
-                // User tapped on a tweet link
-                path = path.mid(path.indexOf("/status/")+8);
-                emit openConversation(path);
-                TabbedPane* p = static_cast<TabbedPane*>(m_root);   // a little bit of downcasting is all I need *saxophone music*
-                p->setActiveTab(p->at(0));
-            }
-            else if(path.lastIndexOf('/') == 0){
-                // User tapped on a profile link e.g. twitter.com/jack
-                emit openProfile(path.mid(1));  // all the path except for the first character, which is a slash
-                TabbedPane* p = static_cast<TabbedPane*>(m_root);
-                p->setActiveTab(p->at(0));
-            }
-            else if (path.contains("/lists/")){
-                // User tapped on a list link
-                TabbedPane* p = static_cast<TabbedPane*>(m_root);
-                p->setActiveTab(p->at(4));
-                path = path.mid(path.indexOf("/lists/")+7);
-                emit openList(path);
-            }
+            // Action is bb.action.OPEN
+            handleUrl(invoke.uri());
         }
+    }
+}
+
+
+/*
+ * This function handles twitter links, they can originate from an invokation via
+ * active text or be pasted directly into the search bar
+ */
+void ApplicationUI::handleUrl(QUrl url){
+    QString path = url.path();
+    if(path.endsWith('/'))  // remove trailing slash
+        path.chop(1);
+
+    if(path.contains("/status/")){
+        // User tapped on a tweet link
+        path = path.mid(path.indexOf("/status/")+8);
+        emit openConversation(path);
+        TabbedPane* p = static_cast<TabbedPane*>(m_root);   // a little bit of downcasting is all I need *saxophone music*
+        p->setActiveTab(p->at(0));
+    }
+    else if (path.contains("/lists/")){
+        // User tapped on a list link
+        TabbedPane* p = static_cast<TabbedPane*>(m_root);
+        p->setActiveTab(p->at(4));
+        path = path.mid(path.indexOf("/lists/")+7);
+        emit openList(path);
+    }
+    else if(path.lastIndexOf('/') == 0){
+        // User tapped on a profile link e.g. twitter.com/jack
+        emit openProfile(path.mid(1));  // all the path (not the url!) except for the first character, which is a slash
+        TabbedPane* p = static_cast<TabbedPane*>(m_root);
+        p->setActiveTab(p->at(0));
     }
 }
