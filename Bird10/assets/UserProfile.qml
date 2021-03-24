@@ -38,8 +38,8 @@ Page {
         //        name = user_name
         waiter.open()
         profileApi.screenName = user_screen_name
-        profileApi.requestUserTweets()
         profileApi.requestUserData()
+        profileApi.requestUserTweets()
     }
 
     Container {
@@ -374,6 +374,8 @@ Page {
                     actions=actionArray
                 }
 
+                // FIXME: user data request must have returned by the time this function is invoked since it relies on id_str
+                // however, the code doesn't guarantee this happens (though during testing it always did)
                 requestMediaUserTweets()
             }
             onFollowed: {
