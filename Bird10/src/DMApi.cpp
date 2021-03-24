@@ -393,7 +393,7 @@ void DMApi::insertMessageInConversation(const QVariantMap& message_, const QVari
             int beginIndex = m["message_data"].toMap()["attachment"].toMap()["photo"].toMap()["indices"].toList()[0].toInt();
             int endIndex = m["message_data"].toMap()["attachment"].toMap()["photo"].toMap()["indices"].toList()[1].toInt();
             text.erase(beginIndex, endIndex-beginIndex);
-            offset = - (endIndex - beginIndex);
+//            offset = - (endIndex - beginIndex);
         }
 
     QVariantList urls = m["message_data"].toMap()["entities"].toMap()["urls"].toList();

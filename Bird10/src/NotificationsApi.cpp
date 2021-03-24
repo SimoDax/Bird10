@@ -146,7 +146,7 @@ int NotificationsApi::insertNotification(const QString& id, int pos, const QStri
 //        tweet["user"] = m_users[tweet["user_id_str"].toString()];
         std::wstring text = tweet["full_text"].toString().toStdWString();
         parseEmojiInText(text);
-        tweet["full_text"] = QString::fromWCharArray(text.c_str());
+        tweet["full_text"] = "<span>" + QString::fromWCharArray(text.c_str()) + "</span>";
 
         item["tweet"] = tweet;
 
@@ -174,7 +174,7 @@ int NotificationsApi::insertTweet(const QString& id, int pos, const QString& sor
 
     std::wstring text = item["full_text"].toString().toStdWString();
     parseEmojiInText(text);
-    item["full_text"] = QString::fromWCharArray(text.c_str());
+    item["full_text"] = "<span>" + QString::fromWCharArray(text.c_str()) + "</span>";
 
     item["type"] = "tweet";
     item["sortIndex"] = sortIndex;
