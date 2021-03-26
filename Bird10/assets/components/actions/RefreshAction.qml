@@ -24,8 +24,5 @@ ActionItem {
     enabled: o1Twitter.linked
     title: "Refresh"
     imageSource: "asset:///images/ic_resume.png"
-    onTriggered: {
-        twitterApi.requestTweets()
-    }
     ActionBar.placement: ActionBarPlacement.InOverflow
 }

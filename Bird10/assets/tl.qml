@@ -174,6 +174,9 @@ NavigationPane {
             },
             RefreshAction {
                 id: refreshAction
+                onTriggered: {
+                    twitterApi.requestTweets()
+                }
             },
             LoginAction {
                 id: loginAction

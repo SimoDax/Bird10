@@ -42,7 +42,7 @@ NavigationPane {
     }
 
     TimelinePage {
-        onCreationCompleted: refreshAction.triggered.connect(twitterApi.requestFavoriteTweets)
+//        onCreationCompleted: refreshAction.triggered.connect(twitterApi.requestFavoriteTweets)
         
         function clear() {
             twitterApi.clearTweetModel()
@@ -77,7 +77,9 @@ NavigationPane {
                 
             },
             RefreshAction {
-                
+                onTriggered: {
+                    twitterApi.requestFavoriteTweets()
+                }
             },
             PayAction {
                 

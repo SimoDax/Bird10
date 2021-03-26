@@ -98,7 +98,9 @@ Page {
             id: scrollToTopAction
         },
         RefreshAction {
-            onTriggered: twitterApi.requestSearch(discoverPage.query, seg.selectedOption.text.toLowerCase())
+            onTriggered: {
+                twitterApi.requestSearch(discoverPage.query, seg.selectedOption.text.toLowerCase())
+            }
         },
         PayAction {
             id: payAction
