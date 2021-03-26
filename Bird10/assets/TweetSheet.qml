@@ -73,7 +73,7 @@ Sheet {
                     close()
                 }
 
-                enabled: tweet.realLength <= 280 && tweet.realLength > 0
+                enabled: (tweet.realLength <= 280 && tweet.realLength > 0) || !composer.noImageSelected() || sheet.video != ""
             }
             dismissAction: ActionItem {
                 title: "Cancel"
