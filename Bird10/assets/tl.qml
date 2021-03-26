@@ -65,6 +65,7 @@ NavigationPane {
         }
         function load(){
             twitterApi.requestTweets()
+            fleetApi.requestFleets()
         }
         
         Container {

@@ -37,14 +37,19 @@ simulator {
 config_pri_assets {
     OTHER_FILES += \
         $$quote($$BASEDIR/assets/1440x1440/AttachedImage.qml) \
+        $$quote($$BASEDIR/assets/1440x1440/EmojiComponent.qml) \
         $$quote($$BASEDIR/assets/1440x1440/ScreenContainer.qml) \
         $$quote($$BASEDIR/assets/720x1280/AttachedImage.qml) \
+        $$quote($$BASEDIR/assets/720x1280/EmojiComponent.qml) \
         $$quote($$BASEDIR/assets/720x1280/ScreenContainer.qml) \
         $$quote($$BASEDIR/assets/720x720/AttachedImage.qml) \
+        $$quote($$BASEDIR/assets/720x720/EmojiComponent.qml) \
         $$quote($$BASEDIR/assets/720x720/ScreenContainer.qml) \
         $$quote($$BASEDIR/assets/768x1280/AttachedImage.qml) \
+        $$quote($$BASEDIR/assets/768x1280/EmojiComponent.qml) \
         $$quote($$BASEDIR/assets/768x1280/ScreenContainer.qml) \
         $$quote($$BASEDIR/assets/About.qml) \
+        $$quote($$BASEDIR/assets/BlackSheet.qml) \
         $$quote($$BASEDIR/assets/BrowserSheet.qml) \
         $$quote($$BASEDIR/assets/ConversationPage.qml) \
         $$quote($$BASEDIR/assets/DMAttachmentPage.qml) \
@@ -151,6 +156,8 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/images/add_to_list_80x80.png) \
         $$quote($$BASEDIR/assets/images/bird_logo_white.png) \
         $$quote($$BASEDIR/assets/images/btn_default_photo_gallery.png) \
+        $$quote($$BASEDIR/assets/images/btn_emoji_flags.png) \
+        $$quote($$BASEDIR/assets/images/btn_emoji_food.png) \
         $$quote($$BASEDIR/assets/images/btn_emoji_nature.png) \
         $$quote($$BASEDIR/assets/images/btn_emoji_objects.png) \
         $$quote($$BASEDIR/assets/images/btn_emoji_people.png) \
@@ -167,6 +174,9 @@ config_pri_assets {
         $$quote($$BASEDIR/assets/images/chat_bubble_gray.png) \
         $$quote($$BASEDIR/assets/images/default_profile_image.png) \
         $$quote($$BASEDIR/assets/images/delete_80x80.png) \
+        $$quote($$BASEDIR/assets/images/emoji_activity.xml) \
+        $$quote($$BASEDIR/assets/images/emoji_flags.xml) \
+        $$quote($$BASEDIR/assets/images/emoji_foods.xml) \
         $$quote($$BASEDIR/assets/images/emoji_nature.xml) \
         $$quote($$BASEDIR/assets/images/emoji_objects.xml) \
         $$quote($$BASEDIR/assets/images/emoji_people.xml) \
