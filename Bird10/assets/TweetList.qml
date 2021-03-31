@@ -138,7 +138,7 @@ ListView {
         var page = dmConversationPage.createObject(nav)
         page.conversationId = id;
         page.remotePartyName = user.name;
-        app.dm.setCurrentConversation(id)
+        app.dm.setCurrentConversation(id)     // this also pops any open conversation from the dm navigation stack
         nav.push(page);
     }
 

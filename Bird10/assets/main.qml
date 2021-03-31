@@ -25,6 +25,10 @@ import org.labsquare 1.0
 TabbedPane {
     id: tabbedPane
     showTabsOnActionBar: app.showTabsOnActionBar
+    
+    onCreationCompleted: {
+        app.dm.closeCurrentConversation.connect(closeConversationPages)
+    }
 
     function error_message(text) {
         errorToast.body = text
@@ -32,6 +36,37 @@ TabbedPane {
     }
     function message(text){
         error_message(text)
+    }
+
+    function closeConversationPages() {
+        // Every time a dm conversation opens, all the other conversation pages in the background need to be closed.
+        // For example, if a user is chatting, then he taps on a tweet link in the chat and then tries to share that tweet (via context action) to another (or the same) chat, the conversation
+        // where he tapped the link needs to be closed before opening a new one. DMApi *could* handle multiple conversations at once but using it in such way opens up to a lot of potential bugs..
+
+        // delete conversation pages in the inbox
+        closeConversationPagesOnNavigationStack(inbox)
+        
+        // now, delete conversation pages from the other tabs (they could be present if the user accessed dms via 'share via dm' or 'dm user' action items)
+
+        closeConversationPagesOnNavigationStack(tlDelegate.object)
+        closeConversationPagesOnNavigationStack(notificationsDelegate.object)
+        if(favDelegate.active)
+            closeConversationPagesOnNavigationStack(favDelegate.object)
+        if(listsDelegate.active)
+            closeConversationPagesOnNavigationStack(listsDelegate.object)
+        if(myProfileDelegate.active)
+            closeConversationPagesOnNavigationStack(myProfileDelegate.object)
+    }
+
+    function closeConversationPagesOnNavigationStack(stack){
+        for (var i = 1; i < stack.count(); i ++) { // we can safely iterate over all the navigation stack (except the bottom page, i starts from 1) since the new conversation page has not been pushed yet
+            if (stack.at(i).objectName == "thisPersonDMPage" || (stack.at(i).objectName == "inboxPage" && i != stack.count()-1)) {
+                var page = stack.at(i)
+                stack.remove(page) // remove does not trigger onPopTransitionEnded -> the current conversation in the api will not be reset
+                page.destroy()
+                i=i-1;             // since the page is removed, the index of the following ones decreases by 1
+            }
+        }
     }
 
     Tab {

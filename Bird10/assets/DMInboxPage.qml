@@ -30,7 +30,7 @@ Page {
     actionBarAutoHideBehavior: ActionBarAutoHideBehavior.HideOnScroll
     
     id: thisDMHistory
-    objectName: "Messages Page"
+    objectName: "inboxPage"
     //property bool needRefreshControl: true
     //    function titleBarButtonClicked() {
     //        var msgSheet = mainPage.getMsgSheet();

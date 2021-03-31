@@ -60,7 +60,7 @@ public:
     Q_INVOKABLE void markRead(const QString& conversationId);
     Q_INVOKABLE void updateLastSeenId();
     Q_INVOKABLE inline GroupDataModel* getConversationFromId(const QString& id){ Conversation* c = m_conversations.value(id); return c ? c->messageModel() : nullptr; };
-    Q_INVOKABLE inline void setCurrentConversation(const QString& id){ m_currentConversation = m_conversations.value(id)->messageModel(); emit currentConversationChanged();}
+    Q_INVOKABLE inline void setCurrentConversation(const QString& id){ emit closeCurrentConversation(); m_currentConversation = m_conversations.value(id)->messageModel(); emit currentConversationChanged();}
     Q_INVOKABLE QString getConversationIdFromUser(const QString& user);
     Q_INVOKABLE void clear();
 
@@ -69,6 +69,7 @@ signals:
     void currentConversationChanged();
     void scrollToLast(bool forceScroll);
     void unreadCountChanged();
+    void closeCurrentConversation();
     void mediaUploaded(const QString& media_id);
     void mediaUploadError(const QString& error);
 

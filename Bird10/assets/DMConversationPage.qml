@@ -48,7 +48,6 @@ Page {
             dmList.requestFocus()
             dmComposer.inputText = ""; //clear the text area
             dmComposer.imageSource = "" //clear the image
-            dmComposer.unfreeze()
         }
         else{
             onMediaUploadError("Media upload failed. Image size may be > 5 MB")
