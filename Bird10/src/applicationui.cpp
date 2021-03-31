@@ -495,9 +495,12 @@ void ApplicationUI::handleUrl(QUrl url){
     if(path.endsWith('/'))  // remove trailing slash
         path.chop(1);
 
-    if(path.contains("/status/")){
+    if(path.contains("/status/") || path.contains("/statuses/")){
         // User tapped on a tweet link
-        path = path.mid(path.indexOf("/status/")+8);
+        if(path.contains("/status/"))
+            path = path.mid(path.indexOf("/status/")+8);
+        else
+            path = path.mid(path.indexOf("/statuses/")+10);
         emit openConversation(path);
         TabbedPane* p = static_cast<TabbedPane*>(m_root);   // a little bit of downcasting is all I need *saxophone music*
         p->setActiveTab(p->at(0));
