@@ -77,7 +77,7 @@ Container {
                     title: "DM user"
                     imageSource: "asset:///images/mail_80x80.png"
                     onTriggered: itemRoot.ListItem.view.dmUser(ListItemData.user)
-                    enabled: ListItemData.user.can_dm
+                    enabled: ListItemData.user.can_dm && ListItemData.user.screen_name != itemRoot.ListItem.view.authenticator.extraTokens.screen_name
                 }
 //                                                    ActionItem {
 //                                                        title: "Share Tweet"
