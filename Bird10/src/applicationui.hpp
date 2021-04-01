@@ -122,7 +122,6 @@ signals:
 public slots:
     void shareImageLoaded();
     void saveImageLoaded();
-    void onVideoCardClosed(const bb::system::CardDoneMessage&);
 
     void onManualExit();
 
