@@ -112,7 +112,7 @@ Page {
         attachedObjects: [
             Timer{
                 id: fleetTimer
-                duration: 10000
+                duration: 8000
                 onTriggered: switchFleet()
                 onActiveChanged: {
                     console.debug('timer active: '+active)
