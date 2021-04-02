@@ -133,6 +133,13 @@ Page {
                     else
                         return "dm";
                 }
+                
+                function openProfileFromScreenName(screen_name) {
+                    var comp = Qt.createComponent("asset:///UserProfile.qml")
+                    var page = comp.createObject(nav)
+                    page.setUser(screen_name, screen_name)
+                    nav.push(page)
+                }
 
                 attachedObjects: [
                     ListScrollStateHandler {

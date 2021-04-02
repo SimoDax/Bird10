@@ -23,6 +23,7 @@ import org.labsquare 1.0
 
 Container {
     id: dmListItem
+    property alias itemRoot: dmListItem    // compatibility with Bird10 conventions
 
     property string timeStamp // this seemed not used.
     property bool isSentDM
@@ -193,6 +194,9 @@ Container {
                                 text: ListItemData.text
                                 textFormat: TextFormat.Html
                                 content.flags: TextContentFlag.EmoticonsOff | TextContentFlag.ActiveText
+                                activeTextHandler: TweetTextHandler {
+                                    
+                                }
 //                                activeTextHandler: ActiveTextHandler {
 //                                    onTriggered: {
 //                                        if (dmListItem.ListItem.view.getController !== undefined && dmListItem.ListItem.view.getController().invokeActiveText !== undefined) {
